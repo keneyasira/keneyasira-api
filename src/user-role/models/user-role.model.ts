@@ -1,39 +1,26 @@
 import { Optional } from 'sequelize/dist';
 import {
     AllowNull,
+    BelongsTo,
     Column,
-    CreatedAt,
-    DataType,
-    DeletedAt,
     ForeignKey,
-    Model,
-    PrimaryKey,
     Table,
-    UpdatedAt,
 } from 'sequelize-typescript';
 
-import { BaseAttributes } from '../../common/base.model';
-import { User } from 'src/user/models/user.model';
-import { Role } from 'src/role/models/role.model';
+import { BaseAttributes, BaseModel } from '../../common/base.model';
+import { User } from '../../user/models/user.model';
+import { Role } from '../../role/models/role.model';
 
 export interface UserRoleAttributes extends BaseAttributes {
-    name: string;
-    description: string;
+    userId: string;
+    roleId: string;
 }
 
 type RoleCreationAttributes = Optional<UserRoleAttributes, 'id'>;
 @Table({
-    tableName: 'user_has_role',
+    tableName: 'user_role',
 })
-export class UserRole extends Model<UserRoleAttributes, RoleCreationAttributes> {
-    @PrimaryKey
-    @Column({
-        type: DataType.UUIDV4,
-        allowNull: false,
-        defaultValue: DataType.UUIDV4,
-    })
-    id: string;
-
+export class UserRole extends BaseModel<UserRoleAttributes, RoleCreationAttributes> { 
     @AllowNull(false)
     @Column
     @ForeignKey(() => User)
@@ -44,24 +31,9 @@ export class UserRole extends Model<UserRoleAttributes, RoleCreationAttributes> 
     @ForeignKey(() => Role)
     roleId: string;
 
-    @CreatedAt
-    createdAt!: string;
+    @BelongsTo(() => User, 'userId')
+    user: User;
 
-    @UpdatedAt
-    updatedAt!: string;
-
-    @DeletedAt
-    deletedAt!: string;
-
-    @Column
-    @ForeignKey(() => User)
-    createdBy?: string;
-
-    @Column
-    @ForeignKey(() => User)
-    updatedBy?: string;
-
-    @Column
-    @ForeignKey(() => User)
-    deletedBy?: string;
+    @BelongsTo(() => Role)
+    role: Role;
 }

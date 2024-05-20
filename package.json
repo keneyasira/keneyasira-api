@@ -1,5 +1,5 @@
 {
-    "name": "smartfit-api",
+    "name": "keneyasira-api",
     "description": "",
     "author": "",
     "private": true,
@@ -7,7 +7,7 @@
     "engines": {
         "node": ">= 16.13.0"
     },
-    "prettier": "./prettierrc.json",
+    "prettier": "./.prettierrc.json",
     "scripts": {
         "prebuild": "rimraf dist",
         "build": "nest build",
@@ -38,7 +38,6 @@
         "express-basic-auth": "^1.2.1",
         "express-rate-limit": "^5.5.1",
         "helmet": "^4.6.0",
-        "keycloak-connect": "^15.1.1",
         "lodash-humps-ts": "0.0.6",
         "lodash.isplainobject": "^4.0.6",
         "lodash.lowercase": "^4.3.0",
@@ -58,6 +57,7 @@
         "winston": "^3.3.3"
     },
     "devDependencies": {
+        "@faker-js/faker": "^8.4.1",
         "@nestjs/cli": "^8.1.5",
         "@nestjs/schematics": "^8.0.5",
         "@nestjs/testing": "^8.2.3",
@@ -80,6 +80,7 @@
         "@types/uuid": "^8.3.4",
         "@typescript-eslint/eslint-plugin": "^5.4.0",
         "@typescript-eslint/parser": "^5.4.0",
+        "dayjs": "^1.11.11",
         "eslint": "8.3.0",
         "eslint-config-prettier": "^8.3.0",
         "eslint-import-resolver-typescript": "^2.5.0",

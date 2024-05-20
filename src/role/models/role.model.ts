@@ -2,18 +2,12 @@ import { Optional } from 'sequelize/dist';
 import {
     AllowNull,
     Column,
-    CreatedAt,
     DataType,
-    DeletedAt,
-    ForeignKey,
-    Model,
     PrimaryKey,
     Table,
-    UpdatedAt,
 } from 'sequelize-typescript';
 
-import { BaseAttributes } from '../../common/base.model';
-import { User } from 'src/user/models/user.model';
+import { BaseAttributes, BaseModel } from '../../common/base.model';
 
 export interface RoleAttributes extends BaseAttributes {
     name: string;
@@ -22,9 +16,9 @@ export interface RoleAttributes extends BaseAttributes {
 
 type RoleCreationAttributes = Optional<RoleAttributes, 'id'>;
 @Table({
-    tableName: 'Role',
+    tableName: 'role',
 })
-export class Role extends Model<RoleAttributes, RoleCreationAttributes> {
+export class Role extends BaseModel<RoleAttributes, RoleCreationAttributes> {
     @PrimaryKey
     @Column({
         type: DataType.UUIDV4,
@@ -40,25 +34,4 @@ export class Role extends Model<RoleAttributes, RoleCreationAttributes> {
     @AllowNull(false)
     @Column
     description: string;
-
-    @CreatedAt
-    createdAt!: string;
-
-    @UpdatedAt
-    updatedAt!: string;
-
-    @DeletedAt
-    deletedAt!: string;
-
-    @Column
-    @ForeignKey(() => User)
-    createdBy?: string;
-
-    @Column
-    @ForeignKey(() => User)
-    updatedBy?: string;
-
-    @Column
-    @ForeignKey(() => User)
-    deletedBy?: string;
 }

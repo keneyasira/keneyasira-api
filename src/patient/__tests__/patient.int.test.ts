@@ -3,18 +3,11 @@ import { execSync } from 'child_process';
 import request from 'supertest';
 
 import { getTestingModule } from '../../core/testing';
-import {
-    cleanupKeycloakMock,
-    getMockInstance,
-    initiliazeKeycloakMock,
-} from '../../utils/keycloak-mock.setup';
 
-describe('CategoryController', () => {
+describe('PatientController', () => {
     let app: INestApplication;
 
     beforeAll(async () => {
-        await initiliazeKeycloakMock();
-
         const testingModule = await getTestingModule();
 
         app = testingModule.createNestApplication();
@@ -25,208 +18,163 @@ describe('CategoryController', () => {
 
     afterAll(async () => {
         if (app) await app.close();
-        cleanupKeycloakMock();
     });
 
     describe('/', () => {
-        it('should get categories', async () => {
-            const kmock = getMockInstance();
-            const user = kmock.database.users[1];
-            const token = kmock.createBearerToken(user.profile.id);
+        it('should get patients', async () => {
+            return (
+                request(app.getHttpServer())
+                    .get('/patient/')
+                    // .auth(token, { type: 'bearer' })
+                    .expect(200)
+                    .expect(({ body }) => {
+                        expect(body).toEqual({
+                            data: [
+                                {
+                                    birthDate: '1999-01-01',
+                                    createdBy: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                                    id: '632273cc-de99-4582-a440-752ba1f78766',
+                                    updatedBy: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                                    user: {
+                                        createdBy: null,
+                                        email: 'patient@keneyasira.com',
+                                        firstName: 'Patient',
+                                        id: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                                        lastName: 'Patient',
+                                        phone: '5551234567',
+                                        updatedBy: null,
+                                    },
+                                    userId: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                                },
+                            ],
+                            total: 1,
+                        });
+                    })
+            );
+        });
 
-            return request(app.getHttpServer())
-                .get('/category')
-                .auth(token, { type: 'bearer' })
-                .expect(200)
-                .expect(({ body }) => {
-                    expect(body).toEqual({
-                        data: [
-                            {
-                                createdBy: '5ffd2cde-53fb-5155-9b1f-f2955d29ba4d',
-                                id: 'f95c9df8-5932-564d-8aa0-bc101e1a69e8',
-                                image: {
-                                    id: 'e540ae76-2900-550a-9002-0a69c4c1d2df',
-                                    url: 'https://picsum.photos/id/1',
-                                },
-                                imageId: 'e540ae76-2900-550a-9002-0a69c4c1d2df',
-                                path: null,
-                                tag: {
-                                    id: '2dc13e7b-a8cb-5eeb-b4bf-5e24b937cdb1',
-                                    title: 'Muscle',
-                                },
-                                tagId: '2dc13e7b-a8cb-5eeb-b4bf-5e24b937cdb1',
-                                title: 'Musculation',
+        it('should get a patient', async () => {
+            return (
+                request(app.getHttpServer())
+                    .get('/patient/632273cc-de99-4582-a440-752ba1f78766')
+                    // .auth(token, { type: 'bearer' })
+                    .expect(200)
+                    .expect(({ body }) => {
+                        expect(body).toEqual({
+                            birthDate: '1999-01-01',
+                            createdBy: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                            id: '632273cc-de99-4582-a440-752ba1f78766',
+                            updatedBy: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                            user: {
+                                createdBy: null,
+                                email: 'patient@keneyasira.com',
+                                firstName: 'Patient',
+                                id: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                                lastName: 'Patient',
+                                phone: '5551234567',
                                 updatedBy: null,
                             },
-                            {
-                                createdBy: '5ffd2cde-53fb-5155-9b1f-f2955d29ba4d',
-                                id: '66e6df29-ec74-512b-ad9c-c74f19750078',
-                                image: {
-                                    id: '7efb7ecd-b450-53d2-b3be-2b8ba4366751',
-                                    url: 'https://picsum.photos/id/1',
-                                },
-                                imageId: '7efb7ecd-b450-53d2-b3be-2b8ba4366751',
-                                path: null,
-                                tag: {
-                                    id: 'd16d0524-ed5f-4375-a644-3b2446e1343a',
-                                    title: 'Bien être',
-                                },
-                                tagId: 'd16d0524-ed5f-4375-a644-3b2446e1343a',
-                                title: 'Bien être',
+                            userId: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                        });
+                    })
+            );
+        });
+
+        it('should create a patient', async () => {
+            return (
+                request(app.getHttpServer())
+                    .post('/patient')
+                    // .auth(token, { type: 'bearer' })
+                    .send({
+                        userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                        birthDate: '2000-05-05',
+                    })
+                    .expect(201)
+                    .expect(({ body }) => {
+                        expect(body).toMatchObject({
+                            birthDate: '2000-05-05',
+                            user: {
+                                createdBy: null,
+                                email: 'practician@keneyasira.com',
+                                firstName: 'Doctor',
+                                id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                lastName: 'Doctor',
+                                phone: '9876543210',
                                 updatedBy: null,
                             },
-                            {
-                                createdBy: '5ffd2cde-53fb-5155-9b1f-f2955d29ba4d',
-                                id: 'a27d8108-d6bf-5e07-9323-ea78b8121ea2',
-                                image: {
-                                    id: '22daa388-f6ac-5bc2-aa60-3fd4e2c1d420',
-                                    url: 'https://picsum.photos/id/1',
-                                },
-                                imageId: '22daa388-f6ac-5bc2-aa60-3fd4e2c1d420',
-                                path: null,
-                                tag: {
-                                    id: '7a208062-dcd7-5821-99a9-06cbc15f4ddb',
-                                    title: 'Nutrition',
-                                },
-                                tagId: '7a208062-dcd7-5821-99a9-06cbc15f4ddb',
-                                title: 'Nutrition',
+                            userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                        });
+                    })
+            );
+        });
+
+        it('should update a patient', async () => {
+            return (
+                request(app.getHttpServer())
+                    .put('/patient/632273cc-de99-4582-a440-752ba1f78766')
+                    // .auth(token, { type: 'bearer' })
+                    .send({
+                        id: '632273cc-de99-4582-a440-752ba1f78766',
+                        birthDate: '2000-05-05',
+                    })
+                    .expect(200)
+                    .expect(({ body }) => {
+                        expect(body).toEqual({
+                            birthDate: '2000-05-05',
+                            createdBy: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                            id: '632273cc-de99-4582-a440-752ba1f78766',
+                            updatedBy: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                            user: {
+                                createdBy: null,
+                                email: 'patient@keneyasira.com',
+                                firstName: 'Patient',
+                                id: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                                lastName: 'Patient',
+                                phone: '5551234567',
                                 updatedBy: null,
                             },
-                        ],
-                        total: 3,
-                    });
-                });
+                            userId: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                        });
+                    })
+            );
         });
 
-        it('should get a category', async () => {
-            const kmock = getMockInstance();
-            const user = kmock.database.users[1];
-            const token = kmock.createBearerToken(user.profile.id);
-
-            return request(app.getHttpServer())
-                .get('/category/f95c9df8-5932-564d-8aa0-bc101e1a69e8')
-                .auth(token, { type: 'bearer' })
-                .expect(200)
-                .expect(({ body }) => {
-                    expect(body).toEqual({
-                        createdBy: '5ffd2cde-53fb-5155-9b1f-f2955d29ba4d',
-                        id: 'f95c9df8-5932-564d-8aa0-bc101e1a69e8',
-                        image: {
-                            id: 'e540ae76-2900-550a-9002-0a69c4c1d2df',
-                            url: 'https://picsum.photos/id/1',
-                        },
-                        imageId: 'e540ae76-2900-550a-9002-0a69c4c1d2df',
-                        path: null,
-                        tag: {
-                            id: '2dc13e7b-a8cb-5eeb-b4bf-5e24b937cdb1',
-                            title: 'Muscle',
-                        },
-                        tagId: '2dc13e7b-a8cb-5eeb-b4bf-5e24b937cdb1',
-                        title: 'Musculation',
-                        updatedBy: null,
-                    });
-                });
-        });
-
-        it('should create a category', async () => {
-            const kmock = getMockInstance();
-            const user = kmock.database.users[1];
-            const token = kmock.createBearerToken(user.profile.id);
-
-            return request(app.getHttpServer())
-                .post('/category')
-                .auth(token, { type: 'bearer' })
-                .send({
-                    title: 'Sueur',
-                    imageId: 'e540ae76-2900-550a-9002-0a69c4c1d2df',
-                    tagId: 'e8db9c31-5981-5927-8c5c-480d6964b59a',
-                })
-                .expect(201)
-                .expect(({ body }) => {
-                    expect(body).toMatchObject({
-                        imageId: 'e540ae76-2900-550a-9002-0a69c4c1d2df',
-                        path: null,
-                        tagId: 'e8db9c31-5981-5927-8c5c-480d6964b59a',
-                        title: 'Sueur',
-                        updatedBy: null,
-                        createdBy: 'aa64ab80-6496-58cc-8be8-f305cbe8a75f',
-                    });
-                });
-        });
-
-        it('should update a category', async () => {
-            const kmock = getMockInstance();
-            const user = kmock.database.users[1];
-            const token = kmock.createBearerToken(user.profile.id);
-
-            return request(app.getHttpServer())
-                .put('/category/f95c9df8-5932-564d-8aa0-bc101e1a69e8')
-                .auth(token, { type: 'bearer' })
-                .send({
-                    id: 'f95c9df8-5932-564d-8aa0-bc101e1a69e8',
-                    imageId: 'e540ae76-2900-550a-9002-0a69c4c1d2df',
-                    tagId: 'e8db9c31-5981-5927-8c5c-480d6964b59a',
-                })
-                .expect(200)
-                .expect(({ body }) => {
-                    expect(body).toEqual({
-                        createdBy: '5ffd2cde-53fb-5155-9b1f-f2955d29ba4d',
-                        id: 'f95c9df8-5932-564d-8aa0-bc101e1a69e8',
-                        imageId: 'e540ae76-2900-550a-9002-0a69c4c1d2df',
-                        path: null,
-                        tagId: 'e8db9c31-5981-5927-8c5c-480d6964b59a',
-                        title: 'Musculation',
-                        updatedBy: 'aa64ab80-6496-58cc-8be8-f305cbe8a75f',
-                    });
-                });
-        });
-
-        it('should delete a category', async () => {
-            const kmock = getMockInstance();
-            const user = kmock.database.users[1];
-            const token = kmock.createBearerToken(user.profile.id);
-
-            return request(app.getHttpServer())
-                .delete('/category/f95c9df8-5932-564d-8aa0-bc101e1a69e8')
-                .auth(token, { type: 'bearer' })
-                .expect(200);
+        it('should delete a patient', async () => {
+            return (
+                request(app.getHttpServer())
+                    .delete('/patient/632273cc-de99-4582-a440-752ba1f78766')
+                    // .auth(token, { type: 'bearer' })
+                    .expect(200)
+            );
         });
 
         it('should return "Not Found" when passing an ID which is absent from the DB', async () => {
-            const kmock = getMockInstance();
-            const user = kmock.database.users[1];
-            const token = kmock.createBearerToken(user.profile.id);
-
             await request(app.getHttpServer())
-                .get('/category/b96567d7-a698-4fdc-8ea4-8eed850824e6')
-                .auth(token, { type: 'bearer' })
+                .get('/patient/b96567d7-a698-4fdc-8ea4-8eed850824e6')
+                // .auth(token, { type: 'bearer' })
                 .expect(404)
                 .expect(({ body }) => {
                     expect(body).toEqual({
                         error: expect.objectContaining({
                             code: 404,
                             message: 'Not Found',
-                            path: '/category/b96567d7-a698-4fdc-8ea4-8eed850824e6',
+                            path: '/patient/b96567d7-a698-4fdc-8ea4-8eed850824e6',
                         }),
                     });
                 });
         });
 
         it('should return "Bad Request" with an incorrect ID', async () => {
-            const kmock = getMockInstance();
-            const user = kmock.database.users[1];
-            const token = kmock.createBearerToken(user.profile.id);
-
             await request(app.getHttpServer())
-                .get('/category/undefined')
-                .auth(token, { type: 'bearer' })
+                .get('/patient/undefined')
+                // .auth(token, { type: 'bearer' })
                 .expect(400)
                 .expect(({ body }) => {
                     expect(body).toEqual({
                         error: expect.objectContaining({
                             code: 400,
                             message: 'invalid input syntax for type uuid: "undefined"',
-                            path: '/category/undefined',
+                            path: '/patient/undefined',
                         }),
                     });
                 });

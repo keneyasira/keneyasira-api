@@ -1,24 +1,63 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { KeycloakService } from 'nestjs-keycloak-admin';
 
-import { Config } from '../../config/default';
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { User } from '../user/models/user.model';
 import { errorToPlainObject } from '../utils/error.helper';
 import { CreateUserRoleDto } from './dtos/create-user-role.dto';
-import { DeleteUserRoleDto } from './dtos/delete-user-role.dto';
+import { QueryParams } from '../typings/query.typings';
+import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
+import { UserRole, UserRoleAttributes } from './models/user-role.model';
+import { Role } from '../role/models/role.model';
 
 @Injectable()
 export class UserRoleService {
-    constructor(
-        private readonly keycloakService: KeycloakService,
-        private readonly config: Config,
-        private readonly logger: ApplicationLoggerService,
-    ) {}
+    constructor(private readonly logger: ApplicationLoggerService) {}
 
-    async find(userId: string) {
+    async findAndCountAll(
+        options: QueryParams,
+    ): Promise<{ data: UserRoleAttributes[]; total: number }> {
+        const offset = options?.limit && options.page ? options.limit * (options.page - 1) : 0;
+
+        const { rows, count: total } = await UserRole.findAndCountAll({
+            limit: options?.limit,
+            offset,
+            order: transformSortParamsToSequelizeFormat(options.sort),
+            include: [
+                {
+                    model: User,
+                },
+                {
+                    model: Role,
+                },
+            ],
+        });
+
+        const data = rows.map((row) => row.toJSON());
+
+        return { data, total };
+    }
+
+    async find(userRoleId: string) {
         try {
-            //TODO
+            const userRole = await UserRole.findOne({
+                where: {
+                    id: userRoleId,
+                },
+                include: [
+                    {
+                        model: User,
+                    },
+                    {
+                        model: Role,
+                    },
+                ],
+            });
+
+            if (!userRole) {
+                throw new NotFoundException();
+            }
+
+            return userRole.toJSON();
         } catch (error) {
             this.logger.error(
                 `UserRoleService - failed to get user-role, ${(error as Error).message}`,
@@ -30,22 +69,30 @@ export class UserRoleService {
         }
     }
 
-    async create(createUserRoleDto: CreateUserRoleDto, connectedUserEmail: string) {
+    async create(createUserRoleDto: CreateUserRoleDto) {
         try {
-            const connectedUser = await User.findOne({
-                where: {
-                    email: connectedUserEmail,
-                },
-                raw: true,
+            const createdUserRole = await UserRole.create({
+                ...createUserRoleDto,
             });
 
-            if (!connectedUser) {
-                throw new NotFoundException(`Connected user not found`);
-            }
+            const createdUserRoleValue = createdUserRole.toJSON();
 
-            //TODO
+            this.logger.info(`UserRoleService - Created user-role`, {
+                createdUserRole: createdUserRoleValue,
+            });
 
-            this.logger.info(`UserRoleService - Created user role`);
+            const userRole = await UserRole.findByPk(createdUserRoleValue.id, {
+                include: [
+                    {
+                        model: User,
+                    },
+                    {
+                        model: Role,
+                    },
+                ],
+            });
+
+            return userRole?.toJSON();
         } catch (error) {
             this.logger.error(
                 `UserRoleService - failed to create user-role, ${(error as Error).message}`,
@@ -58,21 +105,17 @@ export class UserRoleService {
         }
     }
 
-    async delete(deleteUserRoleDto: DeleteUserRoleDto, connectedUserEmail: string) {
+    async delete(userRoleToDeleteId: string) {
         try {
-            const connectedUser = await User.findOne({
-                where: {
-                    email: connectedUserEmail,
-                },
-                raw: true,
+            const deletedCount = await UserRole.destroy({
+                where: { id: userRoleToDeleteId },
             });
 
-            if (!connectedUser) {
-                throw new NotFoundException(`Connected user not found`);
-            }
+            this.logger.info(`UserRoleService - deleted (${deletedCount}) userRole`, {
+                userRoleToDeleteId,
+            });
 
-            //TODO
-
+            return deletedCount;
         } catch (error) {
             this.logger.error(
                 `UserRoleService - failed to delete user-role, ${(error as Error).message}`,

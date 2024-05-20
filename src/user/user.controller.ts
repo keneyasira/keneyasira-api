@@ -13,7 +13,6 @@ import {
     Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { KeycloakUser, RoleMatchingMode, Roles, User } from 'nestjs-keycloak-admin';
 
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { SortParams } from '../typings/query.typings';
@@ -107,9 +106,9 @@ export class UserController {
     }
 
     @Delete('/:id')
-    async delete(@User() user: KeycloakUser, @Param('id') userId: string) {
+    async delete(@Param('id') userId: string) {
         try {
-            return this.userService.delete(userId, user.email);
+            return this.userService.delete(userId);
         } catch (error) {
             this.logger.error(
                 `UserController - failed to delete user, ${(error as Error).message}`,

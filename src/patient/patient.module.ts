@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 
 import { CoreModule } from '../core/core.module';
-import { CategoryController } from './patient.controller';
-import { CategoryService } from './patient.service';
+import { PatientController } from './patient.controller';
+import { PatientService } from './patient.service';
 
 @Module({
-    controllers: [CategoryController],
-    providers: [CategoryService],
-    exports: [CategoryService],
+    controllers: [PatientController],
+    providers: [PatientService],
+    exports: [PatientService],
     imports: [CoreModule],
 })
-export class CategoryModule {}
+export class PatientModule {}

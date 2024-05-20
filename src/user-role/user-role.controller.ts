@@ -1,11 +1,24 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    DefaultValuePipe,
+    Delete,
+    Get,
+    NotFoundException,
+    Param,
+    ParseIntPipe,
+    Post,
+    Query,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { KeycloakUser, RoleMatchingMode, Roles, User } from 'nestjs-keycloak-admin';
 
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { CreateUserRoleDto } from './dtos/create-user-role.dto';
-import { DeleteUserRoleDto } from './dtos/delete-user-role.dto';
 import { UserRoleService } from './user-role.service';
+import { SortParams } from '../typings/query.typings';
+import { errorToPlainObject } from '../utils/error.helper';
+import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
+import { ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
 
 @ApiBearerAuth()
 @ApiTags('user-role')
@@ -16,20 +29,75 @@ export class UserRoleController {
         private readonly userRoleService: UserRoleService,
     ) {}
 
+    @Get('/')
+    async findAll(
+        @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
+        @Query('limit', new DefaultValuePipe(0), ParseIntPipe, ParseLimitParamPipe) limit: number,
+        @Query('sort', new ParseSortPipe()) sort: SortParams[],
+    ) {
+        try {
+            return this.userRoleService.findAndCountAll({ page, limit, sort });
+        } catch (error) {
+            this.logger.error(
+                `UserRoleController - failed to get user-roles, ${(error as Error).message}`,
+                {
+                    error: errorToPlainObject(error as Error),
+                },
+            );
+            throw error;
+        }
+    }
+
     @Get('/:id')
-    @Roles({ roles: ['admin'], mode: RoleMatchingMode.ALL })
-    async findOne(@Param('id') userId: string) {
-        return this.userRoleService.find(userId);
+    async findOne(@Param('id') userRoleId: string) {
+        try {
+            const user = await this.userRoleService.find(userRoleId);
+
+            if (!user) {
+                throw new NotFoundException();
+            }
+
+            return user;
+        } catch (error) {
+            this.logger.error(
+                `UserRoleController - failed to get user-role, ${(error as Error).message}`,
+                {
+                    error: errorToPlainObject(error as Error),
+                },
+            );
+            throw error;
+        }
     }
 
     @Post('/')
-    async create(@User() user: KeycloakUser, @Body() createUserRoleDto: CreateUserRoleDto) {
-        return this.userRoleService.create(createUserRoleDto, user.email);
+    async create(@Body() createUserRoleDto: CreateUserRoleDto) {
+        try {
+            return this.userRoleService.create(createUserRoleDto);
+        } catch (error) {
+            this.logger.error(
+                `UserRoleController - failed to create user role, ${(error as Error).message}`,
+                {
+                    error: errorToPlainObject(error as Error),
+                },
+            );
+
+            throw error;
+        }
     }
 
     @Delete('/:id')
-    @Roles({ roles: ['admin'], mode: RoleMatchingMode.ALL })
-    async delete(@User() user: KeycloakUser, @Body() deleteUserRoleDto: DeleteUserRoleDto) {
-        return this.userRoleService.delete(deleteUserRoleDto, user.email);
+    async delete(@Param('id') userRoleId: string) {
+        try {
+            return this.userRoleService.delete(userRoleId);
+        } catch (error) {
+            this.logger.error(
+                `UserRoleController - failed to delete user role, ${(error as Error).message}`,
+                {
+                    error: errorToPlainObject(error as Error),
+                },
+            );
+
+            throw error;
+        }
     }
 }

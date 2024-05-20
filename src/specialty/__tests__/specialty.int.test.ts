@@ -4,11 +4,10 @@ import request from 'supertest';
 
 import { getTestingModule } from '../../core/testing';
 
-describe('UserTypeController', () => {
+describe('SpecialtyController', () => {
     let app: INestApplication;
 
     beforeAll(async () => {
-
         const testingModule = await getTestingModule();
 
         app = testingModule.createNestApplication();
@@ -22,120 +21,87 @@ describe('UserTypeController', () => {
     });
 
     describe('/', () => {
-        it('should get access groups', async () => {
-
-            return request(app.getHttpServer())
-                .get('/user-type')
+        it('should get specialties', async () => {
+            await request(app.getHttpServer())
+                .get('/specialty')
                 // .auth(token, { type: 'bearer' })
                 .expect(200)
                 .expect(({ body }) => {
                     expect(body).toEqual({
                         data: [
                             {
-                                createdBy: '5468a7d5-016d-53f1-a333-e0cbb90d4896',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                                 id: 'bb045ec3-e2e8-5707-8e4d-f8cfaf7195c1',
-                                title: 'Orange',
-                                updatedBy: null,
+                                name: 'Cardiology',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                             },
                             {
-                                createdBy: 'aa64ab80-6496-58cc-8be8-f305cbe8a75f',
-                                id: '86e54564-9a3f-5da8-88de-3c8cfa5e4901',
-                                title: 'Bouygues',
-                                updatedBy: null,
-                            },
-                            {
-                                createdBy: 'aa64ab80-6496-58cc-8be8-f305cbe8a75f',
-                                id: 'fd3e21a7-cebe-5e06-8a80-7336fa86fcea',
-                                title: 'SNCF',
-                                updatedBy: null,
-                            },
-                            {
-                                createdBy: '5468a7d5-016d-53f1-a333-e0cbb90d4896',
-                                id: 'e0ccb232-dc46-5e73-a6f0-d1c88eeb4191',
-                                title: 'Galéries Lafayette',
-                                updatedBy: null,
-                            },
-                            {
-                                createdBy: '5468a7d5-016d-53f1-a333-e0cbb90d4896',
-                                id: 'f451c29c-f7d5-5d07-88d1-c29e2da82ec1',
-                                title: 'Décathlon',
-                                updatedBy: null,
-                            },
-                            {
-                                createdBy: '5468a7d5-016d-53f1-a333-e0cbb90d4896',
-                                id: '1257cc1b-b77b-5f68-84e1-12ff402bb751',
-                                title: 'Jako',
-                                updatedBy: null,
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                id: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
+                                name: 'Dermatology',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                             },
                         ],
-                        total: 6,
+                        total: 2,
                     });
                 });
         });
 
-        it('should get an access group', async () => {
-
-            return request(app.getHttpServer())
-                .get('/user-type/bb045ec3-e2e8-5707-8e4d-f8cfaf7195c1')
+        it('should get a specialty', async () => {
+            await request(app.getHttpServer())
+                .get('/specialty/bb045ec3-e2e8-5707-8e4d-f8cfaf7195c1')
                 // .auth(token, { type: 'bearer' })
                 .expect(200)
                 .expect(({ body }) => {
                     expect(body).toEqual({
-                        createdBy: '5468a7d5-016d-53f1-a333-e0cbb90d4896',
+                        createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                         id: 'bb045ec3-e2e8-5707-8e4d-f8cfaf7195c1',
-                        title: 'Orange',
-                        updatedBy: null,
+                        name: 'Cardiology',
+                        updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                     });
                 });
         });
 
-        it('should create an access group', async () => {
-
-            return request(app.getHttpServer())
-                .post('/user-type')
+        it('should create a specialty', async () => {
+            await request(app.getHttpServer())
+                .post('/specialty')
                 // .auth(token, { type: 'bearer' })
                 .send({
-                    title: 'PSG',
+                    name: 'Genecology',
                 })
                 .expect(201)
                 .expect(({ body }) => {
-                    expect(body).toMatchObject({
-                        createdBy: 'aa64ab80-6496-58cc-8be8-f305cbe8a75f',
-                        title: 'PSG',
-                        updatedBy: null,
-                    });
+                    expect(body).toMatchObject({});
                 });
         });
 
-        it('should update an access group', async () => {
-
-            return request(app.getHttpServer())
-                .put('/user-type/bb045ec3-e2e8-5707-8e4d-f8cfaf7195c1')
+        it('should update a specialty', async () => {
+            await request(app.getHttpServer())
+                .put('/specialty/e47e3b25-5399-4272-ab9b-c87c11d20177')
                 // .auth(token, { type: 'bearer' })
                 .send({
-                    id: 'bb045ec3-e2e8-5707-8e4d-f8cfaf7195c1',
-                    title: 'updated.title',
+                    id: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
+                    name: 'updated.title',
                 })
                 .expect(200)
                 .expect(({ body }) => {
                     expect(body).toMatchObject({
-                        id: 'bb045ec3-e2e8-5707-8e4d-f8cfaf7195c1',
-                        title: 'updated.title',
+                        id: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
+                        name: 'updated.title',
                     });
                 });
         });
 
-        it('should delete an access group', async () => {
-
-            return request(app.getHttpServer())
-                .delete('/user-type/bb045ec3-e2e8-5707-8e4d-f8cfaf7195c1')
+        it('should delete a specialty', async () => {
+            await request(app.getHttpServer())
+                .delete('/specialty/e47e3b25-5399-4272-ab9b-c87c11d20177')
                 // .auth(token, { type: 'bearer' })
                 .expect(200);
         });
 
         it('should return "Not Found" when passing an ID which is absent from the DB', async () => {
             await request(app.getHttpServer())
-                .get('/user-type/b96567d7-a698-4fdc-8ea4-8eed850824e6')
+                .get('/specialty/b96567d7-a698-4fdc-8ea4-8eed850824e6')
                 // .auth(token, { type: 'bearer' })
                 .expect(404)
                 .expect(({ body }) => {
@@ -143,16 +109,15 @@ describe('UserTypeController', () => {
                         error: expect.objectContaining({
                             code: 404,
                             message: 'Not Found',
-                            path: '/user-type/b96567d7-a698-4fdc-8ea4-8eed850824e6',
+                            path: '/specialty/b96567d7-a698-4fdc-8ea4-8eed850824e6',
                         }),
                     });
                 });
         });
 
         it('should return "Bad Request" with an incorrect ID', async () => {
-
             await request(app.getHttpServer())
-                .get('/user-type/undefined')
+                .get('/specialty/undefined')
                 // .auth(token, { type: 'bearer' })
                 .expect(400)
                 .expect(({ body }) => {
@@ -160,7 +125,7 @@ describe('UserTypeController', () => {
                         error: expect.objectContaining({
                             code: 400,
                             message: 'invalid input syntax for type uuid: "undefined"',
-                            path: '/user-type/undefined',
+                            path: '/specialty/undefined',
                         }),
                     });
                 });

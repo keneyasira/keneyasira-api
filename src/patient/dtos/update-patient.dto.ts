@@ -7,9 +7,10 @@ export interface UpdatePatientPayload extends UpdatePatientDto {
     path?: string | null;
 }
 export class UpdatePatientDto extends PartialType(CreatePatientDto) {
+
     @ApiProperty({
-        example: 'ba606254-e8df-4d5a-9e99-f14fb5871253',
-        description: 'id of the category',
+        example: '1999-01-01',
+        description: 'id of the patient',
     })
     @IsNotEmpty()
     id: string;

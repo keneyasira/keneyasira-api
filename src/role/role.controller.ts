@@ -18,8 +18,9 @@ import { ApplicationLoggerService } from '../core/logger/application.logger.serv
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
 import { CreateRoleDto } from './dtos/create-role.dto';
-import { UpdateRoleDto } from './dtos/update-role.dto';
 import { RoleService } from './role.service';
+import { ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
+import { SortParams } from '../typings/query.typings';
 
 @ApiBearerAuth()
 @ApiTags('role')
@@ -34,8 +35,17 @@ export class RoleController {
     async findAll(
         @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
         @Query('limit', new DefaultValuePipe(0), ParseIntPipe, ParseLimitParamPipe) limit: number,
+        @Query('sort', new ParseSortPipe()) sort: SortParams[],
+
     ) {
-        return this.roleService.findAndCountAll({ page, limit });
+        try {
+            return this.roleService.findAndCountAll({ page, limit, sort });
+        } catch (error) {
+            this.logger.error(`RoleController - failed to get roles, ${(error as Error).message}`, {
+                error: errorToPlainObject(error as Error),
+            });
+            throw error;
+        }
     }
 
     @Get('/:id')
@@ -49,7 +59,7 @@ export class RoleController {
 
             return role;
         } catch (error) {
-            this.logger.error(`RoleController - failed to get user, ${(error as Error).message}`, {
+            this.logger.error(`RoleController - failed to get role, ${(error as Error).message}`, {
                 error: errorToPlainObject(error as Error),
             });
             throw error;
@@ -59,18 +69,6 @@ export class RoleController {
     @Post('/')
     async create(@Body() createRoleDto: CreateRoleDto) {
         return this.roleService.create(createRoleDto);
-    }
-
-    @Put('/:id')
-    async update(
-        @Body() updateRoleDto: UpdateRoleDto,
-        @Param('id') userId: string,
-    ) {
-        if (userId !== updateRoleDto.id) {
-            throw new BadRequestException('Mismatching identifiers');
-        }
-
-        return this.roleService.update(updateRoleDto);
     }
 
     @Delete('/:id')

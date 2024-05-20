@@ -7,7 +7,7 @@ module.exports = {
         email varchar NOT NULL,
         first_name varchar NOT NULL,
         last_name varchar NOT NULL,
-        phone int NOT NULL,
+        phone varchar(20) NOT NULL,
         created_by uuid NULL,
         updated_by uuid NULL,
         created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
@@ -24,6 +24,7 @@ module.exports = {
     CREATE TABLE IF NOT EXISTS "role" (
         id uuid NOT NULL DEFAULT uuid_generate_v4(),
         name varchar NOT NULL,
+        description varchar NOT NULL,
         created_by uuid NULL,
         updated_by uuid NULL,
         created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
@@ -37,10 +38,10 @@ module.exports = {
     );
 
 
-    CREATE TABLE IF NOT EXISTS "user_has_role" (
+    CREATE TABLE IF NOT EXISTS "user_role" (
         id uuid NOT NULL DEFAULT uuid_generate_v4(),
-        user_id uuid NOT NULL
-        role_id uuid NOT NULL
+        user_id uuid NOT NULL,
+        role_id uuid NOT NULL,
         created_by uuid NULL,
         updated_by uuid NULL,
         created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
@@ -57,9 +58,10 @@ module.exports = {
 
     CREATE TABLE IF NOT EXISTS patient (
         id uuid NOT NULL DEFAULT uuid_generate_v4(),
+        birth_date date NOT NULL,
         user_id uuid NOT NULL,
-        created_by uuid NOT NULL,
-        updated_by uuid NOT NULL,
+        created_by uuid NULL,
+        updated_by uuid NULL,
         created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
         updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
         deleted_at timestamptz NULL,
@@ -74,8 +76,8 @@ module.exports = {
     CREATE TABLE IF NOT EXISTS specialty (
         id uuid NOT NULL DEFAULT uuid_generate_v4(),
         name varchar NOT NULL,
-        created_by uuid NOT NULL,
-        updated_by uuid NOT NULL,
+        created_by uuid NULL,
+        updated_by uuid NULL,
         created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
         updated_at timestamptz  NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
         deleted_at timestamptz NULL,
@@ -86,45 +88,12 @@ module.exports = {
         CONSTRAINT deleted_by_fk FOREIGN KEY (deleted_by) REFERENCES "user"(id) ON DELETE CASCADE
     );
 
-    CREATE TABLE IF NOT EXISTS secretary (
-        id uuid NOT NULL DEFAULT uuid_generate_v4(),
-        user_id uuid NOT NULL,
-        created_by uuid NOT NULL,
-        updated_by uuid NOT NULL,
-        created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-        updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-        deleted_at timestamptz NULL,
-        deleted_by uuid NULL,
-        CONSTRAINT "secretary_pk" PRIMARY KEY (id),
-        CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
-        CONSTRAINT created_by_fk FOREIGN KEY (created_by) REFERENCES "user"(id) ON DELETE CASCADE,
-        CONSTRAINT updated_by_fk FOREIGN KEY (updated_by) REFERENCES "user"(id) ON DELETE CASCADE,
-        CONSTRAINT deleted_by_fk FOREIGN KEY (deleted_by) REFERENCES "user"(id) ON DELETE CASCADE
-    );
-
-
-    CREATE TABLE IF NOT EXISTS admin (
-        id uuid NOT NULL DEFAULT uuid_generate_v4(),
-        user_id uuid NOT NULL,
-        created_by uuid NOT NULL,
-        updated_by uuid NOT NULL,
-        created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-        updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-        deleted_at timestamptz NULL,
-        deleted_by uuid NULL,
-        CONSTRAINT "admin_pk" PRIMARY KEY (id),
-        CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
-        CONSTRAINT created_by_fk FOREIGN KEY (created_by) REFERENCES "user"(id) ON DELETE CASCADE,
-        CONSTRAINT updated_by_fk FOREIGN KEY (updated_by) REFERENCES "user"(id) ON DELETE CASCADE,
-        CONSTRAINT deleted_by_fk FOREIGN KEY (deleted_by) REFERENCES "user"(id) ON DELETE CASCADE
-    );
-
 
     CREATE TABLE IF NOT EXISTS practician (
         id uuid NOT NULL DEFAULT uuid_generate_v4(),
         user_id uuid NOT NULL,
-        created_by uuid NOT NULL,
-        updated_by uuid NOT NULL,
+        created_by uuid NULL,
+        updated_by uuid NULL,
         created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
         updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
         deleted_at timestamptz NULL,
@@ -141,10 +110,10 @@ module.exports = {
         id uuid NOT NULL DEFAULT uuid_generate_v4(),
         practician_id uuid NOT NULL,
         specialty_id uuid NOT NULL,
-        created_by uuid NOT NULL,
-        updated_by uuid NOT NULL,
+        created_by uuid NULL,
+        updated_by uuid NULL,
         created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-        updated_at timestamptz NULL,
+        updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
         deleted_at timestamptz NULL,
         deleted_by uuid NULL,
         CONSTRAINT "practician_has_specialty_pk" PRIMARY KEY (id),
@@ -160,8 +129,8 @@ module.exports = {
     CREATE TABLE IF NOT EXISTS establishment (
         id uuid NOT NULL DEFAULT uuid_generate_v4(),
         name varchar NOT NULL,
-        created_by uuid NOT NULL,
-        updated_by uuid NOT NULL,
+        created_by uuid NULL,
+        updated_by uuid NULL,
         created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
         updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
         deleted_at timestamptz NULL,
@@ -177,10 +146,10 @@ module.exports = {
         id uuid NOT NULL DEFAULT uuid_generate_v4(),
         establishment_id uuid NOT NULL,
         practician_id uuid NOT NULL,
-        created_by uuid NOT NULL,
-        updated_by uuid NOT NULL,
+        created_by uuid NULL,
+        updated_by uuid NULL,
         created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-        updated_at timestamptz NULL,
+        updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
         deleted_at timestamptz NULL,
         deleted_by uuid NULL,
         CONSTRAINT "establishment_has_practician_pk" PRIMARY KEY (id),
@@ -195,10 +164,10 @@ module.exports = {
         id uuid NOT NULL DEFAULT uuid_generate_v4(),
         establishment_id uuid NOT NULL,
         specialty_id uuid NOT NULL,
-        created_by uuid NOT NULL,
-        updated_by uuid NOT NULL,
+        created_by uuid NULL,
+        updated_by uuid NULL,
         created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-        updated_at timestamptz NULL,
+        updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
         deleted_at timestamptz NULL,
         deleted_by uuid NULL,
         CONSTRAINT "establishment_has_specialty_pk" PRIMARY KEY (id),
@@ -209,15 +178,16 @@ module.exports = {
         CONSTRAINT deleted_by_fk FOREIGN KEY (deleted_by) REFERENCES "user"(id) ON DELETE CASCADE
     );
 
+
     CREATE TABLE  IF NOT EXISTS time_slot (
         id uuid NOT NULL DEFAULT uuid_generate_v4(),
         available boolean NOT NULL,
         practician_id uuid NOT NULL,
         establishment_id uuid NOT NULL,
-        start_date timestampz NOT NULL,
-        end_date timestampz NOT NULL,
-        created_by uuid NOT NULL,
-        updated_by uuid NULL NOT NULL,
+        start_date timestamptz NOT NULL,
+        end_date timestamptz NOT NULL,
+        created_by uuid NULL,
+        updated_by uuid NULL,
         created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
         updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
         deleted_at timestamptz NULL,
@@ -228,9 +198,22 @@ module.exports = {
         CONSTRAINT created_by_fk FOREIGN KEY (created_by) REFERENCES "user"(id) ON DELETE CASCADE,
         CONSTRAINT updated_by_fk FOREIGN KEY (updated_by) REFERENCES "user"(id) ON DELETE CASCADE,
         CONSTRAINT deleted_by_fk FOREIGN KEY (deleted_by) REFERENCES "user"(id) ON DELETE CASCADE
-
     );
 
+    CREATE TABLE IF NOT EXISTS appointment_status (
+        id uuid NOT NULL DEFAULT uuid_generate_v4(),
+        name varchar NOT NULL,
+        created_by uuid NULL,
+        updated_by uuid NULL,
+        created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+        updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+        deleted_at timestamptz NULL,
+        deleted_by uuid NULL,
+        CONSTRAINT "appointment_status_pk" PRIMARY KEY (id),
+        CONSTRAINT created_by_fk FOREIGN KEY (created_by) REFERENCES "user"(id) ON DELETE CASCADE,
+        CONSTRAINT updated_by_fk FOREIGN KEY (updated_by) REFERENCES "user"(id) ON DELETE CASCADE,
+        CONSTRAINT deleted_by_fk FOREIGN KEY (deleted_by) REFERENCES "user"(id) ON DELETE CASCADE
+    );
 
     CREATE TABLE IF NOT EXISTS appointment (
         id uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -238,9 +221,9 @@ module.exports = {
         practician_id uuid NOT NULL,
         patient_id uuid NOT NULL,
         appointment_status_id uuid NOT NULL,
-        timeslot_id uuid NOT NULL,
-        created_by uuid NOT NULL,
-        updated_by uuid NOT NULL,
+        time_slot_id uuid NOT NULL,
+        created_by uuid NULL,
+        updated_by uuid NULL,
         created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
         updated_at timestamptz NULL,
         deleted_at timestamptz NULL,
@@ -254,21 +237,6 @@ module.exports = {
         CONSTRAINT updated_by_fk FOREIGN KEY (updated_by) REFERENCES "user"(id) ON DELETE CASCADE,
         CONSTRAINT deleted_by_fk FOREIGN KEY (deleted_by) REFERENCES "user"(id) ON DELETE CASCADE
 
-    );
-    
-    CREATE TABLE IF NOT EXISTS appointment_status (
-        id uuid NOT NULL DEFAULT uuid_generate_v4(),
-        name varchar NOT NULL,
-        created_by uuid NOT NULL,
-        updated_by uuid NOT NULL,
-        created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-        updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-        deleted_at timestamptz NULL,
-        deleted_by uuid NULL,
-        CONSTRAINT "appointment_status_pk" PRIMARY KEY (id),
-        CONSTRAINT created_by_fk FOREIGN KEY (created_by) REFERENCES "user"(id) ON DELETE CASCADE,
-        CONSTRAINT updated_by_fk FOREIGN KEY (updated_by) REFERENCES "user"(id) ON DELETE CASCADE,
-        CONSTRAINT deleted_by_fk FOREIGN KEY (deleted_by) REFERENCES "user"(id) ON DELETE CASCADE
     );
     
     `),

@@ -2,7 +2,7 @@ import { BaseDatabaseConfig, BaseLoggerConfig, Config } from './default';
 
 class TestDatabaseConfig extends BaseDatabaseConfig {
     host = process.env.POSTGRES_HOST || 'localhost';
-    database = 'smartfit_api_test';
+    database = 'keneyasira_api_test';
     logging = console.log;
 }
 

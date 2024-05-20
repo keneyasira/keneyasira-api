@@ -23,8 +23,8 @@ import { CreateSpecialtyDto } from './dtos/create-specialty.dto';
 import { UpdateSpecialtyDto } from './dtos/update-specialty.dto';
 
 @ApiBearerAuth()
-@ApiTags('access-group')
-@Controller('access-group')
+@ApiTags('specialty')
+@Controller('specialty')
 export class SpecialtyController {
     constructor(
         private readonly logger: ApplicationLoggerService,
@@ -41,7 +41,7 @@ export class SpecialtyController {
             return this.SpecialtyService.findAndCountAll({ page, limit, sort });
         } catch (error) {
             this.logger.error(
-                `SpecialtyController - failed to get access groups, ${(error as Error).message}`,
+                `SpecialtyController - failed to get specialties, ${(error as Error).message}`,
                 {
                     error: errorToPlainObject(error as Error),
                 },
@@ -71,7 +71,7 @@ export class SpecialtyController {
             return this.SpecialtyService.create(createSpecialtyDto);
         } catch (error) {
             this.logger.error(
-                `SpecialtyController - failed to create access group, ${
+                `SpecialtyController - failed to create specialty, ${
                     (error as Error).message
                 }`,
                 {
@@ -96,7 +96,7 @@ export class SpecialtyController {
             return this.SpecialtyService.update(updateSpecialtyDto);
         } catch (error) {
             this.logger.error(
-                `SpecialtyController - failed to update access group, ${
+                `SpecialtyController - failed to update specialty, ${
                     (error as Error).message
                 }`,
                 {
@@ -114,7 +114,7 @@ export class SpecialtyController {
             return this.SpecialtyService.delete(SpecialtyId);
         } catch (error) {
             this.logger.error(
-                `SpecialtyController - failed to delete access-group, ${
+                `SpecialtyController - failed to delete specialty, ${
                     (error as Error).message
                 }`,
                 {

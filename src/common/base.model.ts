@@ -21,7 +21,7 @@ export interface BaseAttributes {
     deletedBy?: string;
 }
 
-export class BaseModel<Attributes, CreationAttributes> extends Model<
+export class BaseModel<Attributes extends {}, CreationAttributes extends {}> extends Model<
     Attributes,
     CreationAttributes
 > {

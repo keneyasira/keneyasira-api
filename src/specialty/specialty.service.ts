@@ -43,46 +43,30 @@ export class SpecialtyService {
     }
 
     async create(
-        createSpecialtyDto: CreateSpecialtyDto,
-        connectedUserEmail: string,
+        createSpecialtyDto: CreateSpecialtyDto
     ): Promise<SpecialtyAttributes> {
-        const connectedUser = await User.findOne({
-            where: {
-                email: connectedUserEmail,
-            },
-            raw: true,
-        });
 
         const createdSpecialty = await Specialty.create(
             {
                 ...createSpecialtyDto,
-                createdBy: connectedUser?.id,
             },
             { raw: true },
         );
 
         const createdSpecialtyValue = createdSpecialty.toJSON();
 
-        this.logger.info(`Created access group`, { createdSpecialty: createdSpecialtyValue });
+        this.logger.info(`Created specialty`, { createdSpecialty: createdSpecialtyValue });
 
         return createdSpecialtyValue;
     }
 
     async update(
-        updateSpecialtyDto: UpdateSpecialtyDto,
-        connectedUserEmail: string,
+        updateSpecialtyDto: UpdateSpecialtyDto
     ): Promise<SpecialtyAttributes> {
-        const connectedUser = await User.findOne({
-            where: {
-                email: connectedUserEmail,
-            },
-            raw: true,
-        });
 
         const [affectedRows, [updatedSpecialty]] = await Specialty.update(
             {
                 ...updateSpecialtyDto,
-                updatedBy: connectedUser?.id,
             },
             {
                 where: {
@@ -92,39 +76,22 @@ export class SpecialtyService {
             },
         );
 
-        const updateSpecialtyValue = updatedSpecialty.toJSON();
+        const updatedSpecialtyValue = updatedSpecialty.toJSON();
 
-        this.logger.info(`Updated (${affectedRows}) access group`, {
-            updatedSpecialty: updateSpecialtyValue,
+        this.logger.info(`Updated (${affectedRows}) specialty`, {
+            updatedSpecialty: updatedSpecialtyValue,
         });
 
-        return updateSpecialtyValue;
+        return updatedSpecialtyValue;
     }
 
-    async delete(SpecialtyToDeleteId: string, connectedUserEmail: string): Promise<number> {
-        const connectedUser = await User.findOne({
-            where: {
-                email: connectedUserEmail,
-            },
-            raw: true,
-        });
-
+    async delete(specialtyToDeleteId: string): Promise<number> {
         const deletedCount = await Specialty.destroy({
-            where: { id: SpecialtyToDeleteId },
+            where: { id: specialtyToDeleteId },
         });
-
-        await Specialty.update(
-            {
-                deletedBy: connectedUser?.id,
-            },
-            {
-                where: { id: SpecialtyToDeleteId },
-                paranoid: false,
-            },
-        );
 
         this.logger.info(`deleted (${deletedCount}) specialty(ies)`, {
-            imageId: SpecialtyToDeleteId,
+            specialtyToDeleteId,
         });
 
         return deletedCount;

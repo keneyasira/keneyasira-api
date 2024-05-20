@@ -40,16 +40,6 @@ async function bootstrap() {
 
     Swagger.createDocument(app);
 
-    app.use(
-        ['/webhook/keycloak'],
-        basicAuth({
-            challenge: true,
-            users: {
-                [config.keycloak.webhookUsername]: config.keycloak.webhookPassword,
-            },
-        }),
-    );
-
     await app.listen(config.port);
 }
 

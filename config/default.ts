@@ -1,5 +1,4 @@
 import { ValidateNested } from 'class-validator';
-import { KeycloakConfig } from 'keycloak-connect';
 import { Dialect, Options } from 'sequelize/dist';
 
 export class BaseDatabaseConfig implements Options {
@@ -13,7 +12,7 @@ export class BaseDatabaseConfig implements Options {
     host = 'localhost';
     username = process.env.POSTGRES_HOST || 'postgres';
     password = process.env.POSTGRES_PASSWORD || 'postgres';
-    database = process.env.POSTGRES_DB || 'smartfit_api_development';
+    database = process.env.POSTGRES_DB || 'keneyasira_api_development';
     port = Number(process.env.POSTGRES_PORT) || 5432;
     keepConnectionAlive = true;
     // pool options from https://node-postgres.com/api/pool
@@ -41,7 +40,7 @@ export class BaseRateLimitConfig {
 }
 
 export class Config {
-    name = 'smartfit-api';
+    name = 'keneyasira-api';
     version = 'dev';
     nodeEnv = 'development';
     env = 'development';

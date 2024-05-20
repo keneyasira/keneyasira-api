@@ -1,0 +1,7 @@
+.dockerignore
+.DS_Store
+.env.*
+.eslint*
+.prettier*
+**/__tests__/
+node_modules/

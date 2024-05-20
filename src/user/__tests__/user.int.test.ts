@@ -3,18 +3,11 @@ import { execSync } from 'child_process';
 import request from 'supertest';
 
 import { getTestingModule } from '../../core/testing';
-import {
-    cleanupKeycloakMock,
-    getMockInstance,
-    initiliazeKeycloakMock,
-} from '../../utils/keycloak-mock.setup';
 
 describe('UserController', () => {
     let app: INestApplication;
 
     beforeAll(async () => {
-    
-
         const testingModule = await getTestingModule();
 
         app = testingModule.createNestApplication();
@@ -29,7 +22,6 @@ describe('UserController', () => {
 
     describe('/', () => {
         it('should delete a user', async () => {
-
             // create user first
             const id = await request(app.getHttpServer())
                 .post('/user')
@@ -38,20 +30,21 @@ describe('UserController', () => {
                     email: 'todelete@todelete.com',
                     firstName: 'todelete',
                     lastName: 'todelete',
+                    phone: '123',
+                    password: 'secret',
                 })
                 .then(({ body }) => {
                     return body.id;
                 });
 
-            return request(app.getHttpServer())
+            await request(app.getHttpServer())
                 .delete(`/user/${id}`)
                 // .auth(token, { type: 'bearer' })
                 .expect(200);
         });
 
         it('should get users', async () => {
-
-            return request(app.getHttpServer())
+            await request(app.getHttpServer())
                 .get('/user')
                 // .auth(token, { type: 'bearer' })
                 .expect(200)
@@ -59,94 +52,70 @@ describe('UserController', () => {
                     expect(body).toEqual({
                         data: [
                             {
-                                createdBy: '5468a7d5-016d-53f1-a333-e0cbb90d4896',
-                                email: 'abdoulaye.traore@keneyasira.com',
-                                phone: '+22379131415',
-                                firstName: 'Abdoulaye',
-                                id: 'aa64ab80-6496-58cc-8be8-f305cbe8a75f',
-                                lastName: 'Traore',
-                                updatedBy: null,
-                            },
-                            {
-                                createdBy: '5468a7d5-016d-53f1-a333-e0cbb90d4896',
-                                email: 'sidi.faskoye@keneyasira.com',
-                                phone: '+22379131415',
-                                firstName: 'Sidi',
-                                id: '5468a7d5-016d-53f1-a333-e0cbb90d4896',
-                                lastName: 'Faskoye',
-                                updatedBy: null,
-                            },
-                            {
-                                createdBy: '5468a7d5-016d-53f1-a333-e0cbb90d4896',
-                                email: 'balobo.maiga@keneyasira.com',
-                                phone: '+22379131415',
-                                firstName: 'Balobo',
-                                id: 'b659287c-55c9-5b35-a3ff-a92ee68ac2f5',
-                                lastName: 'Maiga',
-                                updatedBy: null,
-                            },
-                            {
-                                createdBy: '5468a7d5-016d-53f1-a333-e0cbb90d4896',
-                                email: 'administrator@keneyasira.com',
-                                phone: '+22379131415',
+                                createdBy: null,
+                                email: 'admin@keneyasira.com',
                                 firstName: 'Admin',
-                                id: 'fc15b582-7d11-5726-952d-4ade7ddddfa9',
-                                lastName: 'Doctor',
+                                id: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                lastName: 'Admin',
+                                phone: '1234567890',
                                 updatedBy: null,
                             },
                             {
-                                createdBy: '5468a7d5-016d-53f1-a333-e0cbb90d4896',
-                                email: 'saidou.toure@keneyasira.com',
-                                phone: '+22379131415',
-                                firstName: 'Saidou',
-                                id: '5ffd2cde-53fb-5155-9b1f-f2955d29ba4d',
-                                lastName: 'Toure',
+                                createdBy: null,
+                                email: 'practician@keneyasira.com',
+                                firstName: 'Doctor',
+                                id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                lastName: 'Doctor',
+                                phone: '9876543210',
+                                updatedBy: null,
+                            },
+                            {
+                                createdBy: null,
+                                email: 'patient@keneyasira.com',
+                                firstName: 'Patient',
+                                id: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                                lastName: 'Patient',
+                                phone: '5551234567',
                                 updatedBy: null,
                             },
                         ],
-                        total: 5,
+                        total: 3,
                     });
                 });
         });
 
         it('should get a user', async () => {
-            const kmock = getMockInstance();
-            const user = kmock.database.users[1];
-            const token = kmock.createBearerToken(user.profile.id);
-
-            return request(app.getHttpServer())
-                .get('/user/aa64ab80-6496-58cc-8be8-f305cbe8a75f')
+            await request(app.getHttpServer())
+                .get('/user/d7a05755-62d3-4a8e-9ea4-035d9fafd924')
                 // .auth(token, { type: 'bearer' })
                 .expect(200)
                 .expect(({ body }) => {
                     expect(body).toEqual({
-                        createdBy: '5468a7d5-016d-53f1-a333-e0cbb90d4896',
-                        email: 'abdoulaye.traore@smartfit.com',
-                        firstName: 'Abdoulaye',
-                        id: 'aa64ab80-6496-58cc-8be8-f305cbe8a75f',
-                        lastName: 'Traore',
+                        createdBy: null,
+                        email: 'admin@keneyasira.com',
+                        firstName: 'Admin',
+                        id: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                        lastName: 'Admin',
+                        phone: '1234567890',
                         updatedBy: null,
                     });
                 });
         });
 
         it('should create a user', async () => {
-            const kmock = getMockInstance();
-            const user = kmock.database.users[1];
-            const token = kmock.createBearerToken(user.profile.id);
-
-            return request(app.getHttpServer())
+            await request(app.getHttpServer())
                 .post('/user')
                 // .auth(token, { type: 'bearer' })
                 .send({
                     email: 'toto@toto.com',
                     firstName: 'firstName',
                     lastName: 'lastName',
+                    phone: '123',
+                    password: 'secret',
                 })
                 .expect(201)
                 .expect(({ body }) => {
                     expect(body).toMatchObject({
-                        createdBy: 'aa64ab80-6496-58cc-8be8-f305cbe8a75f',
                         email: 'toto@toto.com',
                         firstName: 'firstName',
                         lastName: 'lastName',
@@ -155,10 +124,6 @@ describe('UserController', () => {
         });
 
         it('should update a user', async () => {
-            const kmock = getMockInstance();
-            const user = kmock.database.users[1];
-            const token = kmock.createBearerToken(user.profile.id);
-
             // create user first
             const id = await request(app.getHttpServer())
                 .post('/user')
@@ -167,12 +132,13 @@ describe('UserController', () => {
                     email: 'titi@titi.com',
                     firstName: 'titi',
                     lastName: 'titi',
+                    phone: '12345'
                 })
                 .then(({ body }) => {
                     return body.id;
                 });
 
-            return request(app.getHttpServer())
+            await request(app.getHttpServer())
                 .put(`/user/${id}`)
                 // .auth(token, { type: 'bearer' })
                 .send({
@@ -184,7 +150,6 @@ describe('UserController', () => {
                 .expect(({ body }) => {
                     expect(body).toMatchObject({
                         id,
-                        updatedBy: 'aa64ab80-6496-58cc-8be8-f305cbe8a75f',
                         firstName: 'firstName',
                         lastName: 'lastName',
                     });

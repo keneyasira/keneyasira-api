@@ -12,7 +12,6 @@ import {
     Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { KeycloakUser, Public, RoleMatchingMode, Roles, User } from 'nestjs-keycloak-admin';
 
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { SortParams } from '../typings/query.typings';
@@ -33,8 +32,6 @@ export class PatientController {
     ) {}
 
     @Get('/')
-    @Roles({ roles: ['admin'], mode: RoleMatchingMode.ALL })
-    @Public()
     async findAll(
         @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
         @Query('limit', new DefaultValuePipe(0), ParseIntPipe, ParseLimitParamPipe) limit: number,
@@ -44,7 +41,7 @@ export class PatientController {
             return this.patientService.findAndCountAll({ page, limit, sort });
         } catch (error) {
             this.logger.error(
-                `PatientController - failed to get categories, ${(error as Error).message}`,
+                `PatientController - failed to get patients, ${(error as Error).message}`,
                 {
                     error: errorToPlainObject(error as Error),
                 },
@@ -54,8 +51,6 @@ export class PatientController {
     }
 
     @Get('/:id')
-    @Public()
-    // @Roles({ roles: ['admin'], mode: RoleMatchingMode.ALL })
     async findOne(@Param('id') patientId: string) {
         try {
             return this.patientService.find(patientId);
@@ -71,9 +66,9 @@ export class PatientController {
     }
 
     @Post('/')
-    async create(@User() user: KeycloakUser, @Body() createPatientDto: CreatePatientDto) {
+    async create(@Body() createPatientDto: CreatePatientDto) {
         try {
-            return this.patientService.create(createPatientDto, user.email);
+            return this.patientService.create(createPatientDto);
         } catch (error) {
             this.logger.error(
                 `PatientController - failed to create patient, ${(error as Error).message}`,
@@ -87,18 +82,17 @@ export class PatientController {
     }
 
     @Put('/:id')
-    @Roles({ roles: ['admin'], mode: RoleMatchingMode.ALL })
     async update(
-        @User() user: KeycloakUser,
         @Body() updatePatientDto: UpdatePatientDto,
-        @Param('id') userId: string,
+        @Param('id') patientId: string,
     ) {
-        if (userId !== updatePatientDto.id) {
+
+        if (patientId !== updatePatientDto.id) {
             throw new BadRequestException('Mismatching identifiers');
         }
 
         try {
-            return this.patientService.update(updatePatientDto, user.email);
+            return this.patientService.update(updatePatientDto);
         } catch (error) {
             this.logger.error(
                 `PatientController - failed to update patient, ${(error as Error).message}`,
@@ -112,10 +106,9 @@ export class PatientController {
     }
 
     @Delete('/:id')
-    @Roles({ roles: ['admin'], mode: RoleMatchingMode.ALL })
-    async delete(@User() user: KeycloakUser, @Param('id') patientId: string) {
+    async delete(@Param('id') patientId: string) {
         try {
-            return this.patientService.delete(patientId, user.email);
+            return this.patientService.delete(patientId);
         } catch (error) {
             this.logger.error(
                 `PatientController - failed to delete patient, ${(error as Error).message}`,
