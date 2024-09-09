@@ -1,5 +1,5 @@
 import { ValidateNested } from 'class-validator';
-import { Dialect, Options } from 'sequelize/dist';
+import { Dialect, Options } from 'sequelize';
 
 export class BaseDatabaseConfig implements Options {
     define = {

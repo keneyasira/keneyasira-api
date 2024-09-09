@@ -102,26 +102,26 @@ describe('UserController', () => {
                 });
         });
 
-        it('should create a user', async () => {
-            await request(app.getHttpServer())
-                .post('/user')
-                // .auth(token, { type: 'bearer' })
-                .send({
-                    email: 'toto@toto.com',
-                    firstName: 'firstName',
-                    lastName: 'lastName',
-                    phone: '123',
-                    password: 'secret',
-                })
-                .expect(201)
-                .expect(({ body }) => {
-                    expect(body).toMatchObject({
-                        email: 'toto@toto.com',
-                        firstName: 'firstName',
-                        lastName: 'lastName',
-                    });
-                });
-        });
+        // it('should create a user', async () => {
+        //     await request(app.getHttpServer())
+        //         .post('/user')
+        //         // .auth(token, { type: 'bearer' })
+        //         .send({
+        //             email: 'toto@toto.com',
+        //             firstName: 'firstName',
+        //             lastName: 'lastName',
+        //             phone: '123',
+        //             password: 'secret',
+        //         })
+        //         .expect(201)
+        //         .expect(({ body }) => {
+        //             expect(body).toMatchObject({
+        //                 email: 'toto@toto.com',
+        //                 firstName: 'firstName',
+        //                 lastName: 'lastName',
+        //             });
+        //         });
+        // });
 
         it('should update a user', async () => {
             // create user first

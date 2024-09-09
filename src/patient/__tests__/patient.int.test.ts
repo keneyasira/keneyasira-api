@@ -24,7 +24,7 @@ describe('PatientController', () => {
         it('should get patients', async () => {
             return (
                 request(app.getHttpServer())
-                    .get('/patient/')
+                    .get('/patients/')
                     // .auth(token, { type: 'bearer' })
                     .expect(200)
                     .expect(({ body }) => {
@@ -56,7 +56,7 @@ describe('PatientController', () => {
         it('should get a patient', async () => {
             return (
                 request(app.getHttpServer())
-                    .get('/patient/632273cc-de99-4582-a440-752ba1f78766')
+                    .get('/patients/632273cc-de99-4582-a440-752ba1f78766')
                     // .auth(token, { type: 'bearer' })
                     .expect(200)
                     .expect(({ body }) => {
@@ -83,7 +83,7 @@ describe('PatientController', () => {
         it('should create a patient', async () => {
             return (
                 request(app.getHttpServer())
-                    .post('/patient')
+                    .post('/patients')
                     // .auth(token, { type: 'bearer' })
                     .send({
                         userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
@@ -111,7 +111,7 @@ describe('PatientController', () => {
         it('should update a patient', async () => {
             return (
                 request(app.getHttpServer())
-                    .put('/patient/632273cc-de99-4582-a440-752ba1f78766')
+                    .put('/patients/632273cc-de99-4582-a440-752ba1f78766')
                     // .auth(token, { type: 'bearer' })
                     .send({
                         id: '632273cc-de99-4582-a440-752ba1f78766',
@@ -142,7 +142,7 @@ describe('PatientController', () => {
         it('should delete a patient', async () => {
             return (
                 request(app.getHttpServer())
-                    .delete('/patient/632273cc-de99-4582-a440-752ba1f78766')
+                    .delete('/patients/632273cc-de99-4582-a440-752ba1f78766')
                     // .auth(token, { type: 'bearer' })
                     .expect(200)
             );
@@ -150,7 +150,7 @@ describe('PatientController', () => {
 
         it('should return "Not Found" when passing an ID which is absent from the DB', async () => {
             await request(app.getHttpServer())
-                .get('/patient/b96567d7-a698-4fdc-8ea4-8eed850824e6')
+                .get('/patients/b96567d7-a698-4fdc-8ea4-8eed850824e6')
                 // .auth(token, { type: 'bearer' })
                 .expect(404)
                 .expect(({ body }) => {
@@ -158,7 +158,7 @@ describe('PatientController', () => {
                         error: expect.objectContaining({
                             code: 404,
                             message: 'Not Found',
-                            path: '/patient/b96567d7-a698-4fdc-8ea4-8eed850824e6',
+                            path: '/patients/b96567d7-a698-4fdc-8ea4-8eed850824e6',
                         }),
                     });
                 });
@@ -166,7 +166,7 @@ describe('PatientController', () => {
 
         it('should return "Bad Request" with an incorrect ID', async () => {
             await request(app.getHttpServer())
-                .get('/patient/undefined')
+                .get('/patients/undefined')
                 // .auth(token, { type: 'bearer' })
                 .expect(400)
                 .expect(({ body }) => {
@@ -174,7 +174,7 @@ describe('PatientController', () => {
                         error: expect.objectContaining({
                             code: 400,
                             message: 'invalid input syntax for type uuid: "undefined"',
-                            path: '/patient/undefined',
+                            path: '/patients/undefined',
                         }),
                     });
                 });

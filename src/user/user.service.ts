@@ -38,7 +38,7 @@ export class UserService {
         });
 
         if (!user) {
-            throw new NotFoundException();
+            throw new NotFoundException('User not found');
         }
 
         return user;
@@ -62,9 +62,13 @@ export class UserService {
         return createdUserValue;
     }
 
-    async update(updateUserDto: UpdateUserDto) {
+    async update(updateUserDto: UpdateUserDto): Promise<UserAttributes> {
 
         const userToBeUpdated =  await User.findByPk(updateUserDto.id);
+
+        if (!userToBeUpdated) {
+            throw new NotFoundException('User not found');
+        }
 
         const [affectedRows, [updatedUser]] = await User.update(
             {
@@ -79,6 +83,10 @@ export class UserService {
             },
         );
 
+        if (!affectedRows) {
+            throw new NotFoundException('User not found');
+        }
+
         const updateUserValue = updatedUser.toJSON();
 
         this.logger.info(`UserService - Updated (${affectedRows}) user`, { updateUserValue });
@@ -86,17 +94,19 @@ export class UserService {
         return updateUserValue;
     }
 
-    async delete(userToDeleteId: string) {
+    async delete(userToDeleteId: string): Promise<void> {
 
         const deletedCount = await User.destroy({
             where: { id: userToDeleteId },
         });
 
+        if (!deletedCount) {
+            throw new NotFoundException('User not found')
+        }
+
         this.logger.info(`UserService - deleted (${deletedCount}) user`, {
             userId: userToDeleteId,
         });
-
-        return deletedCount;
     }
 
 }

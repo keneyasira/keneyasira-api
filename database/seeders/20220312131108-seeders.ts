@@ -162,6 +162,9 @@ export async function up(queryInterface: any) {
         {
             id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
             name: 'Point G',
+            address: 'Rue Kati, Bamako, Mali',
+            phone: '0022377141319',
+            email: 'pointg@keneyasira.com',
             created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             created_at: '2024-05-20 23:13:00',
@@ -170,6 +173,9 @@ export async function up(queryInterface: any) {
         {
             id: '90b93a53-4109-4182-aa28-d4f3af0b87bb',
             name: 'Gabriel Toure',
+            address: 'Av. Van Vollenhoven, Bamako, Mali',
+            phone: '0022377141319',
+            email: 'gabriel@keneyasira.com',
             created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             created_at: '2024-05-20 23:13:00',
@@ -264,6 +270,18 @@ export async function up(queryInterface: any) {
         {
             id: '56c63078-c32f-4d04-aa96-5e7815de1f98',
             available: false,
+            practician_id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+            establishment_id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+            start_date: `${year}-${month}-${day} 01:30:00.0`,
+            end_date: `${year}-${month}-${day} 02:30:00.0`,
+            created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            created_at: '2024-05-20 23:13:00',
+            updated_at: '2024-05-20 23:13:00',
+        },
+        {
+            id: '6a2cb23b-2882-4a02-81c9-ac2d9c72775f',
+            available: true,
             practician_id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
             establishment_id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
             start_date: `${year}-${month}-${day} 01:30:00.0`,

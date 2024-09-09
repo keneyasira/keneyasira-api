@@ -129,6 +129,9 @@ module.exports = {
     CREATE TABLE IF NOT EXISTS establishment (
         id uuid NOT NULL DEFAULT uuid_generate_v4(),
         name varchar NOT NULL,
+        phone varchar(20) NOT NULL,
+        email varchar NOT NULL,
+        address varchar NOT NULL,
         created_by uuid NULL,
         updated_by uuid NULL,
         created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),

@@ -18,7 +18,7 @@ export class UserRoleService {
     ): Promise<{ data: UserRoleAttributes[]; total: number }> {
         const offset = options?.limit && options.page ? options.limit * (options.page - 1) : 0;
 
-        const { rows, count: total } = await UserRole.findAndCountAll({
+        const { rows: data, count: total } = await UserRole.findAndCountAll({
             limit: options?.limit,
             offset,
             order: transformSortParamsToSequelizeFormat(options.sort),
@@ -30,101 +30,62 @@ export class UserRoleService {
                     model: Role,
                 },
             ],
+            raw: true,
         });
-
-        const data = rows.map((row) => row.toJSON());
 
         return { data, total };
     }
 
     async find(userRoleId: string) {
-        try {
-            const userRole = await UserRole.findOne({
-                where: {
-                    id: userRoleId,
-                },
-                include: [
-                    {
-                        model: User,
-                    },
-                    {
-                        model: Role,
-                    },
-                ],
-            });
-
-            if (!userRole) {
-                throw new NotFoundException();
-            }
-
-            return userRole.toJSON();
-        } catch (error) {
-            this.logger.error(
-                `UserRoleService - failed to get user-role, ${(error as Error).message}`,
+        const userRole = await UserRole.findOne({
+            where: {
+                id: userRoleId,
+            },
+            include: [
                 {
-                    error: errorToPlainObject(error as Error),
+                    model: User,
                 },
-            );
-            throw error;
+                {
+                    model: Role,
+                },
+            ],
+        });
+
+        if (!userRole) {
+            throw new NotFoundException();
         }
+
+        return userRole.get({ plain: true });
     }
 
     async create(createUserRoleDto: CreateUserRoleDto) {
-        try {
-            const createdUserRole = await UserRole.create({
-                ...createUserRoleDto,
-            });
+        const createdUserRole = (await UserRole.create(createUserRoleDto)).get({ plain: true });
 
-            const createdUserRoleValue = createdUserRole.toJSON();
-
-            this.logger.info(`UserRoleService - Created user-role`, {
-                createdUserRole: createdUserRoleValue,
-            });
-
-            const userRole = await UserRole.findByPk(createdUserRoleValue.id, {
-                include: [
-                    {
-                        model: User,
-                    },
-                    {
-                        model: Role,
-                    },
-                ],
-            });
-
-            return userRole?.toJSON();
-        } catch (error) {
-            this.logger.error(
-                `UserRoleService - failed to create user-role, ${(error as Error).message}`,
-                {
-                    error: errorToPlainObject(error as Error),
-                },
-            );
-
-            throw error;
+        if (!createdUserRole) {
+            throw new Error();
         }
+        this.logger.info(`UserRoleService - Created user-role`, {
+            createdUserRole,
+        });
+
+        const userRole = await UserRole.findByPk(createdUserRole.id, {
+            include: [{ model: User }, { model: Role }],
+        });
+
+        return userRole?.get({ plain: true });
     }
 
     async delete(userRoleToDeleteId: string) {
-        try {
-            const deletedCount = await UserRole.destroy({
-                where: { id: userRoleToDeleteId },
-            });
+        const deletedCount = await UserRole.destroy({
+            where: { id: userRoleToDeleteId },
+        });
 
-            this.logger.info(`UserRoleService - deleted (${deletedCount}) userRole`, {
-                userRoleToDeleteId,
-            });
-
-            return deletedCount;
-        } catch (error) {
-            this.logger.error(
-                `UserRoleService - failed to delete user-role, ${(error as Error).message}`,
-                {
-                    error: errorToPlainObject(error as Error),
-                },
-            );
-
-            throw error;
+        if (!deletedCount) {
+            throw new NotFoundException('User role not found');
         }
+
+        this.logger.info(`UserRoleService - deleted (${deletedCount}) userRole`, {
+            userRoleToDeleteId,
+        });
     }
 }

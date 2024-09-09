@@ -1,4 +1,4 @@
-import { Optional } from 'sequelize/dist';
+import { Optional } from 'sequelize';
 import { AllowNull, Column, Table } from 'sequelize-typescript';
 
 import { BaseAttributes, BaseModel } from '../../common/base.model';

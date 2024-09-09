@@ -51,13 +51,7 @@ export class UserRoleController {
     @Get('/:id')
     async findOne(@Param('id') userRoleId: string) {
         try {
-            const user = await this.userRoleService.find(userRoleId);
-
-            if (!user) {
-                throw new NotFoundException();
-            }
-
-            return user;
+            return await this.userRoleService.find(userRoleId);
         } catch (error) {
             this.logger.error(
                 `UserRoleController - failed to get user-role, ${(error as Error).message}`,
@@ -88,7 +82,7 @@ export class UserRoleController {
     @Delete('/:id')
     async delete(@Param('id') userRoleId: string) {
         try {
-            return this.userRoleService.delete(userRoleId);
+            await this.userRoleService.delete(userRoleId);
         } catch (error) {
             this.logger.error(
                 `UserRoleController - failed to delete user role, ${(error as Error).message}`,

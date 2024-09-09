@@ -24,7 +24,7 @@ import { UpdatePatientDto } from './dtos/update-patient.dto';
 
 @ApiBearerAuth()
 @ApiTags('patient')
-@Controller('patient')
+@Controller('patients')
 export class PatientController {
     constructor(
         private readonly logger: ApplicationLoggerService,
@@ -108,7 +108,7 @@ export class PatientController {
     @Delete('/:id')
     async delete(@Param('id') patientId: string) {
         try {
-            return this.patientService.delete(patientId);
+            await this.patientService.delete(patientId);
         } catch (error) {
             this.logger.error(
                 `PatientController - failed to delete patient, ${(error as Error).message}`,

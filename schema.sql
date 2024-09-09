@@ -16,7 +16,7 @@ CREATE TABLE "user" (
   "delete_at" datetime,
   "created_by" uuid,
   "updated_by" uuid,
-  "delete_by" uuid
+  "deleted_by" uuid
 );
 
 CREATE TABLE "patient" (
@@ -27,7 +27,7 @@ CREATE TABLE "patient" (
   "delete_at" datetime,
   "created_by" uuid,
   "updated_by" uuid,
-  "delete_by" uuid
+  "deleted_by" uuid
 );
 
 CREATE TABLE "specialty" (
@@ -38,7 +38,7 @@ CREATE TABLE "specialty" (
   "delete_at" datetime,
   "created_by" uuid,
   "updated_by" uuid,
-  "delete_by" uuid
+  "deleted_by" uuid
 );
 
 CREATE TABLE "practician" (
@@ -49,7 +49,7 @@ CREATE TABLE "practician" (
   "delete_at" datetime,
   "created_by" uuid,
   "updated_by" uuid,
-  "delete_by" uuid
+  "deleted_by" uuid
 );
 
 CREATE TABLE "practician_has_specialty" (
@@ -83,9 +83,20 @@ CREATE TABLE "time_slot" (
   "start_date" datetime,
   "end_date" datetime,
   "created_at" datetime,
-  "delete_at" datetime,
+  "deleted_at" datetime,
   "created_by" uuid,
-  "delete_by" uuid
+  "deleted_by" uuid
+);
+
+CREATE TABLE "appointment_status" (
+  "id" uuid,
+  "name" varchar,
+  "created_at" datetime,
+  "updated_at" datetime,
+  "deleted_at" datetime,
+  "created_by" uuid,
+  "updated_by" uuid,
+  "deleted_by" uuid
 );
 
 CREATE TABLE "appointment" (
@@ -95,13 +106,16 @@ CREATE TABLE "appointment" (
   "patient_id" uuid,
   "start_at" datetime,
   "end_at" datetime,
-  "status" uuid
+  "appointment_status_id" uuid,
+  "created_at" datetime,
+  "updated_at" datetime,
+  "deleted_at" datetime,
+  "created_by" uuid,
+  "updated_by" uuid,
+  "deleted_by" uuid
 );
 
-CREATE TABLE "status" (
-  "id" uuid,
-  "name" varchar
-);
+
 
 COMMENT ON COLUMN "specialty"."name" IS 'dermatology/genycology/etc...';
 
@@ -133,4 +147,6 @@ ALTER TABLE "appointment" ADD FOREIGN KEY ("patient_id") REFERENCES "patient" ("
 
 ALTER TABLE "appointment" ADD FOREIGN KEY ("establishment_id") REFERENCES "establishment" ("id");
 
-ALTER TABLE "patient" ADD FOREIGN KEY ("user_id") REFERENCES "user" ("id");
+ALTER TABLE "appointment" ADD FOREIGN KEY ("appointment_status_id") REFERENCES "appointment_status" ("id");
+
+ALTER TABLE "patient" ADD FOREIGN KEY ("user_id") REFERENCES "user" ("id");@

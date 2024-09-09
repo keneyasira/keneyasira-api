@@ -19,7 +19,7 @@ import { SortParams } from '../typings/query.typings';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
 import { ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
-import { CreateUserDto } from './dtos/create-user.dto';
+// import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserService } from './user.service';
 
@@ -54,7 +54,7 @@ export class UserController {
             const user = await this.userService.find(userId);
 
             if (!user) {
-                throw new NotFoundException();
+                throw new NotFoundException('User not found');
             }
 
             return user;
@@ -66,49 +66,49 @@ export class UserController {
         }
     }
 
-    @Post('/')
-    async create(@Body() createUserDto: CreateUserDto) {
-        try {
-            return this.userService.create(createUserDto);
-        } catch (error) {
-            this.logger.error(
-                `UserController - failed to create user, ${(error as Error).message}`,
-                {
-                    error: errorToPlainObject(error as Error),
-                },
-            );
+    // @Post('/')
+    // async create(@Body() createUserDto: CreateUserDto) {
+    //     try {
+    //         return this.userService.create(createUserDto);
+    //     } catch (error) {
+    //         this.logger.error(
+    //             `UserController - failed to create user, ${(error as Error).message}`,
+    //             {
+    //                 error: errorToPlainObject(error as Error),
+    //             },
+    //         );
 
-            throw error;
-        }
-    }
+    //         throw error;
+    //     }
+    // }
 
-    @Put('/:id')
-    async update(
-        @Body() updateUserDto: UpdateUserDto,
-        @Param('id') userId: string,
-    ) {
-        if (userId !== updateUserDto.id) {
-            throw new BadRequestException('Mismatching identifiers');
-        }
+    // @Put('/:id')
+    // async update(
+    //     @Body() updateUserDto: UpdateUserDto,
+    //     @Param('id') userId: string,
+    // ) {
+    //     if (userId !== updateUserDto.id) {
+    //         throw new BadRequestException('Mismatching identifiers');
+    //     }
 
-        try {
-            return this.userService.update(updateUserDto);
-        } catch (error) {
-            this.logger.error(
-                `UserController - failed to update user, ${(error as Error).message}`,
-                {
-                    error: errorToPlainObject(error as Error),
-                },
-            );
+    //     try {
+    //         return this.userService.update(updateUserDto);
+    //     } catch (error) {
+    //         this.logger.error(
+    //             `UserController - failed to update user, ${(error as Error).message}`,
+    //             {
+    //                 error: errorToPlainObject(error as Error),
+    //             },
+    //         );
 
-            throw error;
-        }
-    }
+    //         throw error;
+    //     }
+    // }
 
     @Delete('/:id')
     async delete(@Param('id') userId: string) {
         try {
-            return this.userService.delete(userId);
+            await this.userService.delete(userId);
         } catch (error) {
             this.logger.error(
                 `UserController - failed to delete user, ${(error as Error).message}`,

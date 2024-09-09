@@ -48,7 +48,7 @@ export class PatientService {
             });
 
             if (!patient) {
-                throw new NotFoundException();
+                throw new NotFoundException('Patient not found');
             }
 
             return patient.toJSON();
@@ -109,6 +109,10 @@ export class PatientService {
             },
         );
 
+        if (!affectedRows) {
+            throw new NotFoundException('Patient not found');
+        }
+
         const updatedPatientValue = updatedPatient.toJSON();
 
         this.logger.info(`PatientService - Updated (${affectedRows}) Patient`, {
@@ -124,32 +128,25 @@ export class PatientService {
         });
 
         if (!patient) {
-            throw new NotFoundException();
+            throw new NotFoundException('Patient not found');
         }
 
-        return patient.toJSON();
+        return patient.get({ plain: true });
     }
 
-    async delete(patientToDeleteId: string): Promise<number> {
-        try {
+    async delete(patientToDeleteId: string): Promise<void> {
+
             const deletedCount = await Patient.destroy({
                 where: { id: patientToDeleteId },
             });
+
+            if (!deletedCount) {
+                throw new NotFoundException('Patient not found');
+            }
 
             this.logger.info(`PatientService - deleted (${deletedCount}) patient`, {
                 patientToDeleteId,
             });
 
-            return deletedCount;
-        } catch (error) {
-            this.logger.error(
-                `PatientService - failed to delete patient, ${(error as Error).message}`,
-                {
-                    error: errorToPlainObject(error as Error),
-                },
-            );
-
-            throw error;
-        }
     }
 }

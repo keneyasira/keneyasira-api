@@ -32,28 +32,23 @@ export class SpecialtyService {
             where: {
                 id: SpecialtyId,
             },
-            raw: true,
         });
 
         if (!specialty) {
-            throw new NotFoundException();
+            throw new NotFoundException('Specialty not found');
         }
 
-        return specialty;
+        return specialty.get({ plain: true });
     }
 
     async create(
         createSpecialtyDto: CreateSpecialtyDto
     ): Promise<SpecialtyAttributes> {
 
-        const createdSpecialty = await Specialty.create(
-            {
-                ...createSpecialtyDto,
-            },
-            { raw: true },
+        const createdSpecialty = await Specialty.create(createSpecialtyDto,
         );
 
-        const createdSpecialtyValue = createdSpecialty.toJSON();
+        const createdSpecialtyValue = createdSpecialty.get({ plain: true });
 
         this.logger.info(`Created specialty`, { createdSpecialty: createdSpecialtyValue });
 
@@ -76,7 +71,11 @@ export class SpecialtyService {
             },
         );
 
-        const updatedSpecialtyValue = updatedSpecialty.toJSON();
+        if (!affectedRows) {
+            throw new NotFoundException('Specialty not found');
+        }
+
+        const updatedSpecialtyValue = updatedSpecialty.get({ plain: true });
 
         this.logger.info(`Updated (${affectedRows}) specialty`, {
             updatedSpecialty: updatedSpecialtyValue,

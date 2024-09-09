@@ -1,4 +1,4 @@
-import { Optional } from 'sequelize/dist';
+import { Optional } from 'sequelize';
 import {
     AllowNull,
     BelongsTo,
@@ -34,6 +34,6 @@ export class UserRole extends BaseModel<UserRoleAttributes, RoleCreationAttribut
     @BelongsTo(() => User, 'userId')
     user: User;
 
-    @BelongsTo(() => Role)
+    @BelongsTo(() => Role, 'roleId')
     role: Role;
 }

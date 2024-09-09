@@ -1,5 +1,4 @@
 import {
-    BadRequestException,
     Body,
     Controller,
     DefaultValuePipe,
@@ -54,7 +53,7 @@ export class RoleController {
             const role = await this.roleService.find(userId);
 
             if (!role) {
-                throw new NotFoundException();
+                throw new NotFoundException('Role not found');
             }
 
             return role;
@@ -73,6 +72,17 @@ export class RoleController {
 
     @Delete('/:id')
     async delete(@Param('id') roleId: string) {
-        return this.roleService.delete(roleId);
+        try {
+            await this.roleService.delete(roleId);
+        } catch (error) {
+            this.logger.error(
+                `RoleController - failed to delete role, ${(error as Error).message}`,
+                {
+                    error: errorToPlainObject(error as Error),
+                },
+            );
+
+            throw error;
+        }
     }
 }

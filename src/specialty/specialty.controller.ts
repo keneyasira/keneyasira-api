@@ -111,7 +111,7 @@ export class SpecialtyController {
     @Delete('/:id')
     async delete( @Param('id') SpecialtyId: string) {
         try {
-            return this.SpecialtyService.delete(SpecialtyId);
+            await this.SpecialtyService.delete(SpecialtyId);
         } catch (error) {
             this.logger.error(
                 `SpecialtyController - failed to delete specialty, ${

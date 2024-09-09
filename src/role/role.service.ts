@@ -5,6 +5,12 @@ import { CreateRoleDto } from './dtos/create-role.dto';
 import { Role, RoleAttributes } from './models/role.model';
 import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
 
+export const ROLE_NAMES = {
+    ADMIN: 'admin',
+    PRACTICIAN: 'practician',
+    PATIENT: 'patient',
+} as const;
+
 @Injectable()
 export class RoleService {
     constructor(private readonly logger: ApplicationLoggerService) {}
@@ -33,16 +39,13 @@ export class RoleService {
         });
 
         if (!role) {
-            throw new NotFoundException();
+            throw new NotFoundException('Role not found');
         }
 
         return role;
     }
 
-    async create(
-        createRoleDto: CreateRoleDto,
-    ): Promise<RoleAttributes> {
-
+    async create(createRoleDto: CreateRoleDto): Promise<RoleAttributes> {
         const createdRole = await Role.create(
             {
                 ...createRoleDto,
@@ -53,23 +56,22 @@ export class RoleService {
 
         const createdRoleValue = createdRole.toJSON();
 
-        this.logger.info(`Created access group`, { createdRole: createdRoleValue });
+        this.logger.info(`Created role`, { createdRole: createdRoleValue });
 
         return createdRoleValue;
     }
 
-    async delete(
-        RoleToDeleteId: string,
-        ): Promise<number> {
-
+    async delete(RoleToDeleteId: string): Promise<void> {
         const deletedCount = await Role.destroy({
             where: { id: RoleToDeleteId },
         });
 
-        this.logger.info(`deleted (${deletedCount}) Role(s)`, {
-            imageId: RoleToDeleteId,
-        });
+        if (!deletedCount) {
+            throw new NotFoundException('Role not found');
+        }
 
-        return deletedCount;
+        this.logger.info(`deleted (${deletedCount}) Role(s)`, {
+            RoleToDeleteId,
+        });
     }
 }
