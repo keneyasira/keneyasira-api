@@ -17,14 +17,14 @@ import { ApplicationLoggerService } from '../core/logger/application.logger.serv
 import { SortParams } from '../typings/query.typings';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
-import { ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
+import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
 import { SpecialtyService } from './specialty.service';
 import { CreateSpecialtyDto } from './dtos/create-specialty.dto';
 import { UpdateSpecialtyDto } from './dtos/update-specialty.dto';
 
 @ApiBearerAuth()
 @ApiTags('specialty')
-@Controller('specialty')
+@Controller('specialties')
 export class SpecialtyController {
     constructor(
         private readonly logger: ApplicationLoggerService,
@@ -35,7 +35,7 @@ export class SpecialtyController {
     async findAll(
         @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
         @Query('limit', new DefaultValuePipe(0), ParseIntPipe, ParseLimitParamPipe) limit: number,
-        @Query('sort', new ParseSortPipe()) sort: SortParams[],
+        @Query('sort', new ParseSortPipe()) sort: SortParams[] = DEFAULT_SORT_PARAMS,
     ) {
         try {
             return this.SpecialtyService.findAndCountAll({ page, limit, sort });
@@ -71,9 +71,7 @@ export class SpecialtyController {
             return this.SpecialtyService.create(createSpecialtyDto);
         } catch (error) {
             this.logger.error(
-                `SpecialtyController - failed to create specialty, ${
-                    (error as Error).message
-                }`,
+                `SpecialtyController - failed to create specialty, ${(error as Error).message}`,
                 {
                     error: errorToPlainObject(error as Error),
                 },
@@ -84,10 +82,7 @@ export class SpecialtyController {
     }
 
     @Put('/:id')
-    async update(
-        @Body() updateSpecialtyDto: UpdateSpecialtyDto,
-        @Param('id') SpecialtyId: string,
-    ) {
+    async update(@Body() updateSpecialtyDto: UpdateSpecialtyDto, @Param('id') SpecialtyId: string) {
         if (SpecialtyId !== updateSpecialtyDto.id) {
             throw new BadRequestException('Mismatching identifiers');
         }
@@ -96,9 +91,7 @@ export class SpecialtyController {
             return this.SpecialtyService.update(updateSpecialtyDto);
         } catch (error) {
             this.logger.error(
-                `SpecialtyController - failed to update specialty, ${
-                    (error as Error).message
-                }`,
+                `SpecialtyController - failed to update specialty, ${(error as Error).message}`,
                 {
                     error: errorToPlainObject(error as Error),
                 },
@@ -109,14 +102,12 @@ export class SpecialtyController {
     }
 
     @Delete('/:id')
-    async delete( @Param('id') SpecialtyId: string) {
+    async delete(@Param('id') SpecialtyId: string) {
         try {
             await this.SpecialtyService.delete(SpecialtyId);
         } catch (error) {
             this.logger.error(
-                `SpecialtyController - failed to delete specialty, ${
-                    (error as Error).message
-                }`,
+                `SpecialtyController - failed to delete specialty, ${(error as Error).message}`,
                 {
                     error: errorToPlainObject(error as Error),
                 },

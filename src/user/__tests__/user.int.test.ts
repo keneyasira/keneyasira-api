@@ -21,31 +21,9 @@ describe('UserController', () => {
     });
 
     describe('/', () => {
-        it('should delete a user', async () => {
-            // create user first
-            const id = await request(app.getHttpServer())
-                .post('/user')
-                // .auth(token, { type: 'bearer' })
-                .send({
-                    email: 'todelete@todelete.com',
-                    firstName: 'todelete',
-                    lastName: 'todelete',
-                    phone: '123',
-                    password: 'secret',
-                })
-                .then(({ body }) => {
-                    return body.id;
-                });
-
-            await request(app.getHttpServer())
-                .delete(`/user/${id}`)
-                // .auth(token, { type: 'bearer' })
-                .expect(200);
-        });
-
         it('should get users', async () => {
             await request(app.getHttpServer())
-                .get('/user')
+                .get('/users')
                 // .auth(token, { type: 'bearer' })
                 .expect(200)
                 .expect(({ body }) => {
@@ -86,7 +64,7 @@ describe('UserController', () => {
 
         it('should get a user', async () => {
             await request(app.getHttpServer())
-                .get('/user/d7a05755-62d3-4a8e-9ea4-035d9fafd924')
+                .get('/users/d7a05755-62d3-4a8e-9ea4-035d9fafd924')
                 // .auth(token, { type: 'bearer' })
                 .expect(200)
                 .expect(({ body }) => {
@@ -102,44 +80,23 @@ describe('UserController', () => {
                 });
         });
 
-        // it('should create a user', async () => {
-        //     await request(app.getHttpServer())
-        //         .post('/user')
-        //         // .auth(token, { type: 'bearer' })
-        //         .send({
-        //             email: 'toto@toto.com',
-        //             firstName: 'firstName',
-        //             lastName: 'lastName',
-        //             phone: '123',
-        //             password: 'secret',
-        //         })
-        //         .expect(201)
-        //         .expect(({ body }) => {
-        //             expect(body).toMatchObject({
-        //                 email: 'toto@toto.com',
-        //                 firstName: 'firstName',
-        //                 lastName: 'lastName',
-        //             });
-        //         });
-        // });
-
         it('should update a user', async () => {
             // create user first
             const id = await request(app.getHttpServer())
-                .post('/user')
+                .post('/users')
                 // .auth(token, { type: 'bearer' })
                 .send({
                     email: 'titi@titi.com',
                     firstName: 'titi',
                     lastName: 'titi',
-                    phone: '12345'
+                    phone: '12345',
                 })
                 .then(({ body }) => {
                     return body.id;
                 });
 
             await request(app.getHttpServer())
-                .put(`/user/${id}`)
+                .put(`/users/${id}`)
                 // .auth(token, { type: 'bearer' })
                 .send({
                     id,
@@ -154,6 +111,20 @@ describe('UserController', () => {
                         lastName: 'lastName',
                     });
                 });
+        });
+
+        it('should delete a user', async () => {
+            const id = 'd7a05755-62d3-4a8e-9ea4-035d9fafd924';
+
+            await request(app.getHttpServer())
+                .delete(`/users/${id}`)
+                // .auth(token, { type: 'bearer' })
+                .expect(200);
+
+            await request(app.getHttpServer())
+                .get(`/users/${id}`)
+                // .auth(token, { type: 'bearer' })
+                .expect(404);
         });
     });
 });

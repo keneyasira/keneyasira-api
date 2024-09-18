@@ -16,7 +16,6 @@ export class AppointmentStatusService {
         options: QueryParams,
     ): Promise<{ data: AppointmentStatusAttributes[]; total: number }> {
         const offset = options?.limit && options.page ? options.limit * (options.page - 1) : 0;
-
         const { rows: data, count: total } = await AppointmentStatus.findAndCountAll({
             limit: options?.limit,
             offset,

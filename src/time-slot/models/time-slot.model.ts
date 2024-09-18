@@ -12,6 +12,7 @@ export interface TimeSlotAttributes extends BaseAttributes {
     endDate: string;
 }
 type TimeSlotCreationAttributes = Optional<TimeSlotAttributes, 'id'>;
+@Table({ tableName: 'time_slot' })
 export class TimeSlot extends BaseModel<TimeSlotAttributes, TimeSlotCreationAttributes> {
     @AllowNull(false)
     @Column

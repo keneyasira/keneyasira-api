@@ -17,14 +17,14 @@ import { ApplicationLoggerService } from '../core/logger/application.logger.serv
 import { SortParams } from '../typings/query.typings';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
-import { ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
+import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
 import { TimeSlotService } from './time-slot.service';
 import { CreateTimeSlotDto } from './dtos/create-time-slot.dto';
 import { UpdateTimeSlotDto } from './dtos/update-time-slot.dto';
 
 @ApiBearerAuth()
 @ApiTags('time-slot')
-@Controller('time-slot')
+@Controller('time-slots')
 export class TimeSlotController {
     constructor(
         private readonly logger: ApplicationLoggerService,
@@ -35,7 +35,7 @@ export class TimeSlotController {
     async findAll(
         @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
         @Query('limit', new DefaultValuePipe(0), ParseIntPipe, ParseLimitParamPipe) limit: number,
-        @Query('sort', new ParseSortPipe()) sort: SortParams[],
+        @Query('sort', new ParseSortPipe()) sort: SortParams[] = DEFAULT_SORT_PARAMS,
     ) {
         try {
             return this.timeSlotService.findAndCountAll({ page, limit, sort });
@@ -81,10 +81,7 @@ export class TimeSlotController {
     }
 
     @Put('/:id')
-    async update(
-        @Body() updateTimeSlotDto: UpdateTimeSlotDto,
-        @Param('id') timeSlotId: string,
-    ) {
+    async update(@Body() updateTimeSlotDto: UpdateTimeSlotDto, @Param('id') timeSlotId: string) {
         if (timeSlotId !== updateTimeSlotDto.id) {
             throw new BadRequestException('Mismatching identifiers');
         }

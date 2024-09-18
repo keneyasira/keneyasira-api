@@ -9,19 +9,19 @@ import {
     Post,
     Query,
 } from '@nestjs/common';
-import { PracticianHasSpecialtyService } from './practician-has-specialty.service';
-import { CreatePracticianHasSpecialtyDto } from './dtos/create-practician-has-specialty.dto';
+import { EstablishmentHasPracticianService } from './establishment-has-practician.service';
+import { CreateEstablishmentHasPracticianDto } from './dtos/create-establishment-has-practician.dto';
 import { ParseLimitParamPipe } from 'src/utils/pipes/parseLimitParamPipe';
 import { SortParams } from 'src/typings/query.typings';
 import { DEFAULT_SORT_PARAMS, ParseSortPipe } from 'src/utils/pipes/parseSortParamPipe';
 import { ApplicationLoggerService } from 'src/core/logger/application.logger.service';
 import { errorToPlainObject } from 'src/utils/error.helper';
 
-@Controller('practician-has-specialties')
-export class PracticianHasSpecialtyController {
+@Controller('establishment-has-practicians')
+export class EstablishmentHasPracticianController {
     constructor(
         private readonly logger: ApplicationLoggerService,
-        private readonly practicianHasSpecialtyService: PracticianHasSpecialtyService,
+        private readonly establishmentHasPracticianService: EstablishmentHasPracticianService,
     ) {}
 
     @Get()
@@ -31,10 +31,10 @@ export class PracticianHasSpecialtyController {
         @Query('sort', new ParseSortPipe()) sort: SortParams[] = DEFAULT_SORT_PARAMS,
     ) {
         try {
-            return this.practicianHasSpecialtyService.findAndCountAll({ page, limit, sort });
+            return this.establishmentHasPracticianService.findAndCountAll({ page, limit, sort });
         } catch (error) {
             this.logger.error(
-                `PracticianHasSpecialtyController - failed to get practicianHasSpecialties, ${
+                `EstablishmentHasPracticianController - failed to get establishmentHasPracticians, ${
                     (error as Error).message
                 }`,
                 {
@@ -48,10 +48,10 @@ export class PracticianHasSpecialtyController {
     @Get(':id')
     async findOne(@Param('id') id: string) {
         try {
-            return this.practicianHasSpecialtyService.find(id);
+            return this.establishmentHasPracticianService.find(id);
         } catch (error) {
             this.logger.error(
-                `PracticianHasSpecialtyController - failed to get practicianHasSpecialty, ${
+                `EstablishmentHasPracticianController - failed to get establishmentHasPractician, ${
                     (error as Error).message
                 }`,
                 {
@@ -63,12 +63,14 @@ export class PracticianHasSpecialtyController {
     }
 
     @Post()
-    async create(@Body() createPracticianHasSpecialtyDto: CreatePracticianHasSpecialtyDto) {
+    async create(@Body() createEstablishmentHasPracticianDto: CreateEstablishmentHasPracticianDto) {
         try {
-            return this.practicianHasSpecialtyService.create(createPracticianHasSpecialtyDto);
+            return this.establishmentHasPracticianService.create(
+                createEstablishmentHasPracticianDto,
+            );
         } catch (error) {
             this.logger.error(
-                `PracticianHasSpecialtyController - failed to create practicianHasSpecialties, ${
+                `EstablishmentHasPracticianController - failed to create establishmentHasPracticians, ${
                     (error as Error).message
                 }`,
                 {
@@ -82,10 +84,10 @@ export class PracticianHasSpecialtyController {
     @Delete(':id')
     async delete(@Param('id') id: string) {
         try {
-            return this.practicianHasSpecialtyService.delete(id);
+            return this.establishmentHasPracticianService.delete(id);
         } catch (error) {
             this.logger.error(
-                `PracticianHasSpecialtyController - failed to delete practicianHasSpecialties, ${
+                `EstablishmentHasPracticianController - failed to delete establishmentHasPracticians, ${
                     (error as Error).message
                 }`,
                 {

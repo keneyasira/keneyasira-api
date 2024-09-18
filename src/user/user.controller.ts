@@ -18,14 +18,14 @@ import { ApplicationLoggerService } from '../core/logger/application.logger.serv
 import { SortParams } from '../typings/query.typings';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
-import { ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
+import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
 // import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserService } from './user.service';
 
 @ApiBearerAuth()
 @ApiTags('user')
-@Controller('user')
+@Controller('users')
 export class UserController {
     constructor(
         private readonly logger: ApplicationLoggerService,
@@ -36,7 +36,7 @@ export class UserController {
     async findAll(
         @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
         @Query('limit', new DefaultValuePipe(0), ParseIntPipe, ParseLimitParamPipe) limit: number,
-        @Query('sort', new ParseSortPipe()) sort: SortParams[],
+        @Query('sort', new ParseSortPipe()) sort: SortParams[] = DEFAULT_SORT_PARAMS,
     ) {
         try {
             return this.userService.findAndCountAll({ page, limit, sort });

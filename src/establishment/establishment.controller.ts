@@ -17,7 +17,7 @@ import { ApplicationLoggerService } from '../core/logger/application.logger.serv
 import { SortParams } from '../typings/query.typings';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
-import { ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
+import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
 import { EstablishmentService } from './establishment.service';
 import { CreateEstablishmentDto } from './dtos/create-establishment.dto';
 import { UpdateEstablishmentDto } from './dtos/update-establishment.dto';
@@ -35,13 +35,15 @@ export class EstablishmentController {
     async findAll(
         @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
         @Query('limit', new DefaultValuePipe(0), ParseIntPipe, ParseLimitParamPipe) limit: number,
-        @Query('sort', new ParseSortPipe()) sort: SortParams[],
+        @Query('sort', new ParseSortPipe()) sort: SortParams[] = DEFAULT_SORT_PARAMS,
     ) {
         try {
             return this.establishmentService.findAndCountAll({ page, limit, sort });
         } catch (error) {
             this.logger.error(
-                `EstablishmentController - failed to get establishments, ${(error as Error).message}`,
+                `EstablishmentController - failed to get establishments, ${
+                    (error as Error).message
+                }`,
                 {
                     error: errorToPlainObject(error as Error),
                 },
@@ -56,7 +58,9 @@ export class EstablishmentController {
             return this.establishmentService.find(establishmentId);
         } catch (error) {
             this.logger.error(
-                `EstablishmentController - failed to get establishment, ${(error as Error).message}`,
+                `EstablishmentController - failed to get establishment, ${
+                    (error as Error).message
+                }`,
                 {
                     error: errorToPlainObject(error as Error),
                 },
@@ -71,7 +75,9 @@ export class EstablishmentController {
             return this.establishmentService.create(createEstablishmentDto);
         } catch (error) {
             this.logger.error(
-                `EstablishmentController - failed to create establishment, ${(error as Error).message}`,
+                `EstablishmentController - failed to create establishment, ${
+                    (error as Error).message
+                }`,
                 {
                     error: errorToPlainObject(error as Error),
                 },
@@ -93,7 +99,9 @@ export class EstablishmentController {
             return this.establishmentService.update(updateEstablishmentDto);
         } catch (error) {
             this.logger.error(
-                `EstablishmentController - failed to update establishment, ${(error as Error).message}`,
+                `EstablishmentController - failed to update establishment, ${
+                    (error as Error).message
+                }`,
                 {
                     error: errorToPlainObject(error as Error),
                 },
@@ -108,7 +116,9 @@ export class EstablishmentController {
             await this.establishmentService.delete(establishmentId);
         } catch (error) {
             this.logger.error(
-                `EstablishmentController - failed to delete establishment, ${(error as Error).message}`,
+                `EstablishmentController - failed to delete establishment, ${
+                    (error as Error).message
+                }`,
                 {
                     error: errorToPlainObject(error as Error),
                 },

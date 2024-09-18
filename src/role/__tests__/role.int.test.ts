@@ -24,7 +24,7 @@ describe('RoleController', () => {
         it('should delete a role', async () => {
             // create role first
             const id = await request(app.getHttpServer())
-                .post('/role')
+                .post('/roles')
                 // .auth(token, { type: 'bearer' })
                 .send({
                     name: 'roleToDelete',
@@ -36,7 +36,7 @@ describe('RoleController', () => {
 
             return (
                 request(app.getHttpServer())
-                    .delete(`/role/${id}`)
+                    .delete(`/roles/${id}`)
                     // .auth(token, { type: 'bearer' })
                     .expect(200)
             );
@@ -45,7 +45,7 @@ describe('RoleController', () => {
         it('should get roles', async () => {
             return (
                 request(app.getHttpServer())
-                    .get('/role')
+                    .get('/roles')
                     // .auth(token, { type: 'bearer' })
                     .expect(200)
                     .expect(({ body }) => {
@@ -82,7 +82,7 @@ describe('RoleController', () => {
         it('should get a role', async () => {
             return (
                 request(app.getHttpServer())
-                    .get('/role/55386193-8051-4853-a0f9-8b6cd37083c7')
+                    .get('/roles/55386193-8051-4853-a0f9-8b6cd37083c7')
                     // .auth(token, { type: 'bearer' })
                     .expect(200)
                     .expect(({ body }) => {
@@ -98,17 +98,17 @@ describe('RoleController', () => {
         it('should create a role', async () => {
             return (
                 request(app.getHttpServer())
-                    .post('/role')
+                    .post('/roles')
                     // .auth(token, { type: 'bearer' })
                     .send({
                         name: 'roleToBeCreated',
-                        description: 'role to be created'
+                        description: 'role to be created',
                     })
                     .expect(201)
                     .expect(({ body }) => {
                         expect(body).toMatchObject({
                             name: 'roleToBeCreated',
-                            description: 'role to be created'
+                            description: 'role to be created',
                         });
                     })
             );

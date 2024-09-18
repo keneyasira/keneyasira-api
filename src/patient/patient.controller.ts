@@ -17,7 +17,7 @@ import { ApplicationLoggerService } from '../core/logger/application.logger.serv
 import { SortParams } from '../typings/query.typings';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
-import { ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
+import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
 import { PatientService } from './patient.service';
 import { CreatePatientDto } from './dtos/create-patient.dto';
 import { UpdatePatientDto } from './dtos/update-patient.dto';
@@ -35,7 +35,7 @@ export class PatientController {
     async findAll(
         @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
         @Query('limit', new DefaultValuePipe(0), ParseIntPipe, ParseLimitParamPipe) limit: number,
-        @Query('sort', new ParseSortPipe()) sort: SortParams[],
+        @Query('sort', new ParseSortPipe()) sort: SortParams[] = DEFAULT_SORT_PARAMS,
     ) {
         try {
             return this.patientService.findAndCountAll({ page, limit, sort });
@@ -82,11 +82,7 @@ export class PatientController {
     }
 
     @Put('/:id')
-    async update(
-        @Body() updatePatientDto: UpdatePatientDto,
-        @Param('id') patientId: string,
-    ) {
-
+    async update(@Body() updatePatientDto: UpdatePatientDto, @Param('id') patientId: string) {
         if (patientId !== updatePatientDto.id) {
             throw new BadRequestException('Mismatching identifiers');
         }

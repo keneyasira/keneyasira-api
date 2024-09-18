@@ -15,15 +15,31 @@ import { ResponseInterceptor } from './response.interceptor';
 import { Role } from '../role/models/role.model';
 import { UserRole } from '../user-role/models/user-role.model';
 import { Patient } from '../patient/models/patient.model';
+import { AppointmentStatus } from '../appointment-status/models/appointment-status.model';
+import { Appointment } from '../appointment/models/appointment.model';
+import { Establishment } from '../establishment/models/establishment.model';
+import { EstablishmentHasPractician } from '../establishment-has-practician/models/establishment-has-practician.model';
+import { EstablishmentHasSpecialty } from '../establishment-has-specialty/models/establishment-has-specialty.model';
+import { Practician } from '../practician/models/practician.model';
+import { PracticianHasSpecialty } from '../practician-has-specialty/models/practician-has-specialty.model';
+import { TimeSlot } from '../time-slot/models/time-slot.model';
 @Module({
     imports: [
         ConfigModule,
         SequelizeModule.forRoot({
             ...ormconfig,
             models: [
+                Appointment,
+                AppointmentStatus,
+                Establishment,
+                EstablishmentHasPractician,
+                EstablishmentHasSpecialty,
                 Patient,
+                Practician,
+                PracticianHasSpecialty,
                 Role,
                 Specialty,
+                TimeSlot,
                 User,
                 UserRole,
             ],

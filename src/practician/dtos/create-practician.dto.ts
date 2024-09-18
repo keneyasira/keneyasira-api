@@ -19,6 +19,4 @@ export class CreatePracticianDto {
     @IsNotEmpty()
     phone: string;
 
-    // @ApiProperty({ example: 's3cret!', description: 'Password of the user' })
-    // password: string;
 }

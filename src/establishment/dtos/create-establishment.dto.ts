@@ -36,23 +36,6 @@ export class CreateEstablishmentDto {
     country: string;
 
     @ApiProperty({
-        example: '',
-        description: 'longitude of the establishmen',
-    })
-    @IsNotEmpty()
-    @IsString()
-    longitude: number;
-
-
-    @ApiProperty({
-        example: '',
-        description: 'latitude of the establishment',
-    })
-    @IsNotEmpty()
-    @IsString()
-    latitude: number;
-
-    @ApiProperty({
         example: '+1234567890',
         description: 'Phone number of the establishment',
     })

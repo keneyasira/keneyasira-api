@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { QueryParams } from '../typings/query.typings';
@@ -64,7 +64,19 @@ export class PatientService {
     }
 
     async create(createPatientDto: CreatePatientDto): Promise<PatientAttributes | undefined> {
-        try {
+
+            // check if the user already exists with the same email
+            const [user, isCreated] = await User.findOrCreate({
+                where: {
+                    email: createPatientDto.email,
+                },
+                defaults: createPatientDto,
+            });
+    
+            if (!isCreated) {
+                throw new ConflictException('User already exists with the same email');
+            }
+        
             const createdPatient = await Patient.create({
                 ...createPatientDto,
             });
@@ -84,16 +96,7 @@ export class PatientService {
             });
 
             return patient?.toJSON();
-        } catch (error) {
-            this.logger.error(
-                `PatientService - failed to create patient, ${(error as Error).message}`,
-                {
-                    error: errorToPlainObject(error as Error),
-                },
-            );
 
-            throw error;
-        }
     }
 
     async update(updatePatientDto: UpdatePatientDto): Promise<PatientAttributes> {

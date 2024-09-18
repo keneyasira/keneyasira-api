@@ -18,12 +18,12 @@ import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
 import { CreateRoleDto } from './dtos/create-role.dto';
 import { RoleService } from './role.service';
-import { ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
+import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
 import { SortParams } from '../typings/query.typings';
 
 @ApiBearerAuth()
 @ApiTags('role')
-@Controller('role')
+@Controller('roles')
 export class RoleController {
     constructor(
         private readonly logger: ApplicationLoggerService,
@@ -34,8 +34,7 @@ export class RoleController {
     async findAll(
         @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
         @Query('limit', new DefaultValuePipe(0), ParseIntPipe, ParseLimitParamPipe) limit: number,
-        @Query('sort', new ParseSortPipe()) sort: SortParams[],
-
+        @Query('sort', new ParseSortPipe()) sort: SortParams[] = DEFAULT_SORT_PARAMS,
     ) {
         try {
             return this.roleService.findAndCountAll({ page, limit, sort });

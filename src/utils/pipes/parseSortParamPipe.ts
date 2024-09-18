@@ -7,14 +7,10 @@ export class ParseSortPipe implements PipeTransform {
     transform(value: string, { type }: ArgumentMetadata): SortParams[] | void {
         if (type !== 'query') return;
 
+        console.log(value);
         const sortOptions: SortParams[] = value
             ? JSON.parse(value)
-            : [
-                  {
-                      field: 'createdAt',
-                      order: 'DESC',
-                  },
-              ];
+            : DEFAULT_SORT_PARAMS;
 
         if (!Array.isArray(sortOptions)) {
             throw new BadRequestException(
@@ -25,3 +21,10 @@ export class ParseSortPipe implements PipeTransform {
         return sortOptions;
     }
 }
+
+export const DEFAULT_SORT_PARAMS: SortParams[] = [
+    {
+        field: 'createdAt',
+        order: 'DESC',
+    },
+]

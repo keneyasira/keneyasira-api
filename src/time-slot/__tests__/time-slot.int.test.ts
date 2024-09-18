@@ -23,7 +23,7 @@ describe('TimeSlotController', () => {
     describe('/', () => {
         it('should get time slots', async () => {
             await request(app.getHttpServer())
-                .get('/time-slot')
+                .get('/time-slots')
                 .expect(200)
                 .expect(({ body }) => {
                     expect(body).toHaveProperty('data');
@@ -35,7 +35,7 @@ describe('TimeSlotController', () => {
             // Assuming a time slot ID exists
             const timeSlotId = 'some-uuid';
             await request(app.getHttpServer())
-                .get(`/time-slot/${timeSlotId}`)
+                .get(`/time-slots/${timeSlotId}`)
                 .expect(200)
                 .expect(({ body }) => {
                     expect(body).toHaveProperty('id');
@@ -47,7 +47,7 @@ describe('TimeSlotController', () => {
 
         it('should create a time slot', async () => {
             await request(app.getHttpServer())
-                .post('/time-slot')
+                .post('/time-slots')
                 .send({
                     startTime: new Date(),
                     endTime: new Date(),
@@ -66,7 +66,7 @@ describe('TimeSlotController', () => {
             // Assuming a time slot ID exists
             const timeSlotId = 'some-uuid';
             await request(app.getHttpServer())
-                .put(`/time-slot/${timeSlotId}`)
+                .put(`/time-slots/${timeSlotId}`)
                 .send({
                     id: timeSlotId,
                     startTime: new Date(),
@@ -85,9 +85,7 @@ describe('TimeSlotController', () => {
         it('should delete a time slot', async () => {
             // Assuming a time slot ID exists
             const timeSlotId = 'some-uuid';
-            await request(app.getHttpServer())
-                .delete(`/time-slot/${timeSlotId}`)
-                .expect(200);
+            await request(app.getHttpServer()).delete(`/time-slots/${timeSlotId}`).expect(200);
         });
     });
 });

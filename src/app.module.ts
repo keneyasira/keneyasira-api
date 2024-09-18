@@ -12,6 +12,8 @@ import { SpecialtyModule } from './specialty/specialty.module';
 import { TimeSlotModule } from './time-slot/time-slot.module';
 import { UserModule } from './user/user.module';
 import { UserRoleModule } from './user-role/user-role.module';
+import { EstablishmentHasSpecialtyModule } from './establishment-has-specialty/establishment-has-specialty.module';
+import { EstablishmentHasPracticianModule } from './establishment-has-practician/establishment-has-practician.module';
 
 @Module({
     imports: [
@@ -19,6 +21,8 @@ import { UserRoleModule } from './user-role/user-role.module';
         AppointmentStatusModule,
         CoreModule,
         EstablishmentModule,
+        EstablishmentHasSpecialtyModule,
+        EstablishmentHasPracticianModule,
         PatientModule,
         PracticianModule,
         PracticianHasSpecialtyModule,

@@ -19,10 +19,9 @@ import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
 import { CreatePracticianDto } from './dtos/create-practician.dto';
 import { PracticianService } from './practician.service';
-import { ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
+import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
 import { SortParams } from '../typings/query.typings';
 import { UpdatePracticianDto } from './dtos/update-practician.dto';
-
 
 @ApiBearerAuth()
 @ApiTags('practician')
@@ -33,20 +32,21 @@ export class PracticianController {
         private readonly practicianService: PracticianService,
     ) {}
 
-
     @Get('/')
     async findAll(
         @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
         @Query('limit', new DefaultValuePipe(0), ParseIntPipe, ParseLimitParamPipe) limit: number,
-        @Query('sort', new ParseSortPipe()) sort: SortParams[],
-
+        @Query('sort', new ParseSortPipe()) sort: SortParams[] = DEFAULT_SORT_PARAMS,
     ) {
         try {
             return this.practicianService.findAndCountAll({ page, limit, sort });
         } catch (error) {
-            this.logger.error(`PracticianController - failed to get practicians, ${(error as Error).message}`, {
-                error: errorToPlainObject(error as Error),
-            });
+            this.logger.error(
+                `PracticianController - failed to get practicians, ${(error as Error).message}`,
+                {
+                    error: errorToPlainObject(error as Error),
+                },
+            );
             throw error;
         }
     }
@@ -62,9 +62,12 @@ export class PracticianController {
 
             return practician;
         } catch (error) {
-            this.logger.error(`PracticianController - failed to get practician, ${(error as Error).message}`, {
-                error: errorToPlainObject(error as Error),
-            });
+            this.logger.error(
+                `PracticianController - failed to get practician, ${(error as Error).message}`,
+                {
+                    error: errorToPlainObject(error as Error),
+                },
+            );
             throw error;
         }
     }
@@ -74,16 +77,18 @@ export class PracticianController {
         try {
             return this.practicianService.create(createPracticianDto);
         } catch (error) {
-            this.logger.error(`PracticianController - failed to create practician, ${(error as Error).message}`, {
-                error: errorToPlainObject(error as Error),
-            });
+            this.logger.error(
+                `PracticianController - failed to create practician, ${(error as Error).message}`,
+                {
+                    error: errorToPlainObject(error as Error),
+                },
+            );
             throw error;
         }
     }
 
     @Put('/:id')
     async update(@Param('id') id: string, @Body() updatePracticianDto: UpdatePracticianDto) {
-        
         if (id !== updatePracticianDto.id) {
             throw new BadRequestException('Id mismatch');
         }
@@ -91,9 +96,12 @@ export class PracticianController {
         try {
             return await this.practicianService.update(updatePracticianDto);
         } catch (error) {
-            this.logger.error(`PracticianController - failed to update practician, ${(error as Error).message}`, {
-                error: errorToPlainObject(error as Error),
-            });
+            this.logger.error(
+                `PracticianController - failed to update practician, ${(error as Error).message}`,
+                {
+                    error: errorToPlainObject(error as Error),
+                },
+            );
             throw error;
         }
     }
@@ -103,11 +111,13 @@ export class PracticianController {
         try {
             await this.practicianService.delete(id);
         } catch (error) {
-            this.logger.error(`PracticianController - failed to delete practician, ${(error as Error).message}`, {
-                error: errorToPlainObject(error as Error),
-            });
+            this.logger.error(
+                `PracticianController - failed to delete practician, ${(error as Error).message}`,
+                {
+                    error: errorToPlainObject(error as Error),
+                },
+            );
             throw error;
         }
     }
-
 }

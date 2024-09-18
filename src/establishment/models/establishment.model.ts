@@ -6,12 +6,14 @@ import { TimeSlot } from '../../time-slot/models/time-slot.model';
 export interface EstablishmentAttributes extends BaseAttributes {
     name: string;
     address: string;
+    city: string,
+    country: string,
 }
 
 type EstablishmentCreationAttributes = Optional<EstablishmentAttributes, 'id'>;
 
 @Table({
-    tableName: 'establishments',
+    tableName: 'establishment',
 })
 export class Establishment extends BaseModel<EstablishmentAttributes, EstablishmentCreationAttributes> {
     @AllowNull(false)
@@ -21,6 +23,14 @@ export class Establishment extends BaseModel<EstablishmentAttributes, Establishm
     @AllowNull(false)
     @Column
     address: string;
+
+    @AllowNull(false)
+    @Column
+    city: string;
+
+    @AllowNull(false)
+    @Column
+    country: string;
 
     @HasMany(() => TimeSlot)
     timeSlots: TimeSlot[];

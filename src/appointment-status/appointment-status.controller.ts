@@ -20,7 +20,7 @@ import { ApplicationLoggerService } from 'src/core/logger/application.logger.ser
 import { SortParams } from 'src/typings/query.typings';
 import { errorToPlainObject } from 'src/utils/error.helper';
 import { ParseLimitParamPipe } from 'src/utils/pipes/parseLimitParamPipe';
-import { ParseSortPipe } from 'src/utils/pipes/parseSortParamPipe';
+import { DEFAULT_SORT_PARAMS, ParseSortPipe } from 'src/utils/pipes/parseSortParamPipe';
 
 @ApiBearerAuth()
 @ApiTags('Appointment Status')
@@ -35,7 +35,7 @@ export class AppointmentStatusController {
     async findAll(
         @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
         @Query('limit', new DefaultValuePipe(0), ParseIntPipe, ParseLimitParamPipe) limit: number,
-        @Query('sort', new ParseSortPipe()) sort: SortParams[],
+        @Query('sort', new ParseSortPipe()) sort: SortParams[] = DEFAULT_SORT_PARAMS,
     ) {
         try {
             return this.appointmentStatusService.findAndCountAll({ page, limit, sort });

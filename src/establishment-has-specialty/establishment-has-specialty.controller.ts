@@ -9,19 +9,19 @@ import {
     Post,
     Query,
 } from '@nestjs/common';
-import { PracticianHasSpecialtyService } from './practician-has-specialty.service';
-import { CreatePracticianHasSpecialtyDto } from './dtos/create-practician-has-specialty.dto';
+import { EstablishmentHasSpecialtyService } from './establishment-has-specialty.service';
+import { CreateEstablishmentHasSpecialtyDto } from './dtos/create-establishment-has-specialty.dto';
 import { ParseLimitParamPipe } from 'src/utils/pipes/parseLimitParamPipe';
 import { SortParams } from 'src/typings/query.typings';
 import { DEFAULT_SORT_PARAMS, ParseSortPipe } from 'src/utils/pipes/parseSortParamPipe';
 import { ApplicationLoggerService } from 'src/core/logger/application.logger.service';
 import { errorToPlainObject } from 'src/utils/error.helper';
 
-@Controller('practician-has-specialties')
-export class PracticianHasSpecialtyController {
+@Controller('establishment-has-specialties')
+export class EstablishmentHasSpecialtyController {
     constructor(
         private readonly logger: ApplicationLoggerService,
-        private readonly practicianHasSpecialtyService: PracticianHasSpecialtyService,
+        private readonly establishmentHasSpecialtyService: EstablishmentHasSpecialtyService,
     ) {}
 
     @Get()
@@ -31,10 +31,10 @@ export class PracticianHasSpecialtyController {
         @Query('sort', new ParseSortPipe()) sort: SortParams[] = DEFAULT_SORT_PARAMS,
     ) {
         try {
-            return this.practicianHasSpecialtyService.findAndCountAll({ page, limit, sort });
+            return this.establishmentHasSpecialtyService.findAndCountAll({ page, limit, sort });
         } catch (error) {
             this.logger.error(
-                `PracticianHasSpecialtyController - failed to get practicianHasSpecialties, ${
+                `EstablishmentHasSpecialtyController - failed to get establishmentHasSpecialties, ${
                     (error as Error).message
                 }`,
                 {
@@ -48,10 +48,10 @@ export class PracticianHasSpecialtyController {
     @Get(':id')
     async findOne(@Param('id') id: string) {
         try {
-            return this.practicianHasSpecialtyService.find(id);
+            return this.establishmentHasSpecialtyService.find(id);
         } catch (error) {
             this.logger.error(
-                `PracticianHasSpecialtyController - failed to get practicianHasSpecialty, ${
+                `EstablishmentHasSpecialtyController - failed to get establishmentHasSpecialty, ${
                     (error as Error).message
                 }`,
                 {
@@ -63,12 +63,12 @@ export class PracticianHasSpecialtyController {
     }
 
     @Post()
-    async create(@Body() createPracticianHasSpecialtyDto: CreatePracticianHasSpecialtyDto) {
+    async create(@Body() createEstablishmentHasSpecialtyDto: CreateEstablishmentHasSpecialtyDto) {
         try {
-            return this.practicianHasSpecialtyService.create(createPracticianHasSpecialtyDto);
+            return this.establishmentHasSpecialtyService.create(createEstablishmentHasSpecialtyDto);
         } catch (error) {
             this.logger.error(
-                `PracticianHasSpecialtyController - failed to create practicianHasSpecialties, ${
+                `EstablishmentHasSpecialtyController - failed to create establishmentHasSpecialties, ${
                     (error as Error).message
                 }`,
                 {
@@ -82,10 +82,10 @@ export class PracticianHasSpecialtyController {
     @Delete(':id')
     async delete(@Param('id') id: string) {
         try {
-            return this.practicianHasSpecialtyService.delete(id);
+            return this.establishmentHasSpecialtyService.delete(id);
         } catch (error) {
             this.logger.error(
-                `PracticianHasSpecialtyController - failed to delete practicianHasSpecialties, ${
+                `EstablishmentHasSpecialtyController - failed to delete establishmentHasSpecialties, ${
                     (error as Error).message
                 }`,
                 {
