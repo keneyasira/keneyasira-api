@@ -57,9 +57,11 @@ module.exports = {
                     ['^\\.'],
                 ],
             },
-        ],    
-        "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars": ["error"],
+        ],
+        '@typescript-eslint/no-unused-vars': [
+            'error',
+            { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+        ],
         'padding-line-between-statements': [
             'error',
             { blankLine: 'always', prev: '*', next: ['return', 'if', 'for', 'switch'] },
@@ -68,7 +70,7 @@ module.exports = {
             { blankLine: 'any', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var'] },
             { blankLine: 'always', prev: 'multiline-const', next: '*' },
         ],
-        "@typescript-eslint/no-floating-promises": "error",
-        "@typescript-eslint/no-misused-promises": "error"
+        '@typescript-eslint/no-floating-promises': 'error',
+        '@typescript-eslint/no-misused-promises': 'error',
     },
 };
