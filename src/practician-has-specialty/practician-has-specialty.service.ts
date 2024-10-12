@@ -3,12 +3,12 @@ import {
     PracticianHasSpecialty,
     PracticianHasSpecialtyAttributes,
 } from './models/practician-has-specialty.model';
-import { ApplicationLoggerService } from 'src/core/logger/application.logger.service';
+import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { CreatePracticianHasSpecialtyDto } from './dtos/create-practician-has-specialty.dto';
-import { Specialty } from 'src/specialty/models/specialty.model';
-import { Practician } from 'src/practician/models/practician.model';
-import { transformSortParamsToSequelizeFormat } from 'src/utils/sequelize.helpers';
-import { QueryParams } from 'src/typings/query.typings';
+import { Specialty } from '../specialty/models/specialty.model';
+import { Practician } from '../practician/models/practician.model';
+import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
+import { QueryParams } from '../typings/query.typings';
 
 @Injectable()
 export class PracticianHasSpecialtyService {

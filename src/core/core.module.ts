@@ -1,7 +1,7 @@
 import { ConfigModule } from '@config/config.module';
 import ormconfig from '@config/ormconfig';
 import { Module } from '@nestjs/common';
-import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { TerminusModule } from '@nestjs/terminus';
 

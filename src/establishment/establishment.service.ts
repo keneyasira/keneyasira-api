@@ -1,11 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEstablishmentDto } from './dtos/create-establishment.dto';
 import { UpdateEstablishmentDto } from './dtos/update-establishment.dto';
-import { ApplicationLoggerService } from 'src/core/logger/application.logger.service';
+import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { Establishment, EstablishmentAttributes } from './models/establishment.model';
-import { transformSortParamsToSequelizeFormat } from 'src/utils/sequelize.helpers';
-import { QueryParams } from 'src/typings/query.typings';
-import OpenLocationCode from 'open-location-code-typescript';
+import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
+import { QueryParams } from '../typings/query.typings';
+import { TimeSlot, TimeSlotAttributes } from '../time-slot/models/time-slot.model';
+import { Appointment, AppointmentAttributes } from '../appointment/models/appointment.model';
+import { Practician } from '../practician/models/practician.model';
+import { Patient } from '../patient/models/patient.model';
+import { User } from '../user/models/user.model';
 
 @Injectable()
 export class EstablishmentService {
@@ -37,6 +41,64 @@ export class EstablishmentService {
         return establishment;
     }
 
+    async findEstablishmentTimeSlots(
+        establishmentId: string,
+        options: QueryParams,
+    ): Promise<{ data: TimeSlotAttributes[]; total: number }> {
+        const offset = options?.limit && options.page ? options.limit * (options.page - 1) : 0;
+
+        const { rows: data, count: total } = await TimeSlot.findAndCountAll({
+            where: {
+                establishmentId: establishmentId,
+            },
+            limit: options?.limit,
+            offset,
+            order: transformSortParamsToSequelizeFormat(options.sort),
+            raw: true,
+        });
+
+        return { data, total };
+    }
+
+    async findEstablishmentAppointments(
+        establishmentId: string,
+        options: QueryParams,
+    ): Promise<{ data: AppointmentAttributes[]; total: number }> {
+        const offset = options?.limit && options.page ? options.limit * (options.page - 1) : 0;
+
+        const { rows: data, count: total } = await Appointment.findAndCountAll({
+            where: {
+                establishmentId: establishmentId,
+            },
+            include: [
+                {
+                    model: Practician,
+                    include: [{
+                        model: User,
+                    }]
+                },
+                {
+                    model: Establishment,
+                },
+                {
+                    model: Patient,
+                    include: [{
+                        model: User,
+                    }]
+                },
+                {
+                    model: TimeSlot,
+                }
+            ],
+            limit: options?.limit,
+            offset,
+            order: transformSortParamsToSequelizeFormat(options.sort),
+            raw: true,
+        });
+
+        return { data, total };
+    }
+
     async create(createEstablishmentDto: CreateEstablishmentDto) {
         // Implement the logic to create an establishment
         const createdEstablishment = await Establishment.create(createEstablishmentDto);
@@ -51,7 +113,6 @@ export class EstablishmentService {
     }
 
     async update(updateEstablishmentDto: UpdateEstablishmentDto) {
-
         const [affectedRows, [updatedEstablishment]] = await Establishment.update(
             {
                 ...updateEstablishmentDto,

@@ -4,11 +4,15 @@ import { QueryParams } from '../typings/query.typings';
 import { CreatePracticianDto } from './dtos/create-practician.dto';
 import { Practician, PracticianAttributes } from './models/practician.model';
 import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
-import { User } from 'src/user/models/user.model';
-import { UserRole } from 'src/user-role/models/user-role.model';
-import { Role } from 'src/role/models/role.model';
-import { ROLE_NAMES } from 'src/role/role.service';
+import { User } from '../user/models/user.model';
+import { UserRole } from '../user-role/models/user-role.model';
+import { Role } from '../role/models/role.model';
+import { ROLE_NAMES } from '../role/role.service';
 import { UpdatePracticianDto } from './dtos/update-practician.dto';
+import { TimeSlot, TimeSlotAttributes } from '../time-slot/models/time-slot.model';
+import { Appointment, AppointmentAttributes } from '../appointment/models/appointment.model';
+import { Establishment } from '../establishment/models/establishment.model';
+import { Patient } from '../patient/models/patient.model';
 
 @Injectable()
 export class PracticianService {
@@ -21,6 +25,11 @@ export class PracticianService {
 
         const { rows: data, count: total } = await Practician.findAndCountAll({
             limit: options?.limit,
+            include: [
+                {
+                    model: User,
+                },
+            ],
             offset,
             order: transformSortParamsToSequelizeFormat(options.sort),
             raw: true,
@@ -48,8 +57,65 @@ export class PracticianService {
         return practician.get({ plain: true });
     }
 
+    async findPracticianTimeSlots(
+        practicianId: string,
+        options: QueryParams,
+    ): Promise<{ data: TimeSlotAttributes[]; total: number }> {
+        const offset = options?.limit && options.page ? options.limit * (options.page - 1) : 0;
+
+        const { rows: data, count: total } = await TimeSlot.findAndCountAll({
+            where: {
+                practicianId: practicianId,
+            },
+            limit: options?.limit,
+            offset,
+            order: transformSortParamsToSequelizeFormat(options.sort),
+            raw: true,
+        });
+
+        return { data, total };
+    }
+
+    async findPracticianAppointments(
+        practicianId: string,
+        options: QueryParams,
+    ): Promise<{ data: AppointmentAttributes[]; total: number }> {
+        const offset = options?.limit && options.page ? options.limit * (options.page - 1) : 0;
+
+        const { rows: data, count: total } = await Appointment.findAndCountAll({
+            where: {
+                practicianId: practicianId,
+            },
+            include: [
+                {
+                    model: Practician,
+                    include: [{
+                        model: User,
+                    }]
+                },
+                {
+                    model: Establishment,
+                },
+                {
+                    model: Patient,
+                    include: [{
+                        model: User,
+                    }]
+                },
+                {
+                    model: TimeSlot,
+                }
+            ],
+            limit: options?.limit,
+            offset,
+            order: transformSortParamsToSequelizeFormat(options.sort),
+            raw: true,
+        });
+
+        return { data, total };
+    }
+
     async create(createPracticianDto: CreatePracticianDto): Promise<PracticianAttributes> {
-        
         // check if the user already exists with the same email
         const [user, isCreated] = await User.findOrCreate({
             where: {
@@ -61,7 +127,7 @@ export class PracticianService {
         if (!isCreated) {
             throw new ConflictException('User already exists with the same email');
         }
-        
+
         const role = await Role.findOne({
             where: {
                 name: ROLE_NAMES.PRACTICIAN,
@@ -91,7 +157,7 @@ export class PracticianService {
     }
 
     async update(updatePracticianDto: UpdatePracticianDto): Promise<PracticianAttributes> {
-        const practicianToBeUpdated =  await Practician.findOne({
+        const practicianToBeUpdated = await Practician.findOne({
             where: {
                 id: updatePracticianDto.id,
             },
@@ -108,7 +174,7 @@ export class PracticianService {
 
         const [affectedRows, []] = await User.update(
             {
-                ...practicianToBeUpdated.user.get({ plain: true }),    
+                ...practicianToBeUpdated.user.get({ plain: true }),
                 ...updatePracticianDto,
             },
             {
@@ -124,7 +190,6 @@ export class PracticianService {
         }
 
         return await this.find(updatePracticianDto.id);
-        
     }
 
     async delete(practicianId: string): Promise<void> {

@@ -93,8 +93,8 @@ regenerate-db-test: ## Delete and recreate the Database and the schema
 
 # build-image: aws-ecr-login
 build-image:
-	docker build -t smartfit-api:${GIT_SHA} .
-# 	docker tag smartfit-api:${GIT_SHA} 447534819717.dkr.ecr.eu-west-1.amazonaws.com/smartfit-api:${GIT_SHA}
-# 	docker tag smartfit-api:${GIT_SHA} 447534819717.dkr.ecr.eu-west-1.amazonaws.com/misterprofession-v2:latest
-# 	docker push 447534819717.dkr.ecr.eu-west-1.amazonaws.com/smartfit-api:${GIT_SHA}
-# 	docker push 447534819717.dkr.ecr.eu-west-1.amazonaws.com/smartfit-api:latest
+	docker build -t keneyasira-api:${GIT_SHA} .
+# 	docker tag keneyasira-api:${GIT_SHA} 447534819717.dkr.ecr.eu-west-1.amazonaws.com/keneyasira-api:${GIT_SHA}
+# 	docker tag keneyasira-api:${GIT_SHA} 447534819717.dkr.ecr.eu-west-1.amazonaws.com/misterprofession-v2:latest
+# 	docker push 447534819717.dkr.ecr.eu-west-1.amazonaws.com/keneyasira-api:${GIT_SHA}
+# 	docker push 447534819717.dkr.ecr.eu-west-1.amazonaws.com/keneyasira-api:latest

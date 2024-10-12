@@ -1,4 +1,4 @@
-import { BaseAttributes, BaseModel } from 'src/common/base.model';
+import { BaseAttributes, BaseModel } from '../../common/base.model';
 import { Column, Model, Table, ForeignKey, AllowNull, BelongsTo } from 'sequelize-typescript';
 import { Practician } from '../../practician/models/practician.model';
 import { Specialty } from '../../specialty/models/specialty.model';

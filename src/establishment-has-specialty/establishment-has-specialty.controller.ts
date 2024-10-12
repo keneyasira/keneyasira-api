@@ -11,11 +11,11 @@ import {
 } from '@nestjs/common';
 import { EstablishmentHasSpecialtyService } from './establishment-has-specialty.service';
 import { CreateEstablishmentHasSpecialtyDto } from './dtos/create-establishment-has-specialty.dto';
-import { ParseLimitParamPipe } from 'src/utils/pipes/parseLimitParamPipe';
-import { SortParams } from 'src/typings/query.typings';
-import { DEFAULT_SORT_PARAMS, ParseSortPipe } from 'src/utils/pipes/parseSortParamPipe';
-import { ApplicationLoggerService } from 'src/core/logger/application.logger.service';
-import { errorToPlainObject } from 'src/utils/error.helper';
+import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
+import { SortParams } from '../typings/query.typings';
+import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
+import { ApplicationLoggerService } from '../core/logger/application.logger.service';
+import { errorToPlainObject } from '../utils/error.helper';
 
 @Controller('establishment-has-specialties')
 export class EstablishmentHasSpecialtyController {

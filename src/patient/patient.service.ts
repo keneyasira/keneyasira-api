@@ -5,9 +5,12 @@ import { QueryParams } from '../typings/query.typings';
 import { User } from '../user/models/user.model';
 import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
 import { CreatePatientDto } from './dtos/create-patient.dto';
-import { UpdatePatientDto, UpdatePatientPayload } from './dtos/update-patient.dto';
+import { UpdatePatientDto } from './dtos/update-patient.dto';
 import { Patient, PatientAttributes } from './models/patient.model';
 import { errorToPlainObject } from '../utils/error.helper';
+import { Role } from '../role/models/role.model';
+import { ROLE_NAMES } from '../role/role.service';
+import { UserRole } from '../user-role/models/user-role.model';
 
 @Injectable()
 export class PatientService {
@@ -64,39 +67,53 @@ export class PatientService {
     }
 
     async create(createPatientDto: CreatePatientDto): Promise<PatientAttributes | undefined> {
+        // check if the user already exists with the same email
+        const [user, isCreated] = await User.findOrCreate({
+            where: {
+                email: createPatientDto.email,
+            },
+            defaults: createPatientDto,
+        });
 
-            // check if the user already exists with the same email
-            const [user, isCreated] = await User.findOrCreate({
-                where: {
-                    email: createPatientDto.email,
+        if (!isCreated) {
+            throw new ConflictException('User already exists with the same email');
+        }
+
+        const role = await Role.findOne({
+            where: {
+                name: ROLE_NAMES.PATIENT,
+            },
+        });
+
+        if (!role) {
+            throw new NotFoundException('Practician role not found');
+        }
+
+        await UserRole.create({
+            userId: user.id,
+            roleId: role.id,
+        });
+
+        const createdPatient = await Patient.create({
+            userId: user.id,
+            birthDate: createPatientDto.birthDate,
+        });
+
+        const createdPatientValue = createdPatient.toJSON();
+
+        this.logger.info(`PatientService - Created Patient`, {
+            createdPatient: createdPatientValue,
+        });
+
+        const patient = await Patient.findByPk(createdPatientValue.id, {
+            include: [
+                {
+                    model: User,
                 },
-                defaults: createPatientDto,
-            });
-    
-            if (!isCreated) {
-                throw new ConflictException('User already exists with the same email');
-            }
-        
-            const createdPatient = await Patient.create({
-                ...createPatientDto,
-            });
+            ],
+        });
 
-            const createdPatientValue = createdPatient.toJSON();
-
-            this.logger.info(`PatientService - Created Patient`, {
-                createdPatient: createdPatientValue,
-            });
-
-            const patient = await Patient.findByPk(createdPatientValue.id, {
-                include: [
-                    {
-                        model: User,
-                    },
-                ],
-            });
-
-            return patient?.toJSON();
-
+        return patient?.toJSON();
     }
 
     async update(updatePatientDto: UpdatePatientDto): Promise<PatientAttributes> {
@@ -138,18 +155,16 @@ export class PatientService {
     }
 
     async delete(patientToDeleteId: string): Promise<void> {
+        const deletedCount = await Patient.destroy({
+            where: { id: patientToDeleteId },
+        });
 
-            const deletedCount = await Patient.destroy({
-                where: { id: patientToDeleteId },
-            });
+        if (!deletedCount) {
+            throw new NotFoundException('Patient not found');
+        }
 
-            if (!deletedCount) {
-                throw new NotFoundException('Patient not found');
-            }
-
-            this.logger.info(`PatientService - deleted (${deletedCount}) patient`, {
-                patientToDeleteId,
-            });
-
+        this.logger.info(`PatientService - deleted (${deletedCount}) patient`, {
+            patientToDeleteId,
+        });
     }
 }

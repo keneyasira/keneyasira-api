@@ -1,26 +1,117 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTimeSlotDto } from './dtos/create-time-slot.dto';
 import { UpdateTimeSlotDto } from './dtos/update-time-slot.dto';
+import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
+import { ApplicationLoggerService } from '../core/logger/application.logger.service';
+import { TimeSlot, TimeSlotAttributes } from './models/time-slot.model';
+import { QueryParams } from '../typings/query.typings';
+import { Establishment } from '../establishment/models/establishment.model';
+import { EstablishmentHasPractician } from '../establishment-has-practician/models/establishment-has-practician.model';
+import { Appointment } from '../appointment/models/appointment.model';
 
 @Injectable()
 export class TimeSlotService {
-    async findAndCountAll(params: { page: number; limit: number; sort: any[] }) {
-        // Implement the logic to find and count all time slots
+    constructor(private readonly logger: ApplicationLoggerService) {}
+
+    async findAndCountAll(
+        options: QueryParams,
+    ): Promise<{ data: TimeSlotAttributes[]; total: number }> {
+        const offset = options?.limit && options.page ? options.limit * (options.page - 1) : 0;
+
+        const { rows: data, count: total } = await TimeSlot.findAndCountAll({
+            limit: options?.limit,
+            offset,
+            order: transformSortParamsToSequelizeFormat(options.sort),
+            raw: true,
+        });
+
+        return { data, total };
     }
 
-    async find(id: string) {
-        // Implement the logic to find a single time slot
+    async find(timeSlotId: string) {
+        const timeSlot = (await TimeSlot.findByPk(timeSlotId))?.get({ plain: true });
+
+        if (!timeSlot) {
+            throw new NotFoundException('TimeSlot not found');
+        }
+
+        return timeSlot;
     }
 
     async create(createTimeSlotDto: CreateTimeSlotDto) {
-        // Implement the logic to create a time slot
+        // check that the practician in the time slot belongs to the establishment
+        if (createTimeSlotDto.practicianId) {
+            const establishmentHasPractician = await EstablishmentHasPractician.findOne({
+                where: {
+                    establishmentId: createTimeSlotDto.establishmentId,
+                    practicianId: createTimeSlotDto.practicianId,
+                },
+            });
+
+            if (!establishmentHasPractician) {
+                throw new BadRequestException('Practician does not belong to Establishment');
+            }
+        }
+
+        // TODO check that another time slot on the same time does not exist for the establishment and/or practician
+
+        const createdTimeSlot = await TimeSlot.create(createTimeSlotDto);
+
+        const createdTimeSlotValue = createdTimeSlot.get({ plain: true });
+
+        this.logger.info(`Created timeSlot`, {
+            createdTimeSlot: createdTimeSlotValue,
+        });
+
+        return createdTimeSlotValue;
     }
 
     async update(updateTimeSlotDto: UpdateTimeSlotDto) {
-        // Implement the logic to update a time slot
+        const [affectedRows, [updatedTimeSlot]] = await TimeSlot.update(
+            {
+                ...updateTimeSlotDto,
+            },
+            {
+                where: {
+                    id: updateTimeSlotDto.id,
+                },
+                returning: true,
+            },
+        );
+
+        if (!affectedRows) {
+            throw new NotFoundException('TimeSlot not found');
+        }
+
+        return await updatedTimeSlot.get({ plain: true });
     }
 
-    async delete(id: string) {
-        // Implement the logic to delete a time slot
+    async delete(timeSlotId: string) {
+        // do not delete timeslots for which you can find appointments
+        const appointments = await Appointment.count({
+            where: {
+                timeSlotId,
+            },
+        });
+
+        if (appointments) {
+            throw new BadRequestException(
+                'Cannot delete timeslot that is associated to appointments',
+            );
+        }
+
+        const deletedCount = await TimeSlot.destroy({
+            where: {
+                id: timeSlotId,
+            },
+        });
+
+        if (!deletedCount) {
+            throw new NotFoundException('TimeSlot not found');
+        }
+
+        this.logger.info(`TimeSlotService - deleted (${deletedCount}) timeSlot`, {
+            timeSlotId,
+        });
     }
 }

@@ -16,11 +16,11 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AppointmentStatusService } from './appointment-status.service';
 import { CreateAppointmentStatusDto } from './dtos/create-appointment-status.dto';
 import { UpdateAppointmentStatusDto } from './dtos/update-appointment-status.dto';
-import { ApplicationLoggerService } from 'src/core/logger/application.logger.service';
-import { SortParams } from 'src/typings/query.typings';
-import { errorToPlainObject } from 'src/utils/error.helper';
-import { ParseLimitParamPipe } from 'src/utils/pipes/parseLimitParamPipe';
-import { DEFAULT_SORT_PARAMS, ParseSortPipe } from 'src/utils/pipes/parseSortParamPipe';
+import { ApplicationLoggerService } from '../core/logger/application.logger.service';
+import { SortParams } from '../typings/query.typings';
+import { errorToPlainObject } from '../utils/error.helper';
+import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
+import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
 
 @ApiBearerAuth()
 @ApiTags('Appointment Status')

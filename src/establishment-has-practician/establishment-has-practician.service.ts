@@ -3,12 +3,12 @@ import {
     EstablishmentHasPractician,
     EstablishmentHasPracticianAttributes,
 } from './models/establishment-has-practician.model';
-import { ApplicationLoggerService } from 'src/core/logger/application.logger.service';
+import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { CreateEstablishmentHasPracticianDto } from './dtos/create-establishment-has-practician.dto';
-import { Practician } from 'src/practician/models/practician.model';
-import { Establishment } from 'src/establishment/models/establishment.model';
-import { transformSortParamsToSequelizeFormat } from 'src/utils/sequelize.helpers';
-import { QueryParams } from 'src/typings/query.typings';
+import { Practician } from '../practician/models/practician.model';
+import { Establishment } from '../establishment/models/establishment.model';
+import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
+import { QueryParams } from '../typings/query.typings';
 
 @Injectable()
 export class EstablishmentHasPracticianService {

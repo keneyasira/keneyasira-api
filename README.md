@@ -1,6 +1,6 @@
-# SmartFit API
+# KeneyaSira API
 
-The repository for the API of SmartFit
+The repository for the API of KeneyaSira
 
 
 ## Installation

@@ -69,6 +69,54 @@ export class EstablishmentController {
         }
     }
 
+    @Get('/:id/time-slots')
+    async findTimeSlots(
+        @Param('id') establishmentId: string,
+        @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
+        @Query('limit', new DefaultValuePipe(0), ParseIntPipe, ParseLimitParamPipe) limit: number,
+        @Query('sort', new ParseSortPipe()) sort: SortParams[] = DEFAULT_SORT_PARAMS,
+    ) {
+        try {
+            return this.establishmentService.findEstablishmentTimeSlots(establishmentId, {
+                page,
+                limit,
+                sort,
+            });
+        } catch (error) {
+            this.logger.error(
+                `EstablishmentController - failed to get timeslots, ${(error as Error).message}`,
+                {
+                    error: errorToPlainObject(error as Error),
+                },
+            );
+            throw error;
+        }
+    }
+
+    @Get('/:id/appointments')
+    async findAppointments(
+        @Param('id') establishmentId: string,
+        @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
+        @Query('limit', new DefaultValuePipe(0), ParseIntPipe, ParseLimitParamPipe) limit: number,
+        @Query('sort', new ParseSortPipe()) sort: SortParams[] = DEFAULT_SORT_PARAMS,
+    ) {
+        try {
+            return this.establishmentService.findEstablishmentAppointments(establishmentId, {
+                page,
+                limit,
+                sort,
+            });
+        } catch (error) {
+            this.logger.error(
+                `EstablishmentController - failed to get appointments, ${(error as Error).message}`,
+                {
+                    error: errorToPlainObject(error as Error),
+                },
+            );
+            throw error;
+        }
+    }
+
     @Post('/')
     async create(@Body() createEstablishmentDto: CreateEstablishmentDto) {
         try {

@@ -6,7 +6,6 @@ import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers
 import { CreateAppointmentStatusDto } from './dtos/create-appointment-status.dto';
 import { UpdateAppointmentStatusDto } from './dtos/update-appointment-status.dto';
 import { AppointmentStatus, AppointmentStatusAttributes } from './models/appointment-status.model';
-import { errorToPlainObject } from 'src/utils/error.helper';
 
 @Injectable()
 export class AppointmentStatusService {

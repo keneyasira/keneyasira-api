@@ -209,10 +209,7 @@ describe('AppointmentController', () => {
             await request(app.getHttpServer())
                 .post('/appointments')
                 .send({
-                    establishment_id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
-                    practician_id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
                     patient_id: '632273cc-de99-4582-a440-752ba1f78766',
-                    //appointment_status_id: '186620b3-a831-440d-a4c7-f0ebc90b9d89', //scheduled by default
                     time_slot_id: '6a2cb23b-2882-4a02-81c9-ac2d9c72775f',
                 })
                 .expect(201)

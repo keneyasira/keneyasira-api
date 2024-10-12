@@ -1,8 +1,8 @@
 import { Optional } from 'sequelize';
-import { AllowNull, BelongsTo, Column, DataType, ForeignKey, Table } from 'sequelize-typescript';
-import { BaseAttributes, BaseModel } from 'src/common/base.model';
+import { AllowNull, Column, DataType, ForeignKey, Table } from 'sequelize-typescript';
+import { BaseAttributes, BaseModel } from '../../common/base.model';
 import { Establishment } from '../../establishment/models/establishment.model';
-import { Practician } from 'src/practician/models/practician.model';
+import { Practician } from '../../practician/models/practician.model';
 
 export interface TimeSlotAttributes extends BaseAttributes {
     establishmentId: string;
@@ -19,7 +19,7 @@ export class TimeSlot extends BaseModel<TimeSlotAttributes, TimeSlotCreationAttr
     @ForeignKey(() => Establishment)
     establishmentId: string;
 
-    @AllowNull(false)
+    @AllowNull(true)
     @Column
     @ForeignKey(() => Practician)
     practicianId: string;
