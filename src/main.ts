@@ -3,7 +3,6 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { useContainer } from 'class-validator';
-import basicAuth from 'express-basic-auth';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 

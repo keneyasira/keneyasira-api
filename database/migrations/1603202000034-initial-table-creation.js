@@ -187,7 +187,7 @@ module.exports = {
     CREATE TABLE  IF NOT EXISTS time_slot (
         id uuid NOT NULL DEFAULT uuid_generate_v4(),
         available boolean NOT NULL,
-        practician_id uuid NOT NULL,
+        practician_id uuid NULL,
         establishment_id uuid NOT NULL,
         start_date timestamptz NOT NULL,
         end_date timestamptz NOT NULL,

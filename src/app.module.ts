@@ -14,11 +14,13 @@ import { UserModule } from './user/user.module';
 import { UserRoleModule } from './user-role/user-role.module';
 import { EstablishmentHasSpecialtyModule } from './establishment-has-specialty/establishment-has-specialty.module';
 import { EstablishmentHasPracticianModule } from './establishment-has-practician/establishment-has-practician.module';
+import { AuthenticationModule } from './authentication/authentication.module';
 
 @Module({
     imports: [
         AppointmentModule,
         AppointmentStatusModule,
+        AuthenticationModule,
         CoreModule,
         EstablishmentModule,
         EstablishmentHasSpecialtyModule,

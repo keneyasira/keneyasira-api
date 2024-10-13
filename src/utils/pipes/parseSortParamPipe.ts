@@ -7,7 +7,6 @@ export class ParseSortPipe implements PipeTransform {
     transform(value: string, { type }: ArgumentMetadata): SortParams[] | void {
         if (type !== 'query') return;
 
-        console.log(value);
         const sortOptions: SortParams[] = value
             ? JSON.parse(value)
             : DEFAULT_SORT_PARAMS;

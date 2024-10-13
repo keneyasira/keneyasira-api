@@ -16,7 +16,7 @@ function removeMetadata(object: Record<string, unknown>, blacklist: string[]) {
             value = removeMetadata(value as Record<string, unknown>, blacklist);
         }
 
-        Object.assign(result, { [key]: value });
+        Object.assign(result as object, { [key]: value });
     });
 }
 
