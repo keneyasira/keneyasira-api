@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
+
+import { CoreModule } from '../core/core.module';
 import { EstablishmentController } from './establishment.controller';
 import { EstablishmentService } from './establishment.service';
-import { CoreModule } from '../core/core.module';
 
 @Module({
     controllers: [EstablishmentController],

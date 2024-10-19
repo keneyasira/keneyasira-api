@@ -1,22 +1,23 @@
 import {
+    Body,
     Controller,
+    Get,
     Post,
     Req,
     Res,
-    Body,
-    ValidationPipe,
-    UseGuards,
-    Get,
     UnauthorizedException,
+    UseGuards,
+    ValidationPipe,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { AuthenticationService } from './authentication.service';
-import { PasswordLessLoginDto } from './dtos/password-less-login.dto';
-import { Request, Response } from 'express';
-import { MagicLoginStrategy } from './strategies/magic-login.strategy';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
+import { Request, Response } from 'express';
+
 import type { UserAttributes } from '../user/models/user.model';
+import { AuthenticationService } from './authentication.service';
 import { Public } from './decorators/is-public.decorator';
+import { PasswordLessLoginDto } from './dtos/password-less-login-magic-link.dto';
+import { MagicLoginStrategy } from './strategies/magic-login.strategy';
 
 @ApiTags('authentication')
 @Controller('authentication')
@@ -39,19 +40,22 @@ export class AuthenticationController {
         )
         body: PasswordLessLoginDto,
     ) {
-        const result = await this.authenticationService.validateUser(body.destination);
+        const result = await this.authenticationService.validateUser(body);
+
         if (!result) {
             throw new UnauthorizedException();
         }
         // assign the transformed value to the raw value
-        req.body.destination = body.destination;
-        return await this.strategy.send(req, res);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        req.body.destination = body.email ?? body.phone ?? '';
+
+        return this.strategy.send(req, res);
     }
 
+    @Public()
     @UseGuards(AuthGuard('magiclogin'))
     @Get('login/callback')
-    async callback(@Req() req: Request) {
-        console.log(req)
-        return await this.authenticationService.generateTokens(req.user as UserAttributes);
+    callback(@Req() req: Request) {
+        return this.authenticationService.generateTokens(req.user as UserAttributes);
     }
 }

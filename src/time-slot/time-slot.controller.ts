@@ -18,9 +18,9 @@ import { SortParams } from '../typings/query.typings';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
 import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
-import { TimeSlotService } from './time-slot.service';
 import { CreateTimeSlotDto } from './dtos/create-time-slot.dto';
 import { UpdateTimeSlotDto } from './dtos/update-time-slot.dto';
+import { TimeSlotService } from './time-slot.service';
 
 @ApiBearerAuth()
 @ApiTags('time-slot')

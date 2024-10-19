@@ -20,6 +20,6 @@ COPY --from=build /app/makefile /app/
 COPY --from=build /app/package*.json /app/
 COPY --from=build /app/database/seeders/*.sql /app/database/seeders/
 
-EXPOSE 3000
+EXPOSE 4000
 
 CMD ["node", "./src/main.js"]

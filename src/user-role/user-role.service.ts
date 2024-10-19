@@ -1,13 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
-import { User } from '../user/models/user.model';
-import { errorToPlainObject } from '../utils/error.helper';
-import { CreateUserRoleDto } from './dtos/create-user-role.dto';
-import { QueryParams } from '../typings/query.typings';
-import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
-import { UserRole, UserRoleAttributes } from './models/user-role.model';
 import { Role } from '../role/models/role.model';
+import { QueryParams } from '../typings/query.typings';
+import { User } from '../user/models/user.model';
+import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
+import { CreateUserRoleDto } from './dtos/create-user-role.dto';
+import { UserRole, UserRoleAttributes } from './models/user-role.model';
 
 @Injectable()
 export class UserRoleService {
@@ -56,6 +55,21 @@ export class UserRoleService {
         }
 
         return userRole.get({ plain: true });
+    }
+
+    async getUserRoles(userId: string) {
+        const results = await UserRole.findAll({
+            where: {
+                userId,
+            },
+            include: [
+                {
+                    model: Role,
+                },
+            ],
+        });
+
+        return results.map((value) => value.get({ plain: true })?.role?.name);
     }
 
     async create(createUserRoleDto: CreateUserRoleDto) {

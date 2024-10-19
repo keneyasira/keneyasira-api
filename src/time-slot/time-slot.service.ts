@@ -1,13 +1,13 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+
+import { Appointment } from '../appointment/models/appointment.model';
+import { ApplicationLoggerService } from '../core/logger/application.logger.service';
+import { EstablishmentHasPractician } from '../establishment-has-practician/models/establishment-has-practician.model';
+import { QueryParams } from '../typings/query.typings';
+import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
 import { CreateTimeSlotDto } from './dtos/create-time-slot.dto';
 import { UpdateTimeSlotDto } from './dtos/update-time-slot.dto';
-import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
-import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { TimeSlot, TimeSlotAttributes } from './models/time-slot.model';
-import { QueryParams } from '../typings/query.typings';
-import { Establishment } from '../establishment/models/establishment.model';
-import { EstablishmentHasPractician } from '../establishment-has-practician/models/establishment-has-practician.model';
-import { Appointment } from '../appointment/models/appointment.model';
 
 @Injectable()
 export class TimeSlotService {

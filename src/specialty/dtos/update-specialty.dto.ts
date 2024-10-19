@@ -1,7 +1,7 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
 
 import { CreateSpecialtyDto } from './create-specialty.dto';
-import { IsNotEmpty } from 'class-validator';
 
 export class UpdateSpecialtyDto extends PartialType(CreateSpecialtyDto) {
     @ApiProperty({

@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
+
+import { CoreModule } from '../core/core.module';
 import { PracticianHasSpecialtyController } from './practician-has-specialty.controller';
 import { PracticianHasSpecialtyService } from './practician-has-specialty.service';
-import { CoreModule } from '../core/core.module';
 
 @Module({
     imports: [CoreModule],

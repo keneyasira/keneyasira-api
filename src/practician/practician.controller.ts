@@ -15,13 +15,13 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
+import { SortParams } from '../typings/query.typings';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
-import { CreatePracticianDto } from './dtos/create-practician.dto';
-import { PracticianService } from './practician.service';
 import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
-import { SortParams } from '../typings/query.typings';
+import { CreatePracticianDto } from './dtos/create-practician.dto';
 import { UpdatePracticianDto } from './dtos/update-practician.dto';
+import { PracticianService } from './practician.service';
 
 @ApiBearerAuth()
 @ApiTags('practician')

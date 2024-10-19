@@ -9,13 +9,14 @@ import {
     Post,
     Query,
 } from '@nestjs/common';
-import { EstablishmentHasPracticianService } from './establishment-has-practician.service';
-import { CreateEstablishmentHasPracticianDto } from './dtos/create-establishment-has-practician.dto';
-import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
-import { SortParams } from '../typings/query.typings';
-import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
+
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
+import { SortParams } from '../typings/query.typings';
 import { errorToPlainObject } from '../utils/error.helper';
+import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
+import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
+import { CreateEstablishmentHasPracticianDto } from './dtos/create-establishment-has-practician.dto';
+import { EstablishmentHasPracticianService } from './establishment-has-practician.service';
 
 @Controller('establishment-has-practicians')
 export class EstablishmentHasPracticianController {

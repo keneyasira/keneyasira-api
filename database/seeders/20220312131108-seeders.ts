@@ -1,8 +1,9 @@
 'use strict';
 
 import dayjs from 'dayjs';
+import type { QueryInterface } from 'sequelize';
 
-export async function up(queryInterface: any) {
+export async function up(queryInterface: QueryInterface) {
     // Seed data for user table
     await queryInterface.bulkInsert('user', [
         {
@@ -252,8 +253,10 @@ export async function up(queryInterface: any) {
 
     const year = dayjs().year();
     let month: string | number = dayjs().month() + 1;
+
     month = month < 10 ? `0${month}` : month;
     const day = dayjs().date() < 10 ? `0${dayjs().date()}` : dayjs().date();
+
     // seed data for time_slot table
     await queryInterface.bulkInsert('time_slot', [
         {

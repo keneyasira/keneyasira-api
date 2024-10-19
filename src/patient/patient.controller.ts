@@ -18,9 +18,9 @@ import { SortParams } from '../typings/query.typings';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
 import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
-import { PatientService } from './patient.service';
 import { CreatePatientDto } from './dtos/create-patient.dto';
 import { UpdatePatientDto } from './dtos/update-patient.dto';
+import { PatientService } from './patient.service';
 
 @ApiBearerAuth()
 @ApiTags('patient')

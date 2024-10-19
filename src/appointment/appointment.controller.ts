@@ -1,11 +1,12 @@
 import { BadRequestException, Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
-import { AppointmentService } from './appointment.service';
 import { SortParams } from '../typings/query.typings';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
-import { ParseSortPipe, DEFAULT_SORT_PARAMS } from '../utils/pipes/parseSortParamPipe';
+import { DEFAULT_SORT_PARAMS,ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
+import { AppointmentService } from './appointment.service';
 import { CreateAppointmentDto } from './dtos/create-appointment.dto';
 import { UpdateAppointmentDto } from './dtos/update-appointment.dto';
 

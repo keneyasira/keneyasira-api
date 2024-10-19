@@ -1,14 +1,17 @@
-import { BaseAttributes, BaseModel } from "src/common/base.model";
-import { Optional } from "sequelize";
-import { Table, Column, AllowNull, ForeignKey, BelongsTo } from "sequelize-typescript";
-import { User } from "src/user/models/user.model";
+import { Optional } from 'sequelize';
+import { AllowNull, BelongsTo,Column, ForeignKey, Table } from 'sequelize-typescript';
+
+import { BaseAttributes, BaseModel } from '../../common/base.model';
+import { User, type UserAttributes } from '../../user/models/user.model';
 
 export interface PracticianAttributes extends BaseAttributes {
-    id: string,
-    userId: string,
+    id: string;
+    userId: string;
+
+    user?: UserAttributes;
 }
 
-type PracticianCreationAttributes = Optional<PracticianAttributes, 'id'>;
+type PracticianCreationAttributes = Optional<PracticianAttributes, 'id' | 'user'>;
 @Table({
     tableName: 'practician',
 })

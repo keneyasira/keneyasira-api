@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+
 import { CoreModule } from '../core/core.module';
 import { PracticianController } from './practician.controller';
 import { PracticianService } from './practician.service';

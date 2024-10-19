@@ -2,14 +2,19 @@ import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from
 
 import { SortParams } from '../../typings/query.typings';
 
+export const DEFAULT_SORT_PARAMS: SortParams[] = [
+    {
+        field: 'createdAt',
+        order: 'DESC',
+    },
+];
 @Injectable()
 export class ParseSortPipe implements PipeTransform {
     transform(value: string, { type }: ArgumentMetadata): SortParams[] | void {
         if (type !== 'query') return;
 
-        const sortOptions: SortParams[] = value
-            ? JSON.parse(value)
-            : DEFAULT_SORT_PARAMS;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const sortOptions: SortParams[] = value ? JSON.parse(value) : DEFAULT_SORT_PARAMS;
 
         if (!Array.isArray(sortOptions)) {
             throw new BadRequestException(
@@ -20,10 +25,3 @@ export class ParseSortPipe implements PipeTransform {
         return sortOptions;
     }
 }
-
-export const DEFAULT_SORT_PARAMS: SortParams[] = [
-    {
-        field: 'createdAt',
-        order: 'DESC',
-    },
-]

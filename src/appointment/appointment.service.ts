@@ -1,16 +1,17 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+
+import { AppointmentStatus } from '../appointment-status/models/appointment-status.model';
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
-import { QueryParams } from '../typings/query.typings';
-import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
-import { AppointmentAttributes, Appointment } from './models/appointment.model';
-import { Practician } from '../practician/models/practician.model';
 import { Establishment } from '../establishment/models/establishment.model';
 import { Patient } from '../patient/models/patient.model';
+import { Practician } from '../practician/models/practician.model';
 import { TimeSlot } from '../time-slot/models/time-slot.model';
+import { QueryParams } from '../typings/query.typings';
 import { User } from '../user/models/user.model';
-import { UpdateAppointmentDto } from './dtos/update-appointment.dto';
+import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
 import { CreateAppointmentDto } from './dtos/create-appointment.dto';
-import { AppointmentStatus } from '../appointment-status/models/appointment-status.model';
+import { UpdateAppointmentDto } from './dtos/update-appointment.dto';
+import { Appointment,AppointmentAttributes } from './models/appointment.model';
 
 export const STATUS_NAMES = {
     SCHEDULED: 'scheduled',
@@ -134,6 +135,7 @@ export class AppointmentService {
             const { establishmentId, practicianId } = await this.checkAndReturnTimeSlot(
                 updateAppointmentDto.timeSlotId,
             );
+
             updatePayload = {
                 establishmentId,
                 practicianId,

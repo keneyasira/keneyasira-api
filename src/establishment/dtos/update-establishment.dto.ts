@@ -1,5 +1,6 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsNotEmpty, IsUUID } from 'class-validator';
+
 import { CreateEstablishmentDto } from './create-establishment.dto';
 
 export class UpdateEstablishmentDto extends PartialType(CreateEstablishmentDto) {

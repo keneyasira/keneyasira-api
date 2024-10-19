@@ -1,14 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+
+import { ApplicationLoggerService } from '../core/logger/application.logger.service';
+import { Practician } from '../practician/models/practician.model';
+import { Specialty } from '../specialty/models/specialty.model';
+import { QueryParams } from '../typings/query.typings';
+import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
+import { CreatePracticianHasSpecialtyDto } from './dtos/create-practician-has-specialty.dto';
 import {
     PracticianHasSpecialty,
     PracticianHasSpecialtyAttributes,
 } from './models/practician-has-specialty.model';
-import { ApplicationLoggerService } from '../core/logger/application.logger.service';
-import { CreatePracticianHasSpecialtyDto } from './dtos/create-practician-has-specialty.dto';
-import { Specialty } from '../specialty/models/specialty.model';
-import { Practician } from '../practician/models/practician.model';
-import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
-import { QueryParams } from '../typings/query.typings';
 
 @Injectable()
 export class PracticianHasSpecialtyService {
@@ -33,6 +34,7 @@ export class PracticianHasSpecialtyService {
             ],
             raw: true,
         });
+
         return { data, total };
     }
 

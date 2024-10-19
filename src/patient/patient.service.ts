@@ -1,16 +1,16 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
+import { Role } from '../role/models/role.model';
+import { ROLE_NAMES } from '../role/role.service';
 import { QueryParams } from '../typings/query.typings';
 import { User } from '../user/models/user.model';
+import { UserRole } from '../user-role/models/user-role.model';
+import { errorToPlainObject } from '../utils/error.helper';
 import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
 import { CreatePatientDto } from './dtos/create-patient.dto';
 import { UpdatePatientDto } from './dtos/update-patient.dto';
 import { Patient, PatientAttributes } from './models/patient.model';
-import { errorToPlainObject } from '../utils/error.helper';
-import { Role } from '../role/models/role.model';
-import { ROLE_NAMES } from '../role/role.service';
-import { UserRole } from '../user-role/models/user-role.model';
 
 @Injectable()
 export class PatientService {

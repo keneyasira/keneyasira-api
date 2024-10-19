@@ -1,8 +1,9 @@
 import { Optional } from 'sequelize';
-import { AllowNull, Column, DataType, ForeignKey, Table } from 'sequelize-typescript';
+import { AllowNull, BelongsTo, Column, DataType, ForeignKey, Table } from 'sequelize-typescript';
+
 import { BaseAttributes, BaseModel } from '../../common/base.model';
-import { Establishment } from '../../establishment/models/establishment.model';
-import { Practician } from '../../practician/models/practician.model';
+import { Establishment, type EstablishmentAttributes } from '../../establishment/models/establishment.model';
+import { Practician, type PracticianAttributes } from '../../practician/models/practician.model';
 
 export interface TimeSlotAttributes extends BaseAttributes {
     establishmentId: string;
@@ -10,8 +11,14 @@ export interface TimeSlotAttributes extends BaseAttributes {
     available: boolean;
     startDate: string;
     endDate: string;
+
+    practician?: PracticianAttributes;
+    establishment?: EstablishmentAttributes;
 }
-type TimeSlotCreationAttributes = Optional<TimeSlotAttributes, 'id'>;
+type TimeSlotCreationAttributes = Optional<
+    TimeSlotAttributes,
+    'id' | 'practician' | 'establishment'
+>;
 @Table({ tableName: 'time_slot' })
 export class TimeSlot extends BaseModel<TimeSlotAttributes, TimeSlotCreationAttributes> {
     @AllowNull(false)
@@ -41,4 +48,10 @@ export class TimeSlot extends BaseModel<TimeSlotAttributes, TimeSlotCreationAttr
         type: DataType.DATE,
     })
     endDate: string;
+
+    @BelongsTo(() => Establishment, 'establishmentId')
+    establishment: Establishment;
+
+    @BelongsTo(() => Practician, 'practicianId')
+    practician: Practician;
 }

@@ -18,9 +18,9 @@ import { SortParams } from '../typings/query.typings';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
 import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
-import { EstablishmentService } from './establishment.service';
 import { CreateEstablishmentDto } from './dtos/create-establishment.dto';
 import { UpdateEstablishmentDto } from './dtos/update-establishment.dto';
+import { EstablishmentService } from './establishment.service';
 
 @ApiBearerAuth()
 @ApiTags('establishment')

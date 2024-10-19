@@ -1,10 +1,11 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { Config } from '@config/default';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import Strategy from 'passport-magic-login';
-import { AuthenticationService } from '../authentication.service';
+
 import { ApplicationLoggerService } from '../../core/logger/application.logger.service';
-import { Config } from '@config/default';
 import type { UserAttributes } from '../../user/models/user.model';
+import { AuthenticationService } from '../authentication.service';
 
 @Injectable()
 export class MagicLoginStrategy extends PassportStrategy(Strategy) {
@@ -19,6 +20,7 @@ export class MagicLoginStrategy extends PassportStrategy(Strategy) {
                 expiresIn: '5m',
             },
             callbackUrl: 'http://localhost:4000/authentication/login/callback',
+            // eslint-disable-next-line @typescript-eslint/require-await
             sendMagicLink: async (destination: string, href: string) => {
                 // TODO: send email or sms
                 this.logger.info(
@@ -26,9 +28,10 @@ export class MagicLoginStrategy extends PassportStrategy(Strategy) {
                     `sending sms to ${destination} with Link ${href}`,
                 );
             },
+            // eslint-disable-next-line @typescript-eslint/require-await
             verify: async (
                 payload: { destination: string },
-                callback: (arg: null, user: Promise<UserAttributes | undefined>) => any,
+                callback: (arg: null, user: Promise<UserAttributes | undefined>) => unknown,
             ) => {
                 callback(null, this.validate(payload));
             },
@@ -36,7 +39,11 @@ export class MagicLoginStrategy extends PassportStrategy(Strategy) {
     }
 
     async validate(payload: { destination: string }) {
-        const result = await this.authenticationService.validateUser(payload.destination);
+        const result = await this.authenticationService.validateUser({
+            phone: payload.destination,
+            email: payload.destination,
+        });
+
         if (!result) {
             throw new UnauthorizedException('Invalid Credentials');
         }

@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { QueryParams } from '../typings/query.typings';
-import { User } from '../user/models/user.model';
 import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
 import { CreateSpecialtyDto } from './dtos/create-specialty.dto';
 import { UpdateSpecialtyDto } from './dtos/update-specialty.dto';

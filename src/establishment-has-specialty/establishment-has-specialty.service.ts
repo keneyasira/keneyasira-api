@@ -1,14 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+
+import { ApplicationLoggerService } from '../core/logger/application.logger.service';
+import { Establishment } from '../establishment/models/establishment.model';
+import { Specialty } from '../specialty/models/specialty.model';
+import { QueryParams } from '../typings/query.typings';
+import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
+import { CreateEstablishmentHasSpecialtyDto } from './dtos/create-establishment-has-specialty.dto';
 import {
     EstablishmentHasSpecialty,
     EstablishmentHasSpecialtyAttributes,
 } from './models/establishment-has-specialty.model';
-import { ApplicationLoggerService } from '../core/logger/application.logger.service';
-import { CreateEstablishmentHasSpecialtyDto } from './dtos/create-establishment-has-specialty.dto';
-import { Specialty } from '../specialty/models/specialty.model';
-import { Establishment } from '../establishment/models/establishment.model';
-import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
-import { QueryParams } from '../typings/query.typings';
 
 @Injectable()
 export class EstablishmentHasSpecialtyService {
@@ -33,6 +34,7 @@ export class EstablishmentHasSpecialtyService {
             ],
             raw: true,
         });
+
         return { data, total };
     }
 

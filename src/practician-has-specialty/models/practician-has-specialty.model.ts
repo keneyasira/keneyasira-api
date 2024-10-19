@@ -1,15 +1,22 @@
-import { BaseAttributes, BaseModel } from '../../common/base.model';
-import { Column, Model, Table, ForeignKey, AllowNull, BelongsTo } from 'sequelize-typescript';
-import { Practician } from '../../practician/models/practician.model';
-import { Specialty } from '../../specialty/models/specialty.model';
 import { Optional } from 'sequelize';
+import { AllowNull, BelongsTo,Column, ForeignKey, Table } from 'sequelize-typescript';
+
+import { BaseAttributes, BaseModel } from '../../common/base.model';
+import { Practician, type PracticianAttributes } from '../../practician/models/practician.model';
+import { Specialty, type SpecialtyAttributes } from '../../specialty/models/specialty.model';
 
 export interface PracticianHasSpecialtyAttributes extends BaseAttributes {
     specialtyId: string;
     practicianId: string;
+
+    practician?: PracticianAttributes;
+    specialty?: SpecialtyAttributes;
 }
 
-type PracticianHasSpecialtyCreationAttributes = Optional<PracticianHasSpecialtyAttributes, 'id'>;
+type PracticianHasSpecialtyCreationAttributes = Optional<
+    PracticianHasSpecialtyAttributes,
+    'id' | 'practician' | 'specialty'
+>;
 @Table({ tableName: 'practician_has_specialty' })
 export class PracticianHasSpecialty extends BaseModel<
     PracticianHasSpecialtyAttributes,

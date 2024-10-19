@@ -1,17 +1,24 @@
-import { BaseAttributes, BaseModel } from '../../common/base.model';
-import { Column, Model, Table, ForeignKey, AllowNull, BelongsTo } from 'sequelize-typescript';
-import { Establishment } from '../../establishment/models/establishment.model';
-import { Practician } from '../../practician/models/practician.model';
 import { Optional } from 'sequelize';
+import { AllowNull, BelongsTo,Column, ForeignKey, Table } from 'sequelize-typescript';
+
+import { BaseAttributes, BaseModel } from '../../common/base.model';
+import {
+    Establishment,
+    type EstablishmentAttributes,
+} from '../../establishment/models/establishment.model';
+import { Practician, type PracticianAttributes } from '../../practician/models/practician.model';
 
 export interface EstablishmentHasPracticianAttributes extends BaseAttributes {
     practicianId: string;
     establishmentId: string;
+
+    practician?: PracticianAttributes;
+    establishment?: EstablishmentAttributes;
 }
 
 type EstablishmentHasPracticianCreationAttributes = Optional<
     EstablishmentHasPracticianAttributes,
-    'id'
+    'id' | 'practician' | 'establishment'
 >;
 
 @Table({ tableName: 'establishment_has_practician' })

@@ -1,15 +1,25 @@
 import { Optional } from 'sequelize';
-import { AllowNull, BelongsTo, Column, CreatedAt, DataType, Default, DeletedAt, ForeignKey, PrimaryKey, Table, UpdatedAt } from 'sequelize-typescript';
+import {
+    AllowNull,
+    BelongsTo,
+    Column,
+    DataType,
+    Default,
+    ForeignKey,
+    Table,
+} from 'sequelize-typescript';
 
 import { BaseAttributes, BaseModel } from '../../common/base.model';
-import { User } from '../../user/models/user.model';
+import { User, type UserAttributes } from '../../user/models/user.model';
 
 export interface PatientAttributes extends BaseAttributes {
     userId: string;
     birthDate: string;
+
+    user?: UserAttributes;
 }
 
-type PatientCreationAttributes = Optional<PatientAttributes, 'id'>;
+type PatientCreationAttributes = Optional<PatientAttributes, 'id' | 'user'>;
 
 @Table({
     tableName: 'patient',

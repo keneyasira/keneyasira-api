@@ -1,5 +1,6 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
+
 import { CreateTimeSlotDto } from './create-time-slot.dto';
 
 export class UpdateTimeSlotDto extends PartialType(CreateTimeSlotDto) {

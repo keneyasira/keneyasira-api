@@ -1,18 +1,19 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { ApplicationLoggerService } from '../core/logger/application.logger.service';
-import { QueryParams } from '../typings/query.typings';
-import { CreatePracticianDto } from './dtos/create-practician.dto';
-import { Practician, PracticianAttributes } from './models/practician.model';
-import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
-import { User } from '../user/models/user.model';
-import { UserRole } from '../user-role/models/user-role.model';
-import { Role } from '../role/models/role.model';
-import { ROLE_NAMES } from '../role/role.service';
-import { UpdatePracticianDto } from './dtos/update-practician.dto';
-import { TimeSlot, TimeSlotAttributes } from '../time-slot/models/time-slot.model';
+
 import { Appointment, AppointmentAttributes } from '../appointment/models/appointment.model';
+import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { Establishment } from '../establishment/models/establishment.model';
 import { Patient } from '../patient/models/patient.model';
+import { Role } from '../role/models/role.model';
+import { ROLE_NAMES } from '../role/role.service';
+import { TimeSlot, TimeSlotAttributes } from '../time-slot/models/time-slot.model';
+import { QueryParams } from '../typings/query.typings';
+import { User } from '../user/models/user.model';
+import { UserRole } from '../user-role/models/user-role.model';
+import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
+import { CreatePracticianDto } from './dtos/create-practician.dto';
+import { UpdatePracticianDto } from './dtos/update-practician.dto';
+import { Practician, PracticianAttributes } from './models/practician.model';
 
 @Injectable()
 export class PracticianService {

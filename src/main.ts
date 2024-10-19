@@ -32,6 +32,7 @@ async function bootstrap() {
         rateLimit({
             skip: (req) => config.logger.omitRoutes.includes(req.path),
             max,
+            validate: { trustProxy: false },
         }),
     );
 
@@ -42,7 +43,7 @@ async function bootstrap() {
     await app.listen(config.port);
 }
 
-bootstrap();
+void bootstrap();
 
 process.on('uncaughtException', function (err) {
     console.error('An exception was thrown but not catch:', err.message);

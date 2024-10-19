@@ -6,6 +6,8 @@ import {
     SequelizeHealthIndicator,
 } from '@nestjs/terminus';
 
+import { Public } from '../../../authentication/decorators/is-public.decorator';
+
 @Controller('health')
 export class HealthController {
     constructor(
@@ -13,6 +15,7 @@ export class HealthController {
         private readonly sequelizeHealthIndicator: SequelizeHealthIndicator,
     ) {}
 
+    @Public()
     @Get()
     @HealthCheck()
     healthCheck(): Promise<HealthCheckResult> {

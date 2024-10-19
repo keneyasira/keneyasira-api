@@ -18,9 +18,9 @@ import { SortParams } from '../typings/query.typings';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
 import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
-import { SpecialtyService } from './specialty.service';
 import { CreateSpecialtyDto } from './dtos/create-specialty.dto';
 import { UpdateSpecialtyDto } from './dtos/update-specialty.dto';
+import { SpecialtyService } from './specialty.service';
 
 @ApiBearerAuth()
 @ApiTags('specialty')

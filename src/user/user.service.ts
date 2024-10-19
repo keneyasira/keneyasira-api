@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Op } from 'sequelize';
 
 import { Config } from '../../config/default';
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
@@ -7,7 +8,6 @@ import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { User, UserAttributes } from './models/user.model';
-
 
 @Injectable()
 export class UserService {
@@ -29,7 +29,7 @@ export class UserService {
         return { data, total };
     }
 
-    async find(userId: string): Promise<User | null> {
+    async findByUserId(userId: string): Promise<User | null> {
         const user = await User.findOne({
             where: {
                 id: userId,
@@ -44,10 +44,21 @@ export class UserService {
         return user;
     }
 
-    async create(
-        createUserDto: CreateUserDto,
-    ): Promise<UserAttributes> {
+    async findByEmailOrNumber({ email, phone }: { email: string; phone: string }) {
+        const user = await User.findOne({
+            where: {
+                [Op.or]: [{ phone: phone ?? '' }, { email: email ?? '' }],
+            },
+        });
 
+        if (!user) {
+            return;
+        }
+
+        return user.get({ plain: true });
+    }
+
+    async create(createUserDto: CreateUserDto): Promise<UserAttributes> {
         const createdUser = await User.create(
             {
                 ...createUserDto,
@@ -63,8 +74,7 @@ export class UserService {
     }
 
     async update(updateUserDto: UpdateUserDto): Promise<UserAttributes> {
-
-        const userToBeUpdated =  await User.findByPk(updateUserDto.id);
+        const userToBeUpdated = await User.findByPk(updateUserDto.id);
 
         if (!userToBeUpdated) {
             throw new NotFoundException('User not found');
@@ -95,18 +105,16 @@ export class UserService {
     }
 
     async delete(userToDeleteId: string): Promise<void> {
-
         const deletedCount = await User.destroy({
             where: { id: userToDeleteId },
         });
 
         if (!deletedCount) {
-            throw new NotFoundException('User not found')
+            throw new NotFoundException('User not found');
         }
 
         this.logger.info(`UserService - deleted (${deletedCount}) user`, {
             userId: userToDeleteId,
         });
     }
-
 }

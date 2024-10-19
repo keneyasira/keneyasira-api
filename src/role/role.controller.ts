@@ -8,18 +8,17 @@ import {
     Param,
     ParseIntPipe,
     Post,
-    Put,
     Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
+import { SortParams } from '../typings/query.typings';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
+import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
 import { CreateRoleDto } from './dtos/create-role.dto';
 import { RoleService } from './role.service';
-import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
-import { SortParams } from '../typings/query.typings';
 
 @ApiBearerAuth()
 @ApiTags('role')

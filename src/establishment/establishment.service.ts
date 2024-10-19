@@ -1,15 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+
+import { Appointment, AppointmentAttributes } from '../appointment/models/appointment.model';
+import { ApplicationLoggerService } from '../core/logger/application.logger.service';
+import { Patient } from '../patient/models/patient.model';
+import { Practician } from '../practician/models/practician.model';
+import { TimeSlot, TimeSlotAttributes } from '../time-slot/models/time-slot.model';
+import { QueryParams } from '../typings/query.typings';
+import { User } from '../user/models/user.model';
+import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
 import { CreateEstablishmentDto } from './dtos/create-establishment.dto';
 import { UpdateEstablishmentDto } from './dtos/update-establishment.dto';
-import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { Establishment, EstablishmentAttributes } from './models/establishment.model';
-import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
-import { QueryParams } from '../typings/query.typings';
-import { TimeSlot, TimeSlotAttributes } from '../time-slot/models/time-slot.model';
-import { Appointment, AppointmentAttributes } from '../appointment/models/appointment.model';
-import { Practician } from '../practician/models/practician.model';
-import { Patient } from '../patient/models/patient.model';
-import { User } from '../user/models/user.model';
 
 @Injectable()
 export class EstablishmentService {

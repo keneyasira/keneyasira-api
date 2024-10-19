@@ -4,7 +4,6 @@ import {
     DefaultValuePipe,
     Delete,
     Get,
-    NotFoundException,
     Param,
     ParseIntPipe,
     Post,
@@ -13,12 +12,12 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
-import { CreateUserRoleDto } from './dtos/create-user-role.dto';
-import { UserRoleService } from './user-role.service';
 import { SortParams } from '../typings/query.typings';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
 import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
+import { CreateUserRoleDto } from './dtos/create-user-role.dto';
+import { UserRoleService } from './user-role.service';
 
 @ApiBearerAuth()
 @ApiTags('user-role')

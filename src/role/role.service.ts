@@ -1,15 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { QueryParams } from '../typings/query.typings';
+import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
 import { CreateRoleDto } from './dtos/create-role.dto';
 import { Role, RoleAttributes } from './models/role.model';
-import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
 
 export const ROLE_NAMES = {
     ADMIN: 'admin',
     PRACTICIAN: 'practician',
     PATIENT: 'patient',
 } as const;
+
+export type ROLE_TYPE = typeof ROLE_NAMES[keyof typeof ROLE_NAMES];
 
 @Injectable()
 export class RoleService {
