@@ -1,5 +1,8 @@
+import { BadRequestException } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
+import parsePhoneNumberFromString from 'libphonenumber-js';
 
 export class CreateEstablishmentDto {
     @ApiProperty({
@@ -26,7 +29,6 @@ export class CreateEstablishmentDto {
     @IsString()
     city: string;
 
-
     @ApiProperty({
         example: 'Mali',
         description: 'country of the establishment',
@@ -35,12 +37,23 @@ export class CreateEstablishmentDto {
     @IsString()
     country: string;
 
+    @IsPhoneNumber('ML')
+    @IsNotEmpty()
+    @Transform(({ value }) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        const result = parsePhoneNumberFromString(value, 'ML');
+
+        if (!result) {
+            throw new BadRequestException();
+        }
+
+        return result.number as string;
+    })
     @ApiProperty({
-        example: '+1234567890',
+        example: '+22379131415',
         description: 'Phone number of the establishment',
     })
     @IsNotEmpty()
-    @IsString()
     phone: string;
 
     @ApiProperty({

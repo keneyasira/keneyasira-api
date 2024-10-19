@@ -7,6 +7,7 @@ import { TimeSlot, type TimeSlotAttributes } from '../../time-slot/models/time-s
 export interface EstablishmentAttributes extends BaseAttributes {
     name: string;
     address: string;
+    phone: string;
     city: string;
     country: string;
     timeSlots?: TimeSlotAttributes[];
@@ -28,6 +29,10 @@ export class Establishment extends BaseModel<
     @AllowNull(false)
     @Column
     address: string;
+
+    @AllowNull(false)
+    @Column
+    phone: string;
 
     @AllowNull(false)
     @Column
