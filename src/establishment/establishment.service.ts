@@ -39,7 +39,7 @@ export class EstablishmentService {
             throw new NotFoundException('Establishment not found');
         }
 
-        return establishment;
+        return { data: [establishment] };
     }
 
     async findEstablishmentTimeSlots(
@@ -74,22 +74,26 @@ export class EstablishmentService {
             include: [
                 {
                     model: Practician,
-                    include: [{
-                        model: User,
-                    }]
+                    include: [
+                        {
+                            model: User,
+                        },
+                    ],
                 },
                 {
                     model: Establishment,
                 },
                 {
                     model: Patient,
-                    include: [{
-                        model: User,
-                    }]
+                    include: [
+                        {
+                            model: User,
+                        },
+                    ],
                 },
                 {
                     model: TimeSlot,
-                }
+                },
             ],
             limit: options?.limit,
             offset,
@@ -110,7 +114,7 @@ export class EstablishmentService {
             createdEstablishment: createdEstablishmentValue,
         });
 
-        return createdEstablishmentValue;
+        return { data: [createdEstablishmentValue] };
     }
 
     async update(updateEstablishmentDto: UpdateEstablishmentDto) {
@@ -136,7 +140,7 @@ export class EstablishmentService {
             updatedEstablishment: updatedEstablishmentValue,
         });
 
-        return updatedEstablishmentValue;
+        return { data: [updatedEstablishmentValue] };
     }
 
     async delete(establishmentId: string) {
