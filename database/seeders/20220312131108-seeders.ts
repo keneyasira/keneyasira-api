@@ -242,7 +242,7 @@ export async function up(queryInterface: QueryInterface) {
             updated_at: '2024-05-20 23:13:00',
         },
         {
-            id: '665b47d5-5ec3-4199-b3f1-87a9aa71d9e6',
+            id: '452da462-61fc-4809-aa50-a712a0f5231c',
             name: 'no_show',
             created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
@@ -348,6 +348,18 @@ export async function up(queryInterface: QueryInterface) {
             created_at: '2024-05-20 23:13:00',
             updated_at: '2024-05-20 23:13:00',
         },
+        // {
+        //     id: 'f5ce1888-25c6-4933-a969-73c53ebcbf0e',
+        //     establishment_id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+        //     practician_id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+        //     patient_id: '632273cc-de99-4582-a440-752ba1f78766',
+        //     appointment_status_id: '452da462-61fc-4809-aa50-a712a0f5231c', //no_show
+        //     time_slot_id: '56c63078-c32f-4d04-aa96-5e7815de1f98',
+        //     created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+        //     updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+        //     created_at: '2024-05-20 23:13:00',
+        //     updated_at: '2024-05-20 23:13:00',
+        // },
         // Add more appointments as needed
     ]);
 
