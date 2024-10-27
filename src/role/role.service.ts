@@ -12,7 +12,7 @@ export const ROLE_NAMES = {
     PATIENT: 'patient',
 } as const;
 
-export type ROLE_TYPE = typeof ROLE_NAMES[keyof typeof ROLE_NAMES];
+export type ROLE_TYPE = (typeof ROLE_NAMES)[keyof typeof ROLE_NAMES];
 
 @Injectable()
 export class RoleService {
@@ -33,7 +33,7 @@ export class RoleService {
         return { data, total };
     }
 
-    async find(RoleId: string): Promise<RoleAttributes> {
+    async find(RoleId: string) {
         const role = await Role.findOne({
             where: {
                 id: RoleId,
@@ -45,10 +45,10 @@ export class RoleService {
             throw new NotFoundException('Role not found');
         }
 
-        return role;
+        return { data: [role] };
     }
 
-    async create(createRoleDto: CreateRoleDto): Promise<RoleAttributes> {
+    async create(createRoleDto: CreateRoleDto) {
         const createdRole = await Role.create(
             {
                 ...createRoleDto,
@@ -57,11 +57,9 @@ export class RoleService {
             { raw: true },
         );
 
-        const createdRoleValue = createdRole.toJSON();
+        this.logger.info(`Created role`, { createdRole });
 
-        this.logger.info(`Created role`, { createdRole: createdRoleValue });
-
-        return createdRoleValue;
+        return { data: [createdRole] };
     }
 
     async delete(RoleToDeleteId: string): Promise<void> {

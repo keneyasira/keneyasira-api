@@ -7,7 +7,7 @@ import { QueryParams } from '../typings/query.typings';
 import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { User, UserAttributes } from './models/user.model';
+import { User } from './models/user.model';
 
 @Injectable()
 export class UserService {
@@ -29,7 +29,7 @@ export class UserService {
         return { data, total };
     }
 
-    async findByUserId(userId: string): Promise<User | null> {
+    async findByUserId(userId: string) {
         const user = await User.findOne({
             where: {
                 id: userId,
@@ -41,7 +41,7 @@ export class UserService {
             throw new NotFoundException('User not found');
         }
 
-        return user;
+        return { data: [user] };
     }
 
     async findByEmailOrNumber({ email, phone }: { email: string; phone: string }) {
@@ -55,10 +55,10 @@ export class UserService {
             return;
         }
 
-        return user.get({ plain: true });
+        return { data: [user.get({ plain: true })] };
     }
 
-    async create(createUserDto: CreateUserDto): Promise<UserAttributes> {
+    async create(createUserDto: CreateUserDto) {
         const createdUser = await User.create(
             {
                 ...createUserDto,
@@ -66,14 +66,14 @@ export class UserService {
             { raw: true },
         );
 
-        const createdUserValue = createdUser.toJSON();
+        const createdUserValue = createdUser.get({ plain: true });
 
         this.logger.info(`UserService - Created user`, { createdUser: createdUserValue });
 
-        return createdUserValue;
+        return { data: [createdUserValue] };
     }
 
-    async update(updateUserDto: UpdateUserDto): Promise<UserAttributes> {
+    async update(updateUserDto: UpdateUserDto) {
         const userToBeUpdated = await User.findByPk(updateUserDto.id);
 
         if (!userToBeUpdated) {
@@ -82,7 +82,7 @@ export class UserService {
 
         const [affectedRows, [updatedUser]] = await User.update(
             {
-                ...userToBeUpdated?.toJSON(),
+                ...userToBeUpdated?.get({ plain: true }),
                 ...updateUserDto,
             },
             {
@@ -97,11 +97,11 @@ export class UserService {
             throw new NotFoundException('User not found');
         }
 
-        const updateUserValue = updatedUser.toJSON();
+        const updateUserValue = updatedUser.get({ plain: true });
 
         this.logger.info(`UserService - Updated (${affectedRows}) user`, { updateUserValue });
 
-        return updateUserValue;
+        return { data: [updateUserValue] };
     }
 
     async delete(userToDeleteId: string): Promise<void> {

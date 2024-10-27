@@ -6,7 +6,6 @@ import { ROLE_NAMES } from '../role/role.service';
 import { QueryParams } from '../typings/query.typings';
 import { User } from '../user/models/user.model';
 import { UserRole } from '../user-role/models/user-role.model';
-import { errorToPlainObject } from '../utils/error.helper';
 import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
 import { CreatePatientDto } from './dtos/create-patient.dto';
 import { UpdatePatientDto } from './dtos/update-patient.dto';
@@ -21,7 +20,7 @@ export class PatientService {
     ): Promise<{ data: PatientAttributes[]; total: number }> {
         const offset = options?.limit && options.page ? options.limit * (options.page - 1) : 0;
 
-        const { rows, count: total } = await Patient.findAndCountAll({
+        const { rows: data, count: total } = await Patient.findAndCountAll({
             limit: options?.limit,
             offset,
             order: transformSortParamsToSequelizeFormat(options.sort),
@@ -32,41 +31,29 @@ export class PatientService {
             ],
         });
 
-        const data = rows.map((row) => row.toJSON());
-
-        return { data, total };
+        return { data: data.map((row) => row.get({ plain: true })), total };
     }
 
-    async find(patientId: string): Promise<PatientAttributes> {
-        try {
-            const patient = await Patient.findOne({
-                where: {
-                    id: patientId,
-                },
-                include: [
-                    {
-                        model: User,
-                    },
-                ],
-            });
-
-            if (!patient) {
-                throw new NotFoundException('Patient not found');
-            }
-
-            return patient.toJSON();
-        } catch (error) {
-            this.logger.error(
-                `PatientService - failed to get patient, ${(error as Error).message}`,
+    async find(patientId: string) {
+        const patient = await Patient.findOne({
+            where: {
+                id: patientId,
+            },
+            include: [
                 {
-                    error: errorToPlainObject(error as Error),
+                    model: User,
                 },
-            );
-            throw error;
+            ],
+        });
+
+        if (!patient) {
+            throw new NotFoundException('Patient not found');
         }
+
+        return { data: [patient.get({ plain: true })] };
     }
 
-    async create(createPatientDto: CreatePatientDto): Promise<PatientAttributes | undefined> {
+    async create(createPatientDto: CreatePatientDto) {
         // check if the user already exists with the same email
         const [user, isCreated] = await User.findOrCreate({
             where: {
@@ -99,24 +86,16 @@ export class PatientService {
             birthDate: createPatientDto.birthDate,
         });
 
-        const createdPatientValue = createdPatient.toJSON();
+        const createdPatientValue = createdPatient.get({ plain: true });
 
         this.logger.info(`PatientService - Created Patient`, {
             createdPatient: createdPatientValue,
         });
 
-        const patient = await Patient.findByPk(createdPatientValue.id, {
-            include: [
-                {
-                    model: User,
-                },
-            ],
-        });
-
-        return patient?.toJSON();
+        return this.find(createdPatientValue.id);
     }
 
-    async update(updatePatientDto: UpdatePatientDto): Promise<PatientAttributes> {
+    async update(updatePatientDto: UpdatePatientDto) {
         const [affectedRows, [updatedPatient]] = await Patient.update(
             {
                 ...updatePatientDto,
@@ -133,7 +112,7 @@ export class PatientService {
             throw new NotFoundException('Patient not found');
         }
 
-        const updatedPatientValue = updatedPatient.toJSON();
+        const updatedPatientValue = updatedPatient.get({ plain: true });
 
         this.logger.info(`PatientService - Updated (${affectedRows}) Patient`, {
             updatedPatient: updatedPatientValue,
@@ -151,7 +130,7 @@ export class PatientService {
             throw new NotFoundException('Patient not found');
         }
 
-        return patient.get({ plain: true });
+        return { data: [patient.get({ plain: true })] };
     }
 
     async delete(patientToDeleteId: string): Promise<void> {

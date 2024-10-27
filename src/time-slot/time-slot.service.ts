@@ -2,8 +2,11 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 
 import { Appointment } from '../appointment/models/appointment.model';
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
+import { Establishment } from '../establishment/models/establishment.model';
 import { EstablishmentHasPractician } from '../establishment-has-practician/models/establishment-has-practician.model';
+import { Practician } from '../practician/models/practician.model';
 import { QueryParams } from '../typings/query.typings';
+import { User } from '../user/models/user.model';
 import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
 import { CreateTimeSlotDto } from './dtos/create-time-slot.dto';
 import { UpdateTimeSlotDto } from './dtos/update-time-slot.dto';
@@ -20,22 +23,50 @@ export class TimeSlotService {
 
         const { rows: data, count: total } = await TimeSlot.findAndCountAll({
             limit: options?.limit,
+            include: [
+                {
+                    model: Establishment,
+                },
+                {
+                    model: Practician,
+                    include: [
+                        {
+                            model: User,
+                        },
+                    ],
+                },
+            ],
             offset,
             order: transformSortParamsToSequelizeFormat(options.sort),
-            raw: true,
         });
 
-        return { data, total };
+        return { data: data.map((row) => row.get({ plain: true })), total };
     }
 
     async find(timeSlotId: string) {
-        const timeSlot = (await TimeSlot.findByPk(timeSlotId))?.get({ plain: true });
+        const timeSlot = (
+            await TimeSlot.findByPk(timeSlotId, {
+                include: [
+                    {
+                        model: Establishment,
+                    },
+                    {
+                        model: Practician,
+                        include: [
+                            {
+                                model: User,
+                            },
+                        ],
+                    },
+                ],
+            })
+        )?.get({ plain: true });
 
         if (!timeSlot) {
             throw new NotFoundException('TimeSlot not found');
         }
 
-        return timeSlot;
+        return { data: [timeSlot] };
     }
 
     async create(createTimeSlotDto: CreateTimeSlotDto) {
@@ -57,13 +88,11 @@ export class TimeSlotService {
 
         const createdTimeSlot = await TimeSlot.create(createTimeSlotDto);
 
-        const createdTimeSlotValue = createdTimeSlot.get({ plain: true });
-
         this.logger.info(`Created timeSlot`, {
-            createdTimeSlot: createdTimeSlotValue,
+            createdTimeSlot,
         });
 
-        return createdTimeSlotValue;
+        return this.find(createdTimeSlot.id);
     }
 
     async update(updateTimeSlotDto: UpdateTimeSlotDto) {
@@ -83,7 +112,7 @@ export class TimeSlotService {
             throw new NotFoundException('TimeSlot not found');
         }
 
-        return await updatedTimeSlot.get({ plain: true });
+        return this.find(updatedTimeSlot.id);
     }
 
     async delete(timeSlotId: string) {

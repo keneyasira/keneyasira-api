@@ -55,19 +55,29 @@ describe('PracticianHasSpecialtyController', () => {
                 .expect(200)
                 .expect(({ body }) => {
                     expect(body).toEqual({
-                        id: '8112162c-e0a2-4f6f-a2c6-14aa72f6bab0',
-                        practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                        specialtyId: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
-                        createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                        updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                        practician: {
-                            id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                            userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
-                        },
-                        specialty: {
-                            id: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
-                            name: 'Dermatology',
-                        },
+                        data: [
+                            {
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                id: expect.any(String),
+                                practician: {
+                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                    id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                    userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                },
+                                practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                specialty: {
+                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                    id: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
+                                    name: 'Dermatology',
+                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                },
+                                specialtyId: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                            },
+                        ],
+                        statusCode: 200,
+                        total: 1,
                     });
                 });
         });
@@ -82,19 +92,28 @@ describe('PracticianHasSpecialtyController', () => {
                 .expect(201)
                 .expect(({ body }) => {
                     expect(body).toEqual({
-                        id: '8112162c-e0a2-4f6f-a2c6-14aa72f6bab0',
-                        practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                        specialtyId: 'bb045ec3-e2e8-5707-8e4d-f8cfaf7195c1',
-                        createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                        updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                        practician: {
-                            id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                            userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
-                        },
-                        specialty: {
-                            id: 'bb045ec3-e2e8-5707-8e4d-f8cfaf7195c1',
-                            name: 'Cardiology',
-                        },
+                        data: [
+                            {
+                                createdBy: null,
+                                id: expect.any(String),
+                                practician: {
+                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                    id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                    userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                },
+                                practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                specialty: {
+                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                    id: 'bb045ec3-e2e8-5707-8e4d-f8cfaf7195c1',
+                                    name: 'Cardiology',
+                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                },
+                                specialtyId: 'bb045ec3-e2e8-5707-8e4d-f8cfaf7195c1',
+                                updatedBy: null,
+                            },
+                        ],
+                        statusCode: 201,
                     });
                 });
         });
@@ -104,7 +123,9 @@ describe('PracticianHasSpecialtyController', () => {
                 .delete(`/practician-has-specialties/8112162c-e0a2-4f6f-a2c6-14aa72f6bab0`)
                 .expect(200);
 
-            await request(app.getHttpServer()).get(`/practician-has-specialties/8112162c-e0a2-4f6f-a2c6-14aa72f6bab0`).expect(404);
+            await request(app.getHttpServer())
+                .get(`/practician-has-specialties/8112162c-e0a2-4f6f-a2c6-14aa72f6bab0`)
+                .expect(404);
         });
 
         it('should return "Bad Request" with an incorrect ID', async () => {

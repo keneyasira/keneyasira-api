@@ -11,6 +11,7 @@ import {
     Post,
     Put,
     Query,
+    Req,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
@@ -22,6 +23,8 @@ import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortPara
 import { CreatePracticianDto } from './dtos/create-practician.dto';
 import { UpdatePracticianDto } from './dtos/update-practician.dto';
 import { PracticianService } from './practician.service';
+import type { UserAttributes } from '../user/models/user.model';
+import { AuthenticatedUser } from '../authentication/decorators/authenticated-user.param-decorator';
 
 @ApiBearerAuth()
 @ApiTags('practician')
@@ -98,7 +101,6 @@ export class PracticianController {
         }
     }
 
-
     @Get('/:id/time-slots')
     async findTimeSlots(
         @Param('id') practicianId: string,
@@ -114,9 +116,7 @@ export class PracticianController {
             });
         } catch (error) {
             this.logger.error(
-                `PracticianController - failed to get time-slots, ${
-                    (error as Error).message
-                }`,
+                `PracticianController - failed to get time-slots, ${(error as Error).message}`,
                 {
                     error: errorToPlainObject(error as Error),
                 },
@@ -126,9 +126,15 @@ export class PracticianController {
     }
 
     @Post('/')
-    async create(@Body() createPracticianDto: CreatePracticianDto) {
+    async create(
+        @AuthenticatedUser() user: UserAttributes,
+        @Body() createPracticianDto: CreatePracticianDto,
+    ) {
         try {
-            return this.practicianService.create(createPracticianDto);
+            return this.practicianService.create({
+                ...createPracticianDto,
+                createdBy: user.id,
+            });
         } catch (error) {
             this.logger.error(
                 `PracticianController - failed to create practician, ${(error as Error).message}`,
@@ -141,13 +147,20 @@ export class PracticianController {
     }
 
     @Put('/:id')
-    async update(@Param('id') id: string, @Body() updatePracticianDto: UpdatePracticianDto) {
+    async update(
+        @AuthenticatedUser() user: UserAttributes,
+        @Param('id') id: string,
+        @Body() updatePracticianDto: UpdatePracticianDto,
+    ) {
         if (id !== updatePracticianDto.id) {
             throw new BadRequestException('Id mismatch');
         }
 
         try {
-            return await this.practicianService.update(updatePracticianDto);
+            return await this.practicianService.update({
+                ...updatePracticianDto,
+                updatedBy: user.id,
+            });
         } catch (error) {
             this.logger.error(
                 `PracticianController - failed to update practician, ${(error as Error).message}`,
@@ -160,9 +173,9 @@ export class PracticianController {
     }
 
     @Delete('/:id')
-    async delete(@Param('id') id: string) {
+    async delete(@AuthenticatedUser() user: UserAttributes, @Param('id') id: string) {
         try {
-            await this.practicianService.delete(id);
+            await this.practicianService.delete({ practicianId: id, deletedBy: user.id });
         } catch (error) {
             this.logger.error(
                 `PracticianController - failed to delete practician, ${(error as Error).message}`,

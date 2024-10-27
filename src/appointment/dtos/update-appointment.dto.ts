@@ -1,5 +1,6 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional } from 'class-validator';
+
 import { CreateAppointmentDto } from './create-appointment.dto';
 
 export class UpdateAppointmentDto extends PartialType(CreateAppointmentDto) {

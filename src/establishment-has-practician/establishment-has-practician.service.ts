@@ -32,10 +32,9 @@ export class EstablishmentHasPracticianService {
                     model: Practician,
                 },
             ],
-            raw: true,
         });
 
-        return { data, total };
+        return { data: data.map((row) => row.get({ plain: true })), total };
     }
 
     async find(establishmentHasPracticianId: string) {
@@ -49,7 +48,7 @@ export class EstablishmentHasPracticianService {
             throw new NotFoundException('Establishment Has Practician not found');
         }
 
-        return establishmentHasPracticianToFind;
+        return { data: [establishmentHasPracticianToFind] };
     }
 
     async create(createEstablishmentHasPracticianDto: CreateEstablishmentHasPracticianDto) {
@@ -61,15 +60,20 @@ export class EstablishmentHasPracticianService {
             throw new Error('Establishment Has Practician could not be created');
         }
 
-        this.logger.info(`EstablishmentHasPracticianService - Created establishment-has-practician`, {
-            createdEstablishmentHasPractician,
-        });
+        this.logger.info(
+            `EstablishmentHasPracticianService - Created establishment-has-practician`,
+            {
+                createdEstablishmentHasPractician,
+            },
+        );
 
-        return (
+        const establishmentHasPractician = (
             await EstablishmentHasPractician.findByPk(createdEstablishmentHasPractician.id, {
                 include: [{ model: Establishment }, { model: Practician }],
             })
         )?.get({ plain: true });
+
+        return { data: [establishmentHasPractician] };
     }
 
     async delete(establishmentHasPracticianToDeleteId: string) {

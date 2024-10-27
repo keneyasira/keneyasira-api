@@ -32,10 +32,9 @@ export class PracticianHasSpecialtyService {
                     model: Specialty,
                 },
             ],
-            raw: true,
         });
 
-        return { data, total };
+        return { data: data.map((row) => row.get({ plain: true })), total };
     }
 
     async find(practicianHasSpecialtyId: string) {
@@ -49,7 +48,7 @@ export class PracticianHasSpecialtyService {
             throw new NotFoundException('Practician Has Specialty not found');
         }
 
-        return practicianHasSpecialtyToFind;
+        return { data: [practicianHasSpecialtyToFind] };
     }
 
     async create(createPracticianHasSpecialtyDto: CreatePracticianHasSpecialtyDto) {
@@ -65,11 +64,13 @@ export class PracticianHasSpecialtyService {
             createdPracticianHasSpecialty,
         });
 
-        return (
+        const practicianHasSpecialty = (
             await PracticianHasSpecialty.findByPk(createdPracticianHasSpecialty.id, {
                 include: [{ model: Practician }, { model: Specialty }],
             })
         )?.get({ plain: true });
+
+        return { data: [practicianHasSpecialty] };
     }
 
     async delete(practicianHasSpecialtyToDeleteId: string) {

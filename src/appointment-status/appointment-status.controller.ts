@@ -23,7 +23,7 @@ import { CreateAppointmentStatusDto } from './dtos/create-appointment-status.dto
 import { UpdateAppointmentStatusDto } from './dtos/update-appointment-status.dto';
 
 @ApiBearerAuth()
-@ApiTags('Appointment Status')
+@ApiTags('appointment-status')
 @Controller('appointment-statuses')
 export class AppointmentStatusController {
     constructor(

@@ -28,7 +28,7 @@ export class EstablishmentService {
             raw: true,
         });
 
-        return { data, total };
+        return { data: data.map((row) => row.get({ plain: true })), total };
     }
 
     async find(establishmentId: string) {
@@ -55,10 +55,9 @@ export class EstablishmentService {
             limit: options?.limit,
             offset,
             order: transformSortParamsToSequelizeFormat(options.sort),
-            raw: true,
         });
 
-        return { data, total };
+        return { data: data.map((row) => row.get({ plain: true })), total };
     }
 
     async findEstablishmentAppointments(
@@ -98,10 +97,9 @@ export class EstablishmentService {
             limit: options?.limit,
             offset,
             order: transformSortParamsToSequelizeFormat(options.sort),
-            raw: true,
         });
 
-        return { data, total };
+        return { data: data.map((row) => row.get({ plain: true })), total };
     }
 
     async create(createEstablishmentDto: CreateEstablishmentDto) {

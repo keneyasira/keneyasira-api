@@ -29,10 +29,9 @@ export class UserRoleService {
                     model: Role,
                 },
             ],
-            raw: true,
         });
 
-        return { data, total };
+        return { data: data.map((row) => row.get({ plain: true })), total };
     }
 
     async find(userRoleId: string) {
@@ -54,7 +53,7 @@ export class UserRoleService {
             throw new NotFoundException();
         }
 
-        return userRole.get({ plain: true });
+        return { data: [userRole.get({ plain: true })] };
     }
 
     async getUserRoles(userId: string) {
@@ -73,7 +72,7 @@ export class UserRoleService {
     }
 
     async create(createUserRoleDto: CreateUserRoleDto) {
-        const createdUserRole = (await UserRole.create(createUserRoleDto)).get({ plain: true });
+        const createdUserRole = await UserRole.create({ ...createUserRoleDto }, { raw: true });
 
         if (!createdUserRole) {
             throw new Error();
@@ -82,11 +81,7 @@ export class UserRoleService {
             createdUserRole,
         });
 
-        const userRole = await UserRole.findByPk(createdUserRole.id, {
-            include: [{ model: User }, { model: Role }],
-        });
-
-        return userRole?.get({ plain: true });
+        return await this.find(createdUserRole.id);
     }
 
     async delete(userRoleToDeleteId: string) {

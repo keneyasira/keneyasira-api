@@ -26,7 +26,7 @@ export class SpecialtyService {
         return { data, total };
     }
 
-    async find(SpecialtyId: string): Promise<SpecialtyAttributes> {
+    async find(SpecialtyId: string) {
         const specialty = await Specialty.findOne({
             where: {
                 id: SpecialtyId,
@@ -37,27 +37,20 @@ export class SpecialtyService {
             throw new NotFoundException('Specialty not found');
         }
 
-        return specialty.get({ plain: true });
+        return { data: [specialty.get({ plain: true })] };
     }
 
-    async create(
-        createSpecialtyDto: CreateSpecialtyDto
-    ): Promise<SpecialtyAttributes> {
-
-        const createdSpecialty = await Specialty.create(createSpecialtyDto,
-        );
+    async create(createSpecialtyDto: CreateSpecialtyDto) {
+        const createdSpecialty = await Specialty.create(createSpecialtyDto);
 
         const createdSpecialtyValue = createdSpecialty.get({ plain: true });
 
         this.logger.info(`Created specialty`, { createdSpecialty: createdSpecialtyValue });
 
-        return createdSpecialtyValue;
+        return { data: [createdSpecialtyValue] };
     }
 
-    async update(
-        updateSpecialtyDto: UpdateSpecialtyDto
-    ): Promise<SpecialtyAttributes> {
-
+    async update(updateSpecialtyDto: UpdateSpecialtyDto) {
         const [affectedRows, [updatedSpecialty]] = await Specialty.update(
             {
                 ...updateSpecialtyDto,
@@ -80,7 +73,7 @@ export class SpecialtyService {
             updatedSpecialty: updatedSpecialtyValue,
         });
 
-        return updatedSpecialtyValue;
+        return { data: [updatedSpecialtyValue] };
     }
 
     async delete(specialtyToDeleteId: string): Promise<number> {

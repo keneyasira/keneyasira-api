@@ -16,11 +16,11 @@ export class AuthenticationService {
         private jwtService: JwtService,
     ) {}
 
-    validateUser( dto: PasswordLessLoginDto) {
+    validateUser(dto: PasswordLessLoginDto) {
         return this.userService.findByEmailOrNumber(dto);
     }
 
-   async generateTokens(user: UserAttributes | undefined) {
+    async generateTokens(user: UserAttributes | undefined) {
         if (!user) {
             throw new UnauthorizedException('Invalid Credentials');
         }

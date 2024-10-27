@@ -35,7 +35,7 @@ export class EstablishmentHasSpecialtyService {
             raw: true,
         });
 
-        return { data, total };
+        return { data: data.map((row) => row.get({ plain: true })), total };
     }
 
     async find(establishmentHasSpecialtyId: string) {
@@ -49,7 +49,7 @@ export class EstablishmentHasSpecialtyService {
             throw new NotFoundException('Establishment Has Specialty not found');
         }
 
-        return establishmentHasSpecialtyToFind;
+        return { data: [establishmentHasSpecialtyToFind] };
     }
 
     async create(createEstablishmentHasSpecialtyDto: CreateEstablishmentHasSpecialtyDto) {
@@ -65,11 +65,13 @@ export class EstablishmentHasSpecialtyService {
             createdEstablishmentHasSpecialty,
         });
 
-        return (
+        const establishmentHasSpecialty = (
             await EstablishmentHasSpecialty.findByPk(createdEstablishmentHasSpecialty.id, {
                 include: [{ model: Establishment }, { model: Specialty }],
             })
         )?.get({ plain: true });
+
+        return { data: [establishmentHasSpecialty] };
     }
 
     async delete(establishmentHasSpecialtyToDeleteId: string) {

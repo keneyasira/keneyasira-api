@@ -3,16 +3,29 @@ import { execSync } from 'child_process';
 import request from 'supertest';
 
 import { getTestingModule } from '../../core/testing';
+import { JwtService } from '@nestjs/jwt';
+import { TestingModule } from '@nestjs/testing';
 
 describe('RoleController', () => {
     let app: INestApplication;
+    let jwtService: JwtService;
+    let accessToken: string;
 
-    beforeAll(async () => {
-        const testingModule = await getTestingModule();
-
+    beforeEach(async () => {
+        const testingModule: TestingModule = await getTestingModule();
         app = testingModule.createNestApplication();
+        jwtService = testingModule.get(JwtService);
 
-        execSync('make regenerate-db-test');
+        // Manually generate a token with a test payload
+        accessToken = jwtService.sign({
+            id: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            sub: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            email: 'admin@keneyasira.com',
+            phone: '+22379131414',
+            roles: ['admin'], // Example role
+            secret: 'secret',
+        });
+
         await app.init();
     });
 
@@ -25,93 +38,101 @@ describe('RoleController', () => {
             // create role first
             const id = await request(app.getHttpServer())
                 .post('/roles')
-                // .auth(token, { type: 'bearer' })
+                .auth(accessToken, { type: 'bearer' })
                 .send({
                     name: 'roleToDelete',
                     description: 'roleToDelete',
                 })
                 .then(({ body }) => {
-                    return body.id;
+                    return body.data.pop().id;
                 });
 
-            return (
-                request(app.getHttpServer())
-                    .delete(`/roles/${id}`)
-                    // .auth(token, { type: 'bearer' })
-                    .expect(200)
-            );
+            return request(app.getHttpServer())
+                .delete(`/roles/${id}`)
+                .auth(accessToken, { type: 'bearer' })
+                .expect(200);
         });
 
         it('should get roles', async () => {
-            return (
-                request(app.getHttpServer())
-                    .get('/roles')
-                    // .auth(token, { type: 'bearer' })
-                    .expect(200)
-                    .expect(({ body }) => {
-                        expect(body).toEqual({
-                            data: [
-                                {
-                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    description: 'admin role',
-                                    id: '55386193-8051-4853-a0f9-8b6cd37083c7',
-                                    name: 'admin',
-                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                },
-                                {
-                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    description: 'practician role',
-                                    id: 'dcc71837-5964-409f-b0c7-3ec4d9f3a114',
-                                    name: 'practician',
-                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                },
-                                {
-                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    description: 'patient role',
-                                    id: '86a41c88-726b-4a69-8774-60a9960cfa09',
-                                    name: 'patient',
-                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                },
-                            ],
-                            total: 3,
-                        });
-                    })
-            );
+            return request(app.getHttpServer())
+                .get('/roles')
+                .auth(accessToken, { type: 'bearer' })
+                .expect(200)
+                .expect(({ body }) => {
+                    expect(body).toEqual({
+                        data: [
+                            {
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                description: 'admin role',
+                                id: '55386193-8051-4853-a0f9-8b6cd37083c7',
+                                name: 'admin',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                            },
+                            {
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                description: 'practician role',
+                                id: 'dcc71837-5964-409f-b0c7-3ec4d9f3a114',
+                                name: 'practician',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                            },
+                            {
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                description: 'patient role',
+                                id: '86a41c88-726b-4a69-8774-60a9960cfa09',
+                                name: 'patient',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                            },
+                        ],
+                        total: 3,
+                        statusCode: 200,
+                    });
+                });
         });
 
         it('should get a role', async () => {
-            return (
-                request(app.getHttpServer())
-                    .get('/roles/55386193-8051-4853-a0f9-8b6cd37083c7')
-                    // .auth(token, { type: 'bearer' })
-                    .expect(200)
-                    .expect(({ body }) => {
-                        expect(body).toMatchObject({
-                            id: '55386193-8051-4853-a0f9-8b6cd37083c7',
-                            name: 'admin',
-                            description: 'admin role',
-                        });
-                    })
-            );
+            return request(app.getHttpServer())
+                .get('/roles/55386193-8051-4853-a0f9-8b6cd37083c7')
+                .auth(accessToken, { type: 'bearer' })
+                .expect(200)
+                .expect(({ body }) => {
+                    expect(body).toMatchObject({
+                        data: [
+                            {
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                description: 'admin role',
+                                id: '55386193-8051-4853-a0f9-8b6cd37083c7',
+                                name: 'admin',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                            },
+                        ],
+                        statusCode: 200,
+                    });
+                });
         });
 
         it('should create a role', async () => {
-            return (
-                request(app.getHttpServer())
-                    .post('/roles')
-                    // .auth(token, { type: 'bearer' })
-                    .send({
-                        name: 'roleToBeCreated',
-                        description: 'role to be created',
-                    })
-                    .expect(201)
-                    .expect(({ body }) => {
-                        expect(body).toMatchObject({
-                            name: 'roleToBeCreated',
-                            description: 'role to be created',
-                        });
-                    })
-            );
+            return request(app.getHttpServer())
+                .post('/roles')
+                .auth(accessToken, { type: 'bearer' })
+                .send({
+                    name: 'roleToBeCreated',
+                    description: 'role to be created',
+                })
+                .expect(201)
+                .expect(({ body }) => {
+                    expect(body).toMatchObject({
+                        data: [
+                            {
+                                createdBy: '',
+                                id: '55386193-8051-4853-a0f9-8b6cd37083c7',
+                                updatedBy: '',
+                                name: 'roleToBeCreated',
+                                description: 'role to be created',
+                            },
+                        ],
+                        statusCode: 200,
+                    });
+                });
         });
     });
 });

@@ -11,7 +11,7 @@ import { User } from '../user/models/user.model';
 import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
 import { CreateAppointmentDto } from './dtos/create-appointment.dto';
 import { UpdateAppointmentDto } from './dtos/update-appointment.dto';
-import { Appointment,AppointmentAttributes } from './models/appointment.model';
+import { Appointment, AppointmentAttributes } from './models/appointment.model';
 
 export const STATUS_NAMES = {
     SCHEDULED: 'scheduled',
@@ -59,10 +59,9 @@ export class AppointmentService {
             include: IncludeValues,
             offset,
             order: transformSortParamsToSequelizeFormat(options.sort),
-            raw: true,
         });
 
-        return { data, total };
+        return { data: data.map((row) => row.get({ plain: true })), total };
     }
 
     async find(appointmentId: string) {

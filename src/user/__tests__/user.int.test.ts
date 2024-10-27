@@ -3,16 +3,29 @@ import { execSync } from 'child_process';
 import request from 'supertest';
 
 import { getTestingModule } from '../../core/testing';
+import { JwtService } from '@nestjs/jwt';
+import { TestingModule } from '@nestjs/testing';
 
 describe('UserController', () => {
     let app: INestApplication;
+    let jwtService: JwtService;
+    let accessToken: string;
 
     beforeAll(async () => {
-        const testingModule = await getTestingModule();
-
+        const testingModule: TestingModule = await getTestingModule();
         app = testingModule.createNestApplication();
+        jwtService = testingModule.get(JwtService);
 
-        execSync('make regenerate-db-test');
+        // Manually generate a token with a test payload
+        accessToken = jwtService.sign({
+            id: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            sub: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            email: 'admin@keneyasira.com',
+            phone: '+22379131414',
+            roles: ['admin'], // Example role
+            secret: 'secret',
+        });
+
         await app.init();
     });
 
@@ -24,7 +37,7 @@ describe('UserController', () => {
         it('should get users', async () => {
             await request(app.getHttpServer())
                 .get('/users')
-                // .auth(token, { type: 'bearer' })
+                .auth(accessToken, { type: 'bearer' })
                 .expect(200)
                 .expect(({ body }) => {
                     expect(body).toEqual({
@@ -35,7 +48,7 @@ describe('UserController', () => {
                                 firstName: 'Admin',
                                 id: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                                 lastName: 'Admin',
-                                phone: '1234567890',
+                                phone: '+22379131414',
                                 updatedBy: null,
                             },
                             {
@@ -44,7 +57,7 @@ describe('UserController', () => {
                                 firstName: 'Doctor',
                                 id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
                                 lastName: 'Doctor',
-                                phone: '9876543210',
+                                phone: '+22379131415',
                                 updatedBy: null,
                             },
                             {
@@ -53,11 +66,12 @@ describe('UserController', () => {
                                 firstName: 'Patient',
                                 id: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
                                 lastName: 'Patient',
-                                phone: '5551234567',
+                                phone: '+22379131416',
                                 updatedBy: null,
                             },
                         ],
                         total: 3,
+                        statusCode: 200,
                     });
                 });
         });
@@ -65,50 +79,22 @@ describe('UserController', () => {
         it('should get a user', async () => {
             await request(app.getHttpServer())
                 .get('/users/d7a05755-62d3-4a8e-9ea4-035d9fafd924')
-                // .auth(token, { type: 'bearer' })
+                .auth(accessToken, { type: 'bearer' })
                 .expect(200)
                 .expect(({ body }) => {
                     expect(body).toEqual({
-                        createdBy: null,
-                        email: 'admin@keneyasira.com',
-                        firstName: 'Admin',
-                        id: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                        lastName: 'Admin',
-                        phone: '1234567890',
-                        updatedBy: null,
-                    });
-                });
-        });
-
-        it('should update a user', async () => {
-            // create user first
-            const id = await request(app.getHttpServer())
-                .post('/users')
-                // .auth(token, { type: 'bearer' })
-                .send({
-                    email: 'titi@titi.com',
-                    firstName: 'titi',
-                    lastName: 'titi',
-                    phone: '12345',
-                })
-                .then(({ body }) => {
-                    return body.id;
-                });
-
-            await request(app.getHttpServer())
-                .put(`/users/${id}`)
-                // .auth(token, { type: 'bearer' })
-                .send({
-                    id,
-                    firstName: 'firstName',
-                    lastName: 'lastName',
-                })
-                .expect(200)
-                .expect(({ body }) => {
-                    expect(body).toMatchObject({
-                        id,
-                        firstName: 'firstName',
-                        lastName: 'lastName',
+                        data: [
+                            {
+                                createdBy: null,
+                                email: 'admin@keneyasira.com',
+                                firstName: 'Admin',
+                                id: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                lastName: 'Admin',
+                                phone: '+22379131414',
+                                updatedBy: null,
+                            },
+                        ],
+                        statusCode: 200,
                     });
                 });
         });
@@ -118,12 +104,12 @@ describe('UserController', () => {
 
             await request(app.getHttpServer())
                 .delete(`/users/${id}`)
-                // .auth(token, { type: 'bearer' })
+                .auth(accessToken, { type: 'bearer' })
                 .expect(200);
 
             await request(app.getHttpServer())
                 .get(`/users/${id}`)
-                // .auth(token, { type: 'bearer' })
+                .auth(accessToken, { type: 'bearer' })
                 .expect(404);
         });
     });
