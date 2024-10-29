@@ -23,7 +23,6 @@ export class UserService {
             limit: options?.limit,
             offset,
             order: transformSortParamsToSequelizeFormat(options.sort),
-            raw: true,
         });
 
         return { data, total };
@@ -34,7 +33,6 @@ export class UserService {
             where: {
                 id: userId,
             },
-            raw: true,
         });
 
         if (!user) {

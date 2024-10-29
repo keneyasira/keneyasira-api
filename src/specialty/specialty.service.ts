@@ -20,7 +20,6 @@ export class SpecialtyService {
             limit: options?.limit,
             offset,
             order: transformSortParamsToSequelizeFormat(options.sort),
-            raw: true,
         });
 
         return { data, total };

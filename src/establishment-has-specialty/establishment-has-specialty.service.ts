@@ -32,7 +32,6 @@ export class EstablishmentHasSpecialtyService {
                     model: Specialty,
                 },
             ],
-            raw: true,
         });
 
         return { data: data.map((row) => row.get({ plain: true })), total };

@@ -27,7 +27,6 @@ export class RoleService {
             limit: options?.limit,
             offset,
             order: transformSortParamsToSequelizeFormat(options.sort),
-            raw: true,
         });
 
         return { data, total };
@@ -38,7 +37,6 @@ export class RoleService {
             where: {
                 id: RoleId,
             },
-            raw: true,
         });
 
         if (!role) {

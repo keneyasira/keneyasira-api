@@ -25,7 +25,6 @@ export class EstablishmentService {
             limit: options?.limit,
             offset,
             order: transformSortParamsToSequelizeFormat(options.sort),
-            raw: true,
         });
 
         return { data: data.map((row) => row.get({ plain: true })), total };

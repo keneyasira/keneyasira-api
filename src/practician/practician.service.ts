@@ -70,7 +70,6 @@ export class PracticianService {
             limit: options?.limit,
             offset,
             order: transformSortParamsToSequelizeFormat(options.sort),
-            raw: true,
         });
 
         return { data, total };
@@ -113,7 +112,6 @@ export class PracticianService {
             limit: options?.limit,
             offset,
             order: transformSortParamsToSequelizeFormat(options.sort),
-            raw: true,
         });
 
         return { data: data.map((row) => row.get({ plain: true })), total };

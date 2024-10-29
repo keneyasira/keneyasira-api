@@ -19,7 +19,6 @@ export class AppointmentStatusService {
             limit: options?.limit,
             offset,
             order: transformSortParamsToSequelizeFormat(options.sort),
-            raw: true,
         });
 
         return { data, total };
@@ -30,7 +29,6 @@ export class AppointmentStatusService {
             where: {
                 id: AppointmentStatusId,
             },
-            raw: true,
         });
 
         if (!appointmentStatus) {
