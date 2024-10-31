@@ -66,13 +66,17 @@ export class AppointmentService {
 
     async find(appointmentId: string) {
         // Implement the logic to find a single appointment
-        const appointment = (await Appointment.findByPk(appointmentId))?.get({ plain: true });
+        const appointment = (
+            await Appointment.findByPk(appointmentId, {
+                include: IncludeValues,
+            })
+        )?.get({ plain: true });
 
         if (!appointment) {
             throw new NotFoundException('Appointment not found');
         }
 
-        return appointment;
+        return { data: [appointment] };
     }
 
     async create(createAppointmentDto: CreateAppointmentDto) {
@@ -97,13 +101,11 @@ export class AppointmentService {
             appointmentStatusId: appointmentStatus?.id,
         });
 
-        const createdAppointmentValue = createdAppointment.get({ plain: true });
-
         this.logger.info(`Created appointment`, {
-            createdAppointment: createdAppointmentValue,
+            createdAppointment,
         });
 
-        return createdAppointmentValue;
+        return this.find(createdAppointment.id);
     }
 
     private async checkAndReturnTimeSlot(timeSlotId: string | undefined) {

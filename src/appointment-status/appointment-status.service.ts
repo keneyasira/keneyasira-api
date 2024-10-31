@@ -21,10 +21,19 @@ export class AppointmentStatusService {
             order: transformSortParamsToSequelizeFormat(options.sort),
         });
 
-        return { data, total };
+        return {
+            data: data.map((row) => {
+                const r = row.get({ plain: true });
+
+                console.log(r);
+
+                return r;
+            }),
+            total,
+        };
     }
 
-    async find(AppointmentStatusId: string): Promise<AppointmentStatusAttributes> {
+    async find(AppointmentStatusId: string) {
         const appointmentStatus = await AppointmentStatus.findOne({
             where: {
                 id: AppointmentStatusId,
@@ -35,12 +44,12 @@ export class AppointmentStatusService {
             throw new NotFoundException('Appointment status not found');
         }
 
-        return appointmentStatus;
+        const row = appointmentStatus.get({ plain: true });
+
+        return { data: [row] };
     }
 
-    async create(
-        appointmentStatusData: CreateAppointmentStatusDto,
-    ): Promise<AppointmentStatusAttributes> {
+    async create(appointmentStatusData: CreateAppointmentStatusDto) {
         const appointmentStatus = await AppointmentStatus.create(appointmentStatusData);
 
         const createdAppointmentStatusValue = appointmentStatus.get({ plain: true });
@@ -49,12 +58,10 @@ export class AppointmentStatusService {
             createdAppointmentStatus: createdAppointmentStatusValue,
         });
 
-        return appointmentStatus.get({ plain: true });
+        return { data: [createdAppointmentStatusValue] };
     }
 
-    async update(
-        updateAppointmentStatusDto: UpdateAppointmentStatusDto,
-    ): Promise<AppointmentStatusAttributes> {
+    async update(updateAppointmentStatusDto: UpdateAppointmentStatusDto) {
         const [affectedRows, [updatedAppointmentStatus]] = await AppointmentStatus.update(
             {
                 ...updateAppointmentStatusDto,
@@ -71,7 +78,7 @@ export class AppointmentStatusService {
             throw new NotFoundException('Appointment status not found');
         }
 
-        return updatedAppointmentStatus.get({ plain: true });
+        return { data: [updatedAppointmentStatus.get({ plain: true })] };
     }
 
     async delete(AppointmentStatusToDeleteId: string): Promise<void> {
