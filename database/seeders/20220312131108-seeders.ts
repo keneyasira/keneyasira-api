@@ -1,7 +1,7 @@
 'use strict';
 
 import dayjs from 'dayjs';
-import type { QueryInterface } from 'sequelize';
+import { QueryInterface } from 'sequelize';
 
 export async function up(queryInterface: QueryInterface) {
     // Seed data for user table

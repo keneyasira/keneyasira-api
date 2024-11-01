@@ -25,6 +25,8 @@ describe('SpecialtyController', () => {
             roles: ['admin'], // Example role
             secret: 'secret',
         });
+
+        await app.init();
     });
 
     afterAll(async () => {
@@ -36,36 +38,35 @@ describe('SpecialtyController', () => {
             await request(app.getHttpServer())
                 .get('/specialties')
                 .auth(accessToken, { type: 'bearer' })
-                .then((body) => console.log(body));
-            .expect(200)
-            .expect(({ body }) => {
-                expect(body).toEqual({
-                    data: [
-                        {
-                            createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                            id: 'bb045ec3-e2e8-5707-8e4d-f8cfaf7195c1',
-                            name: 'Cardiology',
-                            updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                            createdAt: '2024-05-20T23:13:00.000Z',
-                            updatedAt: '2024-05-20T23:13:00.000Z',
-                            deletedAt: null,
-                            deletedBy: null,
-                        },
-                        {
-                            id: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
-                            name: 'Dermatology',
-                            createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                            updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                            createdAt: '2024-05-20T23:13:00.000Z',
-                            updatedAt: '2024-05-20T23:13:00.000Z',
-                            deletedAt: null,
-                            deletedBy: null,
-                        },
-                    ],
-                    statusCode: 200,
-                    total: 2,
+                .expect(200)
+                .expect(({ body }) => {
+                    expect(body).toEqual({
+                        data: [
+                            {
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                id: 'bb045ec3-e2e8-5707-8e4d-f8cfaf7195c1',
+                                name: 'Cardiology',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                deletedAt: null,
+                                deletedBy: null,
+                            },
+                            {
+                                id: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
+                                name: 'Dermatology',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                deletedAt: null,
+                                deletedBy: null,
+                            },
+                        ],
+                        statusCode: 200,
+                        total: 2,
+                    });
                 });
-            });
         });
 
         it('should get a specialty', async () => {

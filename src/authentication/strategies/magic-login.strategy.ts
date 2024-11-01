@@ -4,7 +4,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import Strategy from 'passport-magic-login';
 
 import { ApplicationLoggerService } from '../../core/logger/application.logger.service';
-import type { UserAttributes } from '../../user/models/user.model';
+import { UserAttributes } from '../../user/models/user.model';
 import { AuthenticationService } from '../authentication.service';
 
 @Injectable()

@@ -10,10 +10,10 @@ import { RoleService } from './role.service';
     controllers: [RoleController],
     providers: [
         RoleService,
-        // {
-        //     provide: APP_GUARD,
-        //     useClass: RolesGuard,
-        // },
+        {
+            provide: APP_GUARD,
+            useClass: RolesGuard,
+        },
     ],
     imports: [CoreModule],
     exports: [RoleService],

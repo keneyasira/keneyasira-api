@@ -12,15 +12,15 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+import { AuthenticatedUser } from '../authentication/decorators/authenticated-user.param-decorator';
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { SortParams } from '../typings/query.typings';
+import { UserAttributes } from '../user/models/user.model';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
 import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
 import { CreateRoleDto } from './dtos/create-role.dto';
 import { RoleService } from './role.service';
-import { AuthenticatedUser } from '../authentication/decorators/authenticated-user.param-decorator';
-import type { UserAttributes } from '../user/models/user.model';
 
 @ApiBearerAuth()
 @ApiTags('role')

@@ -12,7 +12,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
-import type { UserAttributes } from '../user/models/user.model';
+import { UserAttributes } from '../user/models/user.model';
 import { AuthenticationService } from './authentication.service';
 import { AuthenticatedUser } from './decorators/authenticated-user.param-decorator';
 import { Public } from './decorators/is-public.decorator';

@@ -3,7 +3,7 @@ import request from 'supertest';
 
 import { JwtService } from '@nestjs/jwt';
 import { getTestingModule } from '../../core/testing';
-import type { CreateAppointmentDto } from '../dtos/create-appointment.dto';
+import { CreateAppointmentDto } from '../dtos/create-appointment.dto';
 
 describe('AppointmentController', () => {
     let app: INestApplication;
