@@ -48,7 +48,7 @@ export class EstablishmentHasSpecialtyService {
             throw new NotFoundException('Establishment Has Specialty not found');
         }
 
-        return { data: [establishmentHasSpecialtyToFind] };
+        return { data: establishmentHasSpecialtyToFind };
     }
 
     async create(createEstablishmentHasSpecialtyDto: CreateEstablishmentHasSpecialtyDto) {
@@ -70,7 +70,7 @@ export class EstablishmentHasSpecialtyService {
             })
         )?.get({ plain: true });
 
-        return { data: [establishmentHasSpecialty] };
+        return { data: establishmentHasSpecialty };
     }
 
     async delete(establishmentHasSpecialtyToDeleteId: string) {

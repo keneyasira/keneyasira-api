@@ -48,7 +48,7 @@ export class PracticianHasSpecialtyService {
             throw new NotFoundException('Practician Has Specialty not found');
         }
 
-        return { data: [practicianHasSpecialtyToFind] };
+        return { data: practicianHasSpecialtyToFind };
     }
 
     async create(createPracticianHasSpecialtyDto: CreatePracticianHasSpecialtyDto) {
@@ -70,7 +70,7 @@ export class PracticianHasSpecialtyService {
             })
         )?.get({ plain: true });
 
-        return { data: [practicianHasSpecialty] };
+        return { data: practicianHasSpecialty };
     }
 
     async delete(practicianHasSpecialtyToDeleteId: string) {

@@ -1,18 +1,31 @@
 import { INestApplication } from '@nestjs/common';
-import { execSync } from 'child_process';
+
 import request from 'supertest';
 
 import { getTestingModule } from '../../core/testing';
+import { JwtService } from '@nestjs/jwt';
 
 describe('PracticianHasSpecialtyController', () => {
     let app: INestApplication;
+    let jwtService: JwtService;
+    let accessToken: string;
 
     beforeAll(async () => {
         const testingModule = await getTestingModule();
 
         app = testingModule.createNestApplication();
+        jwtService = testingModule.get(JwtService);
 
-        execSync('make regenerate-db-test');
+        // Manually generate a token with a test payload
+        accessToken = jwtService.sign({
+            id: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            sub: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            email: 'admin@keneyasira.com',
+            phone: '+22379131414',
+            roles: ['admin'], // Example role
+            secret: 'secret',
+        });
+
         await app.init();
     });
 
@@ -24,67 +37,97 @@ describe('PracticianHasSpecialtyController', () => {
         it('/practician-has-specialties (GET)', async () => {
             await request(app.getHttpServer())
                 .get('/practician-has-specialties')
+                .auth(accessToken, { type: 'bearer' })
                 .expect(200)
                 .expect(({ body }) => {
                     expect(body).toEqual({
                         data: [
                             {
-                                id: '8112162c-e0a2-4f6f-a2c6-14aa72f6bab0',
-                                practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                                specialtyId: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
+                                createdAt: '2024-05-20T23:13:00.000Z',
                                 createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                deletedAt: null,
+                                deletedBy: null,
+                                id: '8112162c-e0a2-4f6f-a2c6-14aa72f6bab0',
                                 practician: {
+                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                    deletedAt: null,
+                                    deletedBy: null,
                                     id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                    updatedAt: '2024-05-20T23:13:00.000Z',
+                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                                     userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
                                 },
+                                practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
                                 specialty: {
+                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                    deletedAt: null,
+                                    deletedBy: null,
                                     id: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
                                     name: 'Dermatology',
+                                    updatedAt: '2024-05-20T23:13:00.000Z',
+                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                                 },
+                                specialtyId: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                             },
                         ],
                         total: 1,
+                        statusCode: 200,
                     });
                 });
         });
 
         it('/practician-has-specialties/:id (GET)', async () => {
             await request(app.getHttpServer())
-                .get(`/practician-has-specialties/`)
+                .get(`/practician-has-specialties/8112162c-e0a2-4f6f-a2c6-14aa72f6bab0`)
+                .auth(accessToken, { type: 'bearer' })
                 .expect(200)
                 .expect(({ body }) => {
                     expect(body).toEqual({
-                        data: [
-                            {
+                        data: {
+                            createdAt: '2024-05-20T23:13:00.000Z',
+                            createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                            deletedAt: null,
+                            deletedBy: null,
+                            id: '8112162c-e0a2-4f6f-a2c6-14aa72f6bab0',
+                            practician: {
+                                createdAt: '2024-05-20T23:13:00.000Z',
                                 createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                id: expect.any(String),
-                                practician: {
-                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
-                                },
-                                practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                                specialty: {
-                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    id: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
-                                    name: 'Dermatology',
-                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                },
-                                specialtyId: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
+                                deletedAt: null,
+                                deletedBy: null,
+                                id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                            },
+                            practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                            specialty: {
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                deletedAt: null,
+                                deletedBy: null,
+                                id: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
+                                name: 'Dermatology',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
                                 updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                             },
-                        ],
+                            specialtyId: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
+                            updatedAt: '2024-05-20T23:13:00.000Z',
+                            updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                        },
+
                         statusCode: 200,
-                        total: 1,
                     });
                 });
         });
 
         it('/practician-has-specialties (POST)', async () => {
-            await request(app.getHttpServer())
+            const id = await request(app.getHttpServer())
                 .post('/practician-has-specialties')
+                .auth(accessToken, { type: 'bearer' })
                 .send({
                     practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
                     specialtyId: 'bb045ec3-e2e8-5707-8e4d-f8cfaf7195c1',
@@ -92,45 +135,74 @@ describe('PracticianHasSpecialtyController', () => {
                 .expect(201)
                 .expect(({ body }) => {
                     expect(body).toEqual({
-                        data: [
-                            {
-                                createdBy: null,
-                                id: expect.any(String),
-                                practician: {
-                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
-                                },
-                                practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                                specialty: {
-                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    id: 'bb045ec3-e2e8-5707-8e4d-f8cfaf7195c1',
-                                    name: 'Cardiology',
-                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                },
-                                specialtyId: 'bb045ec3-e2e8-5707-8e4d-f8cfaf7195c1',
-                                updatedBy: null,
+                        data: {
+                            createdAt: expect.any(String),
+                            createdBy: null,
+                            deletedAt: null,
+                            deletedBy: null,
+                            id: expect.any(String),
+                            practician: {
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                deletedAt: null,
+                                deletedBy: null,
+                                id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
                             },
-                        ],
+                            practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                            specialty: {
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                deletedAt: null,
+                                deletedBy: null,
+                                id: 'bb045ec3-e2e8-5707-8e4d-f8cfaf7195c1',
+                                name: 'Cardiology',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                            },
+                            specialtyId: 'bb045ec3-e2e8-5707-8e4d-f8cfaf7195c1',
+                            updatedAt: expect.any(String),
+                            updatedBy: null,
+                        },
                         statusCode: 201,
                     });
-                });
+                })
+                .then(({ body }) => body.data.id);
+
+            await request(app.getHttpServer())
+                .delete(`/practician-has-specialties/${id}`)
+                .auth(accessToken, { type: 'bearer' })
+                .expect(200);
         });
 
         it('/practician-has-specialties/:id (DELETE)', async () => {
+            const id = await request(app.getHttpServer())
+                .post('/practician-has-specialties')
+                .auth(accessToken, { type: 'bearer' })
+                .send({
+                    practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                    specialtyId: 'bb045ec3-e2e8-5707-8e4d-f8cfaf7195c1',
+                })
+                .expect(201)
+                .then(({ body }) => body.data.id);
+
             await request(app.getHttpServer())
                 .delete(`/practician-has-specialties/8112162c-e0a2-4f6f-a2c6-14aa72f6bab0`)
+                .auth(accessToken, { type: 'bearer' })
                 .expect(200);
 
             await request(app.getHttpServer())
                 .get(`/practician-has-specialties/8112162c-e0a2-4f6f-a2c6-14aa72f6bab0`)
+                .auth(accessToken, { type: 'bearer' })
                 .expect(404);
         });
 
         it('should return "Bad Request" with an incorrect ID', async () => {
             await request(app.getHttpServer())
                 .get('/practician-has-specialties/invalid-id')
+                .auth(accessToken, { type: 'bearer' })
                 .expect(400)
                 .expect(({ body }) => {
                     expect(body).toEqual({
@@ -146,12 +218,14 @@ describe('PracticianHasSpecialtyController', () => {
         it('should return "Not Found" when passing an ID which is absent from the DB', async () => {
             await request(app.getHttpServer())
                 .get('/practician-has-specialties/b96567d7-a698-4fdc-8ea4-8eed850824e6')
+                .auth(accessToken, { type: 'bearer' })
                 .expect(404)
                 .expect(({ body }) => {
                     expect(body).toEqual({
                         error: expect.objectContaining({
                             code: 404,
-                            message: 'Not Found',
+                            error: 'Not Found',
+                            message: 'Practician Has Specialty not found',
                             path: '/practician-has-specialties/b96567d7-a698-4fdc-8ea4-8eed850824e6',
                         }),
                     });

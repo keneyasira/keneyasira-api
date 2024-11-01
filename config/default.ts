@@ -63,5 +63,5 @@ export class Config {
         defaultLocale: 'fr-FR',
     };
 
-    blacklistProperties = ['createdAt', 'updatedAt', 'deletedAt', 'deletedBy'];
+    blacklistProperties = [];
 }

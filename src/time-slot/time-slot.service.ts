@@ -66,10 +66,11 @@ export class TimeSlotService {
             throw new NotFoundException('TimeSlot not found');
         }
 
-        return { data: [timeSlot] };
+        return { data: timeSlot };
     }
 
     async create(createTimeSlotDto: CreateTimeSlotDto) {
+
         // check that the practician in the time slot belongs to the establishment
         if (createTimeSlotDto.practicianId) {
             const establishmentHasPractician = await EstablishmentHasPractician.findOne({
@@ -84,7 +85,7 @@ export class TimeSlotService {
             }
         }
 
-        // TODO check that another time slot on the same time does not exist for the establishment and/or practician
+        // TODO check the number of time slots on the same time for the establishment and/or practician and how many are allowed
 
         const createdTimeSlot = await TimeSlot.create(createTimeSlotDto);
 

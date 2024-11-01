@@ -1,5 +1,5 @@
 import { INestApplication } from '@nestjs/common';
-import { execSync } from 'child_process';
+
 import request from 'supertest';
 
 import { getTestingModule } from '../../core/testing';
@@ -43,31 +43,43 @@ describe('UserController', () => {
                     expect(body).toEqual({
                         data: [
                             {
-                                createdBy: null,
                                 email: 'admin@keneyasira.com',
                                 firstName: 'Admin',
                                 id: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                                 lastName: 'Admin',
                                 phone: '+22379131414',
+                                createdBy: null,
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
                                 updatedBy: null,
+                                deletedAt: null,
+                                deletedBy: null,
                             },
                             {
-                                createdBy: null,
                                 email: 'practician@keneyasira.com',
                                 firstName: 'Doctor',
                                 id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
                                 lastName: 'Doctor',
                                 phone: '+22379131415',
+                                createdBy: null,
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
                                 updatedBy: null,
+                                deletedAt: null,
+                                deletedBy: null,
                             },
                             {
-                                createdBy: null,
                                 email: 'patient@keneyasira.com',
                                 firstName: 'Patient',
                                 id: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
                                 lastName: 'Patient',
                                 phone: '+22379131416',
+                                createdBy: null,
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
                                 updatedBy: null,
+                                deletedAt: null,
+                                deletedBy: null,
                             },
                         ],
                         total: 3,
@@ -83,34 +95,22 @@ describe('UserController', () => {
                 .expect(200)
                 .expect(({ body }) => {
                     expect(body).toEqual({
-                        data: [
-                            {
-                                createdBy: null,
-                                email: 'admin@keneyasira.com',
-                                firstName: 'Admin',
-                                id: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                lastName: 'Admin',
-                                phone: '+22379131414',
-                                updatedBy: null,
-                            },
-                        ],
+                        data: {
+                            email: 'admin@keneyasira.com',
+                            firstName: 'Admin',
+                            id: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                            lastName: 'Admin',
+                            phone: '+22379131414',
+                            createdBy: null,
+                            createdAt: '2024-05-20T23:13:00.000Z',
+                            updatedAt: '2024-05-20T23:13:00.000Z',
+                            updatedBy: null,
+                            deletedAt: null,
+                            deletedBy: null,
+                        },
                         statusCode: 200,
                     });
                 });
-        });
-
-        it('should delete a user', async () => {
-            const id = 'd7a05755-62d3-4a8e-9ea4-035d9fafd924';
-
-            await request(app.getHttpServer())
-                .delete(`/users/${id}`)
-                .auth(accessToken, { type: 'bearer' })
-                .expect(200);
-
-            await request(app.getHttpServer())
-                .get(`/users/${id}`)
-                .auth(accessToken, { type: 'bearer' })
-                .expect(404);
         });
     });
 });

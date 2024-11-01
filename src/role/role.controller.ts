@@ -19,6 +19,8 @@ import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
 import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
 import { CreateRoleDto } from './dtos/create-role.dto';
 import { RoleService } from './role.service';
+import { AuthenticatedUser } from '../authentication/decorators/authenticated-user.param-decorator';
+import type { UserAttributes } from '../user/models/user.model';
 
 @ApiBearerAuth()
 @ApiTags('role')
@@ -64,14 +66,14 @@ export class RoleController {
     }
 
     @Post('/')
-    async create(@Body() createRoleDto: CreateRoleDto) {
-        return this.roleService.create(createRoleDto);
+    async create(@AuthenticatedUser() user: UserAttributes, @Body() createRoleDto: CreateRoleDto) {
+        return this.roleService.create({ ...createRoleDto, createdBy: user.id });
     }
 
     @Delete('/:id')
-    async delete(@Param('id') roleId: string) {
+    async delete(@AuthenticatedUser() user: UserAttributes, @Param('id') roleId: string) {
         try {
-            await this.roleService.delete(roleId);
+            await this.roleService.delete({ roleId, deletedBy: user.id });
         } catch (error) {
             this.logger.error(
                 `RoleController - failed to delete role, ${(error as Error).message}`,

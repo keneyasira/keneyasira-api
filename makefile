@@ -30,6 +30,7 @@ type-check: ## Check that our code can be transpiled by typescript
 	@npm run type-check
 
 test: ## Run test suite. You can filter out using `make test TEST_NAME=<pattern>`
+	@npm run build
 	@$(MAKE) regenerate-db-test
 	@npm run test $(TEST_NAME)
 

@@ -1,5 +1,4 @@
 import { INestApplication } from '@nestjs/common';
-import { execSync } from 'child_process';
 import { getTestingModule } from '../../core/testing';
 import request from 'supertest';
 import { CreatePracticianDto } from '../dtos/create-practician.dto';
@@ -27,7 +26,6 @@ describe('PracticianController', () => {
             secret: 'secret',
         });
 
-        execSync('make regenerate-db-test');
         await app.init();
     });
 
@@ -43,25 +41,33 @@ describe('PracticianController', () => {
                 .expect(200)
                 .expect(({ body }) => {
                     expect(body).toEqual({
-                        result: {
-                            data: [
-                                {
-                                    id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                                    userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
-                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    user: {
-                                        id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
-                                        email: 'practician@keneyasira.com',
-                                        firstName: 'Doctor',
-                                        lastName: 'Doctor',
-                                        phone: '+22379131415',
-                                    },
+                        data: [
+                            {
+                                id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                deletedAt: null,
+                                deletedBy: null,
+                                user: {
+                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    createdBy: null,
+                                    id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                    email: 'practician@keneyasira.com',
+                                    firstName: 'Doctor',
+                                    lastName: 'Doctor',
+                                    phone: '+22379131415',
+                                    updatedBy: null,
+                                    deletedAt: null,
+                                    deletedBy: null,
+                                    updatedAt: '2024-05-20T23:13:00.000Z',
                                 },
-                            ],
-                            total: 1,
-                        },
+                            },
+                        ],
                         statusCode: 200,
+                        total: 1,
                     });
                 });
         });
@@ -72,23 +78,28 @@ describe('PracticianController', () => {
                 .expect(200)
                 .expect(({ body }) => {
                     expect(body).toEqual({
-                        result: {
-                            data: [
-                                {
-                                    id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                                    userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
-                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    user: {
-                                        id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
-                                        email: 'practician@keneyasira.com',
-                                        firstName: 'Practician',
-                                        lastName: 'Practician',
-                                        phone: '5551234567',
-                                    },
-                                },
-                            ],
-                            total: 1,
+                        data: {
+                            id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                            userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                            createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                            updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                            createdAt: '2024-05-20T23:13:00.000Z',
+                            updatedAt: '2024-05-20T23:13:00.000Z',
+                            deletedAt: null,
+                            deletedBy: null,
+                            user: {
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                createdBy: null,
+                                id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                email: 'practician@keneyasira.com',
+                                firstName: 'Doctor',
+                                lastName: 'Doctor',
+                                phone: '+22379131415',
+                                updatedBy: null,
+                                deletedAt: null,
+                                deletedBy: null,
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                            },
                         },
                         statusCode: 200,
                     });
@@ -96,66 +107,123 @@ describe('PracticianController', () => {
         });
         it('should create a practician', async () => {
             const practician: CreatePracticianDto = {
-                email: 'docteur@practician.com',
+                email: 'create@practician.com',
                 lastName: 'lastName',
                 firstName: 'firstName',
-                phone: '0022379131510',
+                phone: '0022379131519',
             };
 
-            await request(app.getHttpServer())
+            const id = await request(app.getHttpServer())
                 .post('/practicians')
                 .auth(accessToken, { type: 'bearer' })
                 .send(practician)
                 .expect(201)
                 .expect(({ body }) => {
-                    expect(body.user).toMatchObject({
-                        id: expect.any(String),
-                        userId: expect.any(String),
-                        createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                        updatedBy: '',
-                        createdAt: expect.any(Date),
-                        updatedAt: '',
-                        user: {
+                    expect(body).toMatchObject({
+                        data: {
                             id: expect.any(String),
-                            email: 'docteur@practician.com',
-                            firstName: practician.firstName,
-                            lastName: practician.lastName,
-                            phone: practician.phone,
+                            userId: expect.any(String),
+                            createdBy: null,
+                            updatedBy: null,
+                            createdAt: expect.any(String),
+                            updatedAt: expect.any(String),
+                            deletedAt: null,
+                            deletedBy: null,
+                            user: {
+                                id: expect.any(String),
+                                email: 'create@practician.com',
+                                firstName: practician.firstName,
+                                lastName: practician.lastName,
+                                phone: practician.phone,
+                                deletedAt: null,
+                                deletedBy: null,
+                            },
                         },
+
+                        statusCode: 201,
                     });
-                });
+                })
+                .then(({ body }) => body.data.id);
+
+            await request(app.getHttpServer())
+                .delete(`/practicians/${id}`)
+                .auth(accessToken, { type: 'bearer' })
+                .expect(200);
         });
         it('should update a practician', async () => {
+            const practician: CreatePracticianDto = {
+                email: 'docteur1@practician.com',
+                lastName: 'lastName',
+                firstName: 'firstName',
+                phone: '0022379151510',
+            };
+
+            const id = await request(app.getHttpServer())
+                .post('/practicians')
+                .auth(accessToken, { type: 'bearer' })
+                .send(practician)
+                .expect(201)
+                .then(({ body }) => body.data.id);
+
             const updatePayload: UpdatePracticianDto = {
-                id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                id,
                 email: 'update@practician.com',
                 lastName: 'updateName',
                 firstName: 'updateName',
-                phone: '0022389131410',
+                phone: '0022389151410',
             };
 
             const userId = 'd4581754-69b2-4414-9e9c-4a17fb2022c2';
 
             await request(app.getHttpServer())
-                .put(`/practicians/${updatePayload.id}`)
+                .put(`/practicians/${id}`)
                 .auth(accessToken, { type: 'bearer' })
                 .send(updatePayload)
-                .expect(201)
+                .expect(200)
                 .expect(({ body }) => {
                     expect(body).toMatchObject({
-                        id: updatePayload.id,
-                        userId,
-                        createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                        updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                        user: {
-                            ...updatePayload,
+                        data: {
+                            createdBy: null,
+                            id,
+                            updatedBy: null,
+                            user: {
+                                createdBy: null,
+                                email: 'update@practician.com',
+                                firstName: 'updateName',
+                                id: expect.any(String),
+                                lastName: 'updateName',
+                                phone: '0022389151410',
+                                updatedBy: null,
+                            },
+                            userId: expect.any(String),
                         },
+
+                        statusCode: 200,
                     });
                 });
+
+            await request(app.getHttpServer())
+                .delete(`/practicians/${id}`)
+                .auth(accessToken, { type: 'bearer' })
+                .expect(200);
         });
         it('should delete a practician', async () => {
+            const practician: CreatePracticianDto = {
+                email: 'docteur2@practician.com',
+                lastName: 'lastName',
+                firstName: 'firstName',
+                phone: '0022379131517',
+            };
+
+            const id = await request(app.getHttpServer())
+                .post('/practicians')
+                .auth(accessToken, { type: 'bearer' })
+                .send(practician)
+                .expect(201)
+                .then(({ body }) => body.data.id);
+
             await request(app.getHttpServer())
-                .delete(`/practicians/18f33b4c-6f7c-4af7-8d0f-3c50aab951ac`)
+                .delete(`/practicians/${id}`)
                 .auth(accessToken, { type: 'bearer' })
                 .expect(200);
         });
@@ -194,7 +262,7 @@ describe('PracticianController', () => {
 
         it('should return "Conflict" when trying to create a practician with an email which already exists', async () => {
             const practician: CreatePracticianDto = {
-                email: 'docteur@practician.com',
+                email: 'practician@keneyasira.com',
                 lastName: 'lastName',
                 firstName: 'firstName',
                 phone: '0022389131410',
@@ -210,13 +278,44 @@ describe('PracticianController', () => {
                         error: expect.objectContaining({
                             code: 409,
                             error: 'Conflict',
-                            message: 'User already exists with the same email',
+                            message: 'User already exists with the same email or phone',
                             path: '/practicians',
                             payload: {
-                                email: 'docteur@practician.com',
+                                email: 'practician@keneyasira.com',
                                 firstName: 'firstName',
                                 lastName: 'lastName',
                                 phone: '0022389131410',
+                            },
+                        }),
+                    });
+                });
+        });
+
+        it('should return "Conflict" when trying to create a practician with a phone number which already exists', async () => {
+            const practician: CreatePracticianDto = {
+                email: 'docteur3@practician.com',
+                lastName: 'lastName',
+                firstName: 'firstName',
+                phone: '+22379131415',
+            };
+
+            await request(app.getHttpServer())
+                .post('/practicians')
+                .auth(accessToken, { type: 'bearer' })
+                .send(practician)
+                .expect(409)
+                .expect(({ body }) => {
+                    expect(body).toEqual({
+                        error: expect.objectContaining({
+                            code: 409,
+                            error: 'Conflict',
+                            message: 'User already exists with the same email or phone',
+                            path: '/practicians',
+                            payload: {
+                                email: 'docteur3@practician.com',
+                                firstName: 'firstName',
+                                lastName: 'lastName',
+                                phone: '+22379131415',
                             },
                         }),
                     });

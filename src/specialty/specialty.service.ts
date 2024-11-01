@@ -22,7 +22,7 @@ export class SpecialtyService {
             order: transformSortParamsToSequelizeFormat(options.sort),
         });
 
-        return { data, total };
+        return { data: data.map((row) => row.get({ plain: true })), total };
     }
 
     async find(SpecialtyId: string) {
@@ -36,17 +36,22 @@ export class SpecialtyService {
             throw new NotFoundException('Specialty not found');
         }
 
-        return { data: [specialty.get({ plain: true })] };
+        return { data: specialty.get({ plain: true }) };
     }
 
     async create(createSpecialtyDto: CreateSpecialtyDto) {
-        const createdSpecialty = await Specialty.create(createSpecialtyDto);
+        const [createdSpecialty, _] = await Specialty.findOrCreate({
+            where: {
+                name: createSpecialtyDto.name,
+            },
+            defaults: createSpecialtyDto,
+        });
 
         const createdSpecialtyValue = createdSpecialty.get({ plain: true });
 
         this.logger.info(`Created specialty`, { createdSpecialty: createdSpecialtyValue });
 
-        return { data: [createdSpecialtyValue] };
+        return { data: createdSpecialtyValue };
     }
 
     async update(updateSpecialtyDto: UpdateSpecialtyDto) {
@@ -72,7 +77,7 @@ export class SpecialtyService {
             updatedSpecialty: updatedSpecialtyValue,
         });
 
-        return { data: [updatedSpecialtyValue] };
+        return { data: updatedSpecialtyValue };
     }
 
     async delete(specialtyToDeleteId: string): Promise<number> {

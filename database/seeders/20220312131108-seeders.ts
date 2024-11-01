@@ -264,8 +264,9 @@ export async function up(queryInterface: QueryInterface) {
             available: false,
             practician_id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
             establishment_id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
-            start_date: `${year}-${month}-${day} 00:00:00.0`,
-            end_date: `${year}-${month}-${day} 01:00:00.0`,
+            date: `${year}-${month}-${day}`,
+            start_time: `00:00:00.0`,
+            end_time: `01:00:00.0`,
             created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             created_at: '2024-05-20 23:13:00',
@@ -273,11 +274,12 @@ export async function up(queryInterface: QueryInterface) {
         },
         {
             id: '4b42301e-0108-46f2-a721-e01dc8c359d2',
-            available: true,
+            available: false,
             practician_id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
             establishment_id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
-            start_date: `${year}-${month}-${day} 01:00:00.0`,
-            end_date: `${year}-${month}-${day} 01:30:00.0`,
+            date: `${year}-${month}-${day}`,
+            start_time: `01:00:00.0`,
+            end_time: `01:30:00.0`,
             created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             created_at: '2024-05-20 23:13:00',
@@ -288,8 +290,9 @@ export async function up(queryInterface: QueryInterface) {
             available: false,
             practician_id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
             establishment_id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
-            start_date: `${year}-${month}-${day} 01:30:00.0`,
-            end_date: `${year}-${month}-${day} 02:30:00.0`,
+            date: `${year}-${month}-${day}`,
+            start_time: '01:30:00.0',
+            end_time: `02:30:00.0`,
             created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             created_at: '2024-05-20 23:13:00',
@@ -300,8 +303,9 @@ export async function up(queryInterface: QueryInterface) {
             available: true,
             practician_id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
             establishment_id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
-            start_date: `${year}-${month}-${day} 01:30:00.0`,
-            end_date: `${year}-${month}-${day} 02:30:00.0`,
+            date: `${year}-${month}-${day}`,
+            start_time: `01:30:00.0`,
+            end_time: `02:30:00.0`,
             created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             created_at: '2024-05-20 23:13:00',
@@ -367,21 +371,21 @@ export async function up(queryInterface: QueryInterface) {
     return Promise.resolve();
 }
 
-export async function down(queryInterface: any) {
+export async function down(queryInterface: QueryInterface) {
     // Remove all data from tables during rollback
-    await queryInterface.bulkDelete('role', null, {});
-    await queryInterface.bulkDelete('user', null, {});
-    await queryInterface.bulkDelete('user_role', null, {});
-    await queryInterface.bulkDelete('patient', null, {});
-    await queryInterface.bulkDelete('specialty', null, {});
-    await queryInterface.bulkDelete('practician', null, {});
-    await queryInterface.bulkDelete('establishment', null, {});
-    await queryInterface.bulkDelete('establishment_has_practician', null, {});
-    await queryInterface.bulkDelete('establishment_has_specialty', null, {});
-    await queryInterface.bulkDelete('practician_has_specialty', null, {});
-    await queryInterface.bulkDelete('time_slot', null, {});
-    await queryInterface.bulkDelete('appointment', null, {});
-    await queryInterface.bulkDelete('appointment_status', null, {});
+    await queryInterface.bulkDelete('role', {}, {});
+    await queryInterface.bulkDelete('user', {}, {});
+    await queryInterface.bulkDelete('user_role', {}, {});
+    await queryInterface.bulkDelete('patient', {}, {});
+    await queryInterface.bulkDelete('specialty', {}, {});
+    await queryInterface.bulkDelete('practician', {}, {});
+    await queryInterface.bulkDelete('establishment', {}, {});
+    await queryInterface.bulkDelete('establishment_has_practician', {}, {});
+    await queryInterface.bulkDelete('establishment_has_specialty', {}, {});
+    await queryInterface.bulkDelete('practician_has_specialty', {}, {});
+    await queryInterface.bulkDelete('time_slot', {}, {});
+    await queryInterface.bulkDelete('appointment', {}, {});
+    await queryInterface.bulkDelete('appointment_status', {}, {});
 
     // Remember to return, indicating that the rollback was successful
     return Promise.resolve();

@@ -7,7 +7,7 @@ import { QueryParams } from '../typings/query.typings';
 import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { User } from './models/user.model';
+import { User, type UserAttributes } from './models/user.model';
 
 @Injectable()
 export class UserService {
@@ -16,7 +16,9 @@ export class UserService {
         private readonly logger: ApplicationLoggerService,
     ) {}
 
-    async findAndCountAll(options: QueryParams): Promise<{ data: User[]; total: number }> {
+    async findAndCountAll(
+        options: QueryParams,
+    ): Promise<{ data: UserAttributes[]; total: number }> {
         const offset = options?.limit && options.page ? options.limit * (options.page - 1) : 0;
 
         const { rows: data, count: total } = await User.findAndCountAll({
@@ -25,7 +27,7 @@ export class UserService {
             order: transformSortParamsToSequelizeFormat(options.sort),
         });
 
-        return { data, total };
+        return { data: data.map((row) => row.get({ plain: true })), total };
     }
 
     async findByUserId(userId: string) {
@@ -39,7 +41,7 @@ export class UserService {
             throw new NotFoundException('User not found');
         }
 
-        return { data: [user] };
+        return { data: user.get({ plain: true }) };
     }
 
     async findByEmailOrNumber({ email, phone }: { email: string; phone: string }) {
@@ -53,22 +55,25 @@ export class UserService {
             return;
         }
 
-        return { data: [user.get({ plain: true })] };
+        return { data: user.get({ plain: true }) };
     }
 
     async create(createUserDto: CreateUserDto) {
-        const createdUser = await User.create(
-            {
-                ...createUserDto,
+        const [createdUser, _] = await User.findOrCreate({
+            where: {
+                [Op.or]: [
+                    { phone: createUserDto.phone ?? '' },
+                    { email: createUserDto.email ?? '' },
+                ],
             },
-            { raw: true },
-        );
+            defaults: createUserDto,
+        });
 
         const createdUserValue = createdUser.get({ plain: true });
 
         this.logger.info(`UserService - Created user`, { createdUser: createdUserValue });
 
-        return { data: [createdUserValue] };
+        return { data: createdUserValue };
     }
 
     async update(updateUserDto: UpdateUserDto) {
@@ -99,7 +104,7 @@ export class UserService {
 
         this.logger.info(`UserService - Updated (${affectedRows}) user`, { updateUserValue });
 
-        return { data: [updateUserValue] };
+        return { data: updateUserValue };
     }
 
     async delete(userToDeleteId: string): Promise<void> {

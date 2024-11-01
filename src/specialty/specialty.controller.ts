@@ -24,7 +24,7 @@ import { SpecialtyService } from './specialty.service';
 
 @ApiBearerAuth()
 @ApiTags('specialty')
-@Controller('specialties')
+@Controller('specialty')
 export class SpecialtyController {
     constructor(
         private readonly logger: ApplicationLoggerService,

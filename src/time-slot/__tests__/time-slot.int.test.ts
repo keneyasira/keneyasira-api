@@ -1,5 +1,7 @@
-import { INestApplication } from '@nestjs/common';
+import { Body, INestApplication } from '@nestjs/common';
 import request from 'supertest';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 import { getTestingModule } from '../../core/testing';
 import { UpdateTimeSlotDto } from '../dtos/update-time-slot.dto';
@@ -40,149 +42,216 @@ describe('TimeSlotController', () => {
                 .auth(accessToken, { type: 'bearer' })
                 .expect(200)
                 .expect(({ body }) => {
-                    console.log(JSON.stringify(body, null, 2));
                     expect(body).toEqual({
                         statusCode: 200,
                         data: [
                             {
+                                available: false,
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                deletedAt: null,
+                                deletedBy: null,
+                                date: expect.any(String),
+                                endTime: expect.any(String),
+                                startTime: expect.any(String),
+                                establishment: {
+                                    address: 'Rue Kati, Bamako, Mali',
+                                    city: 'Bamako',
+                                    country: 'Mali',
+                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                    deletedAt: null,
+                                    deletedBy: null,
+                                    id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                                    name: 'Point G',
+                                    phone: '+22379131419',
+                                    updatedAt: '2024-05-20T23:13:00.000Z',
+                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                },
+                                establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
                                 id: '091f0895-91c6-4fd0-b638-5db2dd933539',
-                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
-                                practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                                available: false,
-                                startDate: '2024-10-24T00:00:00.000Z',
-                                endDate: '2024-10-24T01:00:00.000Z',
-                                establishment: {
-                                    id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
-                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    name: 'Point G',
-                                    address: 'Rue Kati, Bamako, Mali',
-                                    phone: '+22379131419',
-                                    city: 'Bamako',
-                                    country: 'Mali',
-                                },
                                 practician: {
-                                    id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                    createdAt: '2024-05-20T23:13:00.000Z',
                                     createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                    deletedAt: null,
+                                    deletedBy: null,
+                                    id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                    updatedAt: '2024-05-20T23:13:00.000Z',
                                     updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
                                     user: {
-                                        id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                        createdAt: '2024-05-20T23:13:00.000Z',
+                                        createdBy: null,
+                                        deletedAt: null,
+                                        deletedBy: null,
                                         email: 'practician@keneyasira.com',
                                         firstName: 'Doctor',
+                                        id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
                                         lastName: 'Doctor',
                                         phone: '+22379131415',
-                                        createdBy: null,
+                                        updatedAt: '2024-05-20T23:13:00.000Z',
                                         updatedBy: null,
                                     },
+                                    userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
                                 },
+                                practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                             },
                             {
+                                available: false,
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                deletedAt: null,
+                                deletedBy: null,
+                                date: expect.any(String),
+                                endTime: expect.any(String),
+                                startTime: expect.any(String),
+                                establishment: {
+                                    address: 'Rue Kati, Bamako, Mali',
+                                    city: 'Bamako',
+                                    country: 'Mali',
+                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                    deletedAt: null,
+                                    deletedBy: null,
+                                    id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                                    name: 'Point G',
+                                    phone: '+22379131419',
+                                    updatedAt: '2024-05-20T23:13:00.000Z',
+                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                },
+                                establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
                                 id: '4b42301e-0108-46f2-a721-e01dc8c359d2',
-                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
-                                practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                                available: true,
-                                startDate: '2024-10-24T01:00:00.000Z',
-                                endDate: '2024-10-24T01:30:00.000Z',
-                                establishment: {
-                                    id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
-                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    name: 'Point G',
-                                    address: 'Rue Kati, Bamako, Mali',
-                                    phone: '+22379131419',
-                                    city: 'Bamako',
-                                    country: 'Mali',
-                                },
                                 practician: {
-                                    id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                    createdAt: '2024-05-20T23:13:00.000Z',
                                     createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                    deletedAt: null,
+                                    deletedBy: null,
+                                    id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                    updatedAt: '2024-05-20T23:13:00.000Z',
                                     updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
                                     user: {
-                                        id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                        createdAt: '2024-05-20T23:13:00.000Z',
+                                        createdBy: null,
+                                        deletedAt: null,
+                                        deletedBy: null,
                                         email: 'practician@keneyasira.com',
                                         firstName: 'Doctor',
+                                        id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
                                         lastName: 'Doctor',
                                         phone: '+22379131415',
-                                        createdBy: null,
+                                        updatedAt: '2024-05-20T23:13:00.000Z',
                                         updatedBy: null,
                                     },
+                                    userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
                                 },
+                                practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                             },
                             {
-                                id: '56c63078-c32f-4d04-aa96-5e7815de1f98',
-                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
-                                practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
                                 available: false,
-                                startDate: '2024-10-24T01:30:00.000Z',
-                                endDate: '2024-10-24T02:30:00.000Z',
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                deletedAt: null,
+                                deletedBy: null,
+                                date: expect.any(String),
+                                endTime: expect.any(String),
+                                startTime: expect.any(String),
                                 establishment: {
-                                    id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
-                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    name: 'Point G',
                                     address: 'Rue Kati, Bamako, Mali',
-                                    phone: '+22379131419',
                                     city: 'Bamako',
                                     country: 'Mali',
-                                },
-                                practician: {
-                                    id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                    createdAt: '2024-05-20T23:13:00.000Z',
                                     createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                    deletedAt: null,
+                                    deletedBy: null,
+                                    id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                                    name: 'Point G',
+                                    phone: '+22379131419',
+                                    updatedAt: '2024-05-20T23:13:00.000Z',
                                     updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                },
+                                establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                                id: '56c63078-c32f-4d04-aa96-5e7815de1f98',
+                                practician: {
+                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                    deletedAt: null,
+                                    deletedBy: null,
+                                    id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                    updatedAt: '2024-05-20T23:13:00.000Z',
+                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                                     user: {
-                                        id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                        createdAt: '2024-05-20T23:13:00.000Z',
+                                        createdBy: null,
+                                        deletedAt: null,
+                                        deletedBy: null,
                                         email: 'practician@keneyasira.com',
                                         firstName: 'Doctor',
+                                        id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
                                         lastName: 'Doctor',
                                         phone: '+22379131415',
-                                        createdBy: null,
+                                        updatedAt: '2024-05-20T23:13:00.000Z',
                                         updatedBy: null,
                                     },
+                                    userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
                                 },
+                                practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                             },
                             {
-                                id: '6a2cb23b-2882-4a02-81c9-ac2d9c72775f',
-                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
-                                practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
                                 available: true,
-                                startDate: '2024-10-24T01:30:00.000Z',
-                                endDate: '2024-10-24T02:30:00.000Z',
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                deletedAt: null,
+                                deletedBy: null,
+                                date: expect.any(String),
+                                endTime: expect.any(String),
+                                startTime: expect.any(String),
                                 establishment: {
-                                    id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
-                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    name: 'Point G',
                                     address: 'Rue Kati, Bamako, Mali',
-                                    phone: '+22379131419',
                                     city: 'Bamako',
                                     country: 'Mali',
-                                },
-                                practician: {
-                                    id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                    createdAt: '2024-05-20T23:13:00.000Z',
                                     createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                    deletedAt: null,
+                                    deletedBy: null,
+                                    id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                                    name: 'Point G',
+                                    phone: '+22379131419',
+                                    updatedAt: '2024-05-20T23:13:00.000Z',
                                     updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                },
+                                establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                                id: '6a2cb23b-2882-4a02-81c9-ac2d9c72775f',
+                                practician: {
+                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                    deletedAt: null,
+                                    deletedBy: null,
+                                    id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                    updatedAt: '2024-05-20T23:13:00.000Z',
+                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                                     user: {
-                                        id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                        createdAt: '2024-05-20T23:13:00.000Z',
+                                        createdBy: null,
+                                        deletedAt: null,
+                                        deletedBy: null,
                                         email: 'practician@keneyasira.com',
                                         firstName: 'Doctor',
+                                        id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
                                         lastName: 'Doctor',
                                         phone: '+22379131415',
-                                        createdBy: null,
+                                        updatedAt: '2024-05-20T23:13:00.000Z',
                                         updatedBy: null,
                                     },
+                                    userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
                                 },
+                                practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                             },
                         ],
                         total: 4,
@@ -197,85 +266,141 @@ describe('TimeSlotController', () => {
                 .expect(200)
                 .expect(({ body }) => {
                     expect(body).toEqual({
-                        data: [
-                            {
-                                available: false,
+                        data: {
+                            available: false,
+                            createdAt: '2024-05-20T23:13:00.000Z',
+                            createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                            deletedAt: null,
+                            deletedBy: null,
+                            date: expect.any(String),
+                            endTime: expect.any(String),
+                            startTime: expect.any(String),
+                            establishment: {
+                                address: 'Rue Kati, Bamako, Mali',
+                                city: 'Bamako',
+                                country: 'Mali',
+                                createdAt: '2024-05-20T23:13:00.000Z',
                                 createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                endDate: '2024-10-24T01:00:00.000Z',
-                                establishment: {
-                                    address: 'Rue Kati, Bamako, Mali',
-                                    city: 'Bamako',
-                                    country: 'Mali',
-                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
-                                    name: 'Point G',
-                                    phone: '+22379131419',
-                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                },
-                                establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
-                                id: '091f0895-91c6-4fd0-b638-5db2dd933539',
-                                practician: {
-                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    user: {
-                                        createdBy: null,
-                                        email: 'practician@keneyasira.com',
-                                        firstName: 'Doctor',
-                                        id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
-                                        lastName: 'Doctor',
-                                        phone: '+22379131415',
-                                        updatedBy: null,
-                                    },
-                                    userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
-                                },
-                                practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                                startDate: '2024-10-24T00:00:00.000Z',
+                                deletedAt: null,
+                                deletedBy: null,
+                                id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                                name: 'Point G',
+                                phone: '+22379131419',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
                                 updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                             },
-                        ],
+                            establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                            id: '091f0895-91c6-4fd0-b638-5db2dd933539',
+                            practician: {
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                deletedAt: null,
+                                deletedBy: null,
+                                id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                user: {
+                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    createdBy: null,
+                                    deletedAt: null,
+                                    deletedBy: null,
+                                    email: 'practician@keneyasira.com',
+                                    firstName: 'Doctor',
+                                    id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                    lastName: 'Doctor',
+                                    phone: '+22379131415',
+                                    updatedAt: '2024-05-20T23:13:00.000Z',
+                                    updatedBy: null,
+                                },
+                                userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                            },
+                            practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                            updatedAt: '2024-05-20T23:13:00.000Z',
+                            updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                        },
+
                         statusCode: 200,
                     });
                 });
         });
 
         it('should create a time slot', async () => {
+            const newDate = new Date().toDateString();
+            dayjs.extend(customParseFormat);
+
+            // Parse the Date object using Day.js
+            const dayjsDate = dayjs(newDate);
+
+            // Format the parsed date to 'yyyy-mm-dd'
+            const formattedDate = dayjsDate.format('YYYY-MM-DD');
+
             await request(app.getHttpServer())
                 .post('/time-slots')
                 .auth(accessToken, { type: 'bearer' })
                 .send({
                     available: true,
-                    startDate: new Date().toISOString(),
-                    endDate: new Date().toISOString(),
+                    date: formattedDate,
+                    startTime: '12:00',
+                    endTime: '13:00',
                     practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                    establishmentId: '90b93a53-4109-4182-aa28-d4f3af0b87bb',
+                    establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
                 })
                 .expect(201)
                 .expect(({ body }) => {
                     expect(body).toEqual({
-                        data: [
-                            {
-                                available: true,
-                                createdBy: null,
-                                endDate: '2024-10-24T02:54:14.760Z',
-                                establishment: {
-                                    address: 'Av. Van Vollenhoven, Bamako, Mali',
-                                    city: 'Bamako',
-                                    country: 'Mali',
-                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    id: '90b93a53-4109-4182-aa28-d4f3af0b87bb',
-                                    name: 'Gabriel Toure',
-                                    phone: '+22379131418',
-                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                },
-                                establishmentId: '90b93a53-4109-4182-aa28-d4f3af0b87bb',
-                                id: 'c6ab34f7-7576-42b3-afff-98175e6b8a74',
-                                practician: null,
-                                practicianId: null,
-                                startDate: '2024-10-24T02:54:14.760Z',
-                                updatedBy: null,
+                        data: {
+                            available: true,
+                            createdAt: expect.any(String),
+                            createdBy: null,
+                            deletedAt: null,
+                            deletedBy: null,
+                            date: formattedDate,
+                            endTime: '13:00:00',
+                            startTime: '12:00:00',
+                            establishment: {
+                                address: 'Rue Kati, Bamako, Mali',
+                                city: 'Bamako',
+                                country: 'Mali',
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                deletedAt: null,
+                                deletedBy: null,
+                                id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                                name: 'Point G',
+                                phone: '+22379131419',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                             },
-                        ],
+                            establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                            id: expect.any(String),
+                            practician: {
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                deletedAt: null,
+                                deletedBy: null,
+                                id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                user: {
+                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    createdBy: null,
+                                    deletedAt: null,
+                                    deletedBy: null,
+                                    email: 'practician@keneyasira.com',
+                                    firstName: 'Doctor',
+                                    id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                    lastName: 'Doctor',
+                                    phone: '+22379131415',
+                                    updatedAt: '2024-05-20T23:13:00.000Z',
+                                    updatedBy: null,
+                                },
+                                userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                            },
+                            practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                            updatedAt: expect.any(String),
+                            updatedBy: null,
+                        },
+
                         statusCode: 201,
                     });
                 });
@@ -294,52 +419,142 @@ describe('TimeSlotController', () => {
                 .expect(200)
                 .expect(({ body }) => {
                     expect(body).toEqual({
-                        data: [
-                            {
-                                available: true,
+                        data: {
+                            available: true,
+                            createdAt: '2024-05-20T23:13:00.000Z',
+                            createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                            deletedAt: null,
+                            deletedBy: null,
+                            date: expect.any(String),
+                            endTime: expect.any(String),
+                            startTime: expect.any(String),
+                            establishment: {
+                                address: 'Rue Kati, Bamako, Mali',
+                                city: 'Bamako',
+                                country: 'Mali',
+                                createdAt: '2024-05-20T23:13:00.000Z',
                                 createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                endDate: '2024-10-24T01:00:00.000Z',
-                                establishment: {
-                                    address: 'Rue Kati, Bamako, Mali',
-                                    city: 'Bamako',
-                                    country: 'Mali',
-                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
-                                    name: 'Point G',
-                                    phone: '+22379131419',
-                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                },
-                                establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
-                                id: '091f0895-91c6-4fd0-b638-5db2dd933539',
-                                practician: {
-                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    user: {
-                                        createdBy: null,
-                                        email: 'practician@keneyasira.com',
-                                        firstName: 'Doctor',
-                                        id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
-                                        lastName: 'Doctor',
-                                        phone: '+22379131415',
-                                        updatedBy: null,
-                                    },
-                                    userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
-                                },
-                                practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                                startDate: '2024-10-24T00:00:00.000Z',
+                                deletedAt: null,
+                                deletedBy: null,
+                                id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                                name: 'Point G',
+                                phone: '+22379131419',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
                                 updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                             },
-                        ],
+                            establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                            id: '091f0895-91c6-4fd0-b638-5db2dd933539',
+                            practician: {
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                deletedAt: null,
+                                deletedBy: null,
+                                id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                user: {
+                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    createdBy: null,
+                                    deletedAt: null,
+                                    deletedBy: null,
+                                    email: 'practician@keneyasira.com',
+                                    firstName: 'Doctor',
+                                    id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                    lastName: 'Doctor',
+                                    phone: '+22379131415',
+                                    updatedAt: '2024-05-20T23:13:00.000Z',
+                                    updatedBy: null,
+                                },
+                                userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                            },
+                            practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                            updatedAt: expect.any(String),
+                            updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                        },
                         statusCode: 200,
+                    });
+                });
+
+            await request(app.getHttpServer())
+                .put(`/time-slots/${updateDto.id}`)
+                .auth(accessToken, { type: 'bearer' })
+                .send({
+                    id: '091f0895-91c6-4fd0-b638-5db2dd933539',
+                    available: false,
+                })
+                .expect(200);
+        });
+
+        it('should delete a time slot', async () => {
+            const newDate = new Date().toDateString();
+            dayjs.extend(customParseFormat);
+
+            // Parse the Date object using Day.js
+            const dayjsDate = dayjs(newDate);
+
+            // Format the parsed date to 'yyyy-mm-dd'
+            const formattedDate = dayjsDate.format('YYYY-MM-DD');
+
+            const id = await request(app.getHttpServer())
+                .post('/time-slots')
+                .auth(accessToken, { type: 'bearer' })
+                .send({
+                    available: true,
+                    date: formattedDate,
+                    startTime: '12:00',
+                    endTime: '13:00',
+                    practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                    establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                })
+                .expect(201)
+                .then(({ body }) => body.data.id);
+
+            await request(app.getHttpServer())
+                .delete(`/time-slots/${id}`)
+                .auth(accessToken, { type: 'bearer' })
+                .expect(200);
+        });
+
+        it('should not create a time slot with a practician that is not associated to the establishment', async () => {
+            const newDate = new Date().toISOString();
+            await request(app.getHttpServer())
+                .post('/time-slots')
+                .auth(accessToken, { type: 'bearer' })
+                .send({
+                    available: true,
+                    startDate: newDate,
+                    endDate: newDate,
+                    practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                    establishmentId: '90b93a53-4109-4182-aa28-d4f3af0b87bb',
+                })
+                .expect(400)
+                .expect(({ body }) => {
+                    expect(body).toEqual({
+                        error: expect.objectContaining({
+                            code: 400,
+                            error: 'Bad Request',
+                            message: 'Practician does not belong to Establishment',
+                            path: '/time-slots',
+                        }),
                     });
                 });
         });
 
-        it('should delete a time slot', async () => {
+        it('should not delete a time slot associated with an appointment', async () => {
             await request(app.getHttpServer())
                 .delete(`/time-slots/091f0895-91c6-4fd0-b638-5db2dd933539`)
-                .expect(200);
+                .auth(accessToken, { type: 'bearer' })
+                .expect(400)
+                .expect(({ body }) => {
+                    expect(body).toEqual({
+                        error: expect.objectContaining({
+                            code: 400,
+                            error: 'Bad Request',
+                            message: 'Cannot delete timeslot that is associated to appointments',
+                            path: '/time-slots/091f0895-91c6-4fd0-b638-5db2dd933539',
+                        }),
+                    });
+                });
         });
 
         it('should return "Not Found" when passing an ID which is absent from the DB', async () => {
@@ -358,6 +573,7 @@ describe('TimeSlotController', () => {
                     });
                 });
         });
+
         it('should return "Bad Request" with an incorrect ID', async () => {
             await request(app.getHttpServer())
                 .get('/time-slots/undefined')

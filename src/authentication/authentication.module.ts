@@ -32,10 +32,10 @@ import { MagicLoginStrategy } from './strategies/magic-login.strategy';
         AuthenticationService,
         MagicLoginStrategy,
         JwtStrategy,
-        {
-            provide: APP_GUARD,
-            useClass: JwtAuthGuard,
-        },
+        // {
+        //     provide: APP_GUARD,
+        //     useClass: JwtAuthGuard,
+        // },
     ],
     exports: [AuthenticationService],
 })

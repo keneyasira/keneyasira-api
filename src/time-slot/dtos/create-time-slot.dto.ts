@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional,  } from 'class-validator';
+import { IsDateString, IsMilitaryTime, IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateTimeSlotDto {
     @ApiProperty({
@@ -25,17 +25,26 @@ export class CreateTimeSlotDto {
     establishmentId: string;
 
     @ApiProperty({
-        example: '2023-06-15 00:00:00.0',
-        description: 'Start date and time of the time slot',
+        example: '2023-06-15',
+        description: 'date of the time slot',
     })
+    @IsDateString()
     @IsNotEmpty()
-    startDate: string;
+    date: string;
 
     @ApiProperty({
-        example: '2023-06-15 01:00:00.0',
-        description: 'End date and time of the time slot',
+        example: '00:00:00.0',
+        description: 'Start time of the time slot',
     })
+    @IsMilitaryTime()
     @IsNotEmpty()
-    endDate: string;
+    startTime: string;
 
+    @ApiProperty({
+        example: '01:00:00.0',
+        description: 'End time of the time slot',
+    })
+    @IsMilitaryTime()
+    @IsNotEmpty()
+    endTime: string;
 }

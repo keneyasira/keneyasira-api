@@ -9,8 +9,9 @@ export interface TimeSlotAttributes extends BaseAttributes {
     establishmentId: string;
     practicianId: string;
     available: boolean;
-    startDate: string;
-    endDate: string;
+    date: string;
+    startTime: string;
+    endTime: string;
 
     practician?: PracticianAttributes;
     establishment?: EstablishmentAttributes;
@@ -41,13 +42,19 @@ export class TimeSlot extends BaseModel<TimeSlotAttributes, TimeSlotCreationAttr
     @Column({
         type: DataType.DATE,
     })
-    startDate: string;
+    date: string;
 
     @AllowNull(false)
     @Column({
-        type: DataType.DATE,
+        type: DataType.TIME,
     })
-    endDate: string;
+    startTime: string;
+
+    @AllowNull(false)
+    @Column({
+        type: DataType.TIME,
+    })
+    endTime: string;
 
     @BelongsTo(() => Establishment, 'establishmentId')
     establishment: Establishment;

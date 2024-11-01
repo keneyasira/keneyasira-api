@@ -48,6 +48,6 @@ export class MagicLoginStrategy extends PassportStrategy(Strategy) {
             throw new UnauthorizedException('Invalid Credentials');
         }
 
-        return result.data.pop();
+        return result.data;
     }
 }

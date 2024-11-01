@@ -24,7 +24,12 @@ async function bootstrap() {
 
     app.useLogger(app.get(ApplicationLoggerService));
 
-    app.useGlobalPipes(new ValidationPipe());
+    app.useGlobalPipes(
+        new ValidationPipe({
+            transform: true,
+            transformOptions: { enableImplicitConversion: true },
+        }),
+    );
 
     app.use(helmet());
 

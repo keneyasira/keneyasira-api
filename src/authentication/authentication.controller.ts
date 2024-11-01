@@ -7,7 +7,6 @@ import {
     Res,
     UnauthorizedException,
     UseGuards,
-    ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
@@ -33,12 +32,7 @@ export class AuthenticationController {
     async login(
         @Req() req: Request,
         @Res() res: Response,
-        @Body(
-            new ValidationPipe({
-                transform: true,
-                transformOptions: { enableImplicitConversion: true },
-            }),
-        )
+        @Body()
         body: PasswordLessLoginDto,
     ) {
         const result = await this.authenticationService.validateUser(body);

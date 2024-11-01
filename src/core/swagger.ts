@@ -17,7 +17,7 @@ export class Swagger {
                 basicAuth({
                     challenge: true,
                     // this is the username and password used to authenticate
-                    users: { 'api-docs': 'F39BB3CF-534E-441B-A188-E950FA1CF04E' },
+                    users: { api: 'api' },
                 }),
             );
 

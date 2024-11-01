@@ -13,8 +13,10 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+import { AuthenticatedUser } from '../authentication/decorators/authenticated-user.param-decorator';
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { SortParams } from '../typings/query.typings';
+import { UserAttributes } from '../user/models/user.model';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
 import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
@@ -66,9 +68,12 @@ export class PatientController {
     }
 
     @Post('/')
-    async create(@Body() createPatientDto: CreatePatientDto) {
+    async create(
+        @AuthenticatedUser() user: UserAttributes,
+        @Body() createPatientDto: CreatePatientDto,
+    ) {
         try {
-            return this.patientService.create(createPatientDto);
+            return this.patientService.create({ ...createPatientDto, createdBy: user.id });
         } catch (error) {
             this.logger.error(
                 `PatientController - failed to create patient, ${(error as Error).message}`,
@@ -82,13 +87,17 @@ export class PatientController {
     }
 
     @Put('/:id')
-    async update(@Body() updatePatientDto: UpdatePatientDto, @Param('id') patientId: string) {
+    async update(
+        @AuthenticatedUser() user: UserAttributes,
+        @Body() updatePatientDto: UpdatePatientDto,
+        @Param('id') patientId: string,
+    ) {
         if (patientId !== updatePatientDto.id) {
             throw new BadRequestException('Mismatching identifiers');
         }
 
         try {
-            return this.patientService.update(updatePatientDto);
+            return this.patientService.update({ ...updatePatientDto, updatedBy: user.id });
         } catch (error) {
             this.logger.error(
                 `PatientController - failed to update patient, ${(error as Error).message}`,
@@ -102,9 +111,9 @@ export class PatientController {
     }
 
     @Delete('/:id')
-    async delete(@Param('id') patientId: string) {
+    async delete(@AuthenticatedUser() user: UserAttributes, @Param('id') patientId: string) {
         try {
-            await this.patientService.delete(patientId);
+            await this.patientService.delete({ patientId, deletedBy: user.id });
         } catch (error) {
             this.logger.error(
                 `PatientController - failed to delete patient, ${(error as Error).message}`,

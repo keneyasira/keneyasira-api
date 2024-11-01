@@ -22,13 +22,7 @@ export class AppointmentStatusService {
         });
 
         return {
-            data: data.map((row) => {
-                const r = row.get({ plain: true });
-
-                console.log(r);
-
-                return r;
-            }),
+            data: data.map((row) => row.get({ plain: true })),
             total,
         };
     }
@@ -46,7 +40,7 @@ export class AppointmentStatusService {
 
         const row = appointmentStatus.get({ plain: true });
 
-        return { data: [row] };
+        return { data: row };
     }
 
     async create(appointmentStatusData: CreateAppointmentStatusDto) {
@@ -58,7 +52,7 @@ export class AppointmentStatusService {
             createdAppointmentStatus: createdAppointmentStatusValue,
         });
 
-        return { data: [createdAppointmentStatusValue] };
+        return { data: createdAppointmentStatusValue };
     }
 
     async update(updateAppointmentStatusDto: UpdateAppointmentStatusDto) {
@@ -78,7 +72,7 @@ export class AppointmentStatusService {
             throw new NotFoundException('Appointment status not found');
         }
 
-        return { data: [updatedAppointmentStatus.get({ plain: true })] };
+        return { data: updatedAppointmentStatus.get({ plain: true }) };
     }
 
     async delete(AppointmentStatusToDeleteId: string): Promise<void> {

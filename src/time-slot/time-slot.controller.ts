@@ -14,6 +14,8 @@ import {
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
+// import { Roles } from '../role/decorators/roles.decorator';
+// import { ROLE_NAMES } from '../role/role.service';
 import { SortParams } from '../typings/query.typings';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
@@ -66,6 +68,7 @@ export class TimeSlotController {
     }
 
     @Post('/')
+    // @Roles(ROLE_NAMES.ADMIN, ROLE_NAMES.PRACTICIAN)
     async create(@Body() createTimeSlotDto: CreateTimeSlotDto) {
         try {
             return this.timeSlotService.create(createTimeSlotDto);
@@ -81,6 +84,7 @@ export class TimeSlotController {
     }
 
     @Put('/:id')
+    // @Roles(ROLE_NAMES.ADMIN, ROLE_NAMES.PRACTICIAN)
     async update(@Body() updateTimeSlotDto: UpdateTimeSlotDto, @Param('id') timeSlotId: string) {
         if (timeSlotId !== updateTimeSlotDto.id) {
             throw new BadRequestException('Mismatching identifiers');
@@ -100,6 +104,7 @@ export class TimeSlotController {
     }
 
     @Delete('/:id')
+    // @Roles(ROLE_NAMES.ADMIN, ROLE_NAMES.PRACTICIAN)
     async delete(@Param('id') timeSlotId: string) {
         try {
             await this.timeSlotService.delete(timeSlotId);

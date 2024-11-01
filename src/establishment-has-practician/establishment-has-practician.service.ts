@@ -48,13 +48,18 @@ export class EstablishmentHasPracticianService {
             throw new NotFoundException('Establishment Has Practician not found');
         }
 
-        return { data: [establishmentHasPracticianToFind] };
+        return { data: establishmentHasPracticianToFind };
     }
 
     async create(createEstablishmentHasPracticianDto: CreateEstablishmentHasPracticianDto) {
-        const createdEstablishmentHasPractician = (
-            await EstablishmentHasPractician.create(createEstablishmentHasPracticianDto)
-        ).get({ plain: true });
+        const [createdEstablishmentHasPractician, _] =
+            await EstablishmentHasPractician.findOrCreate({
+                where: {
+                    practicianId: createEstablishmentHasPracticianDto.practicianId,
+                    establishmentId: createEstablishmentHasPracticianDto.establishmentId,
+                },
+                defaults: createEstablishmentHasPracticianDto,
+            });
 
         if (!createdEstablishmentHasPractician) {
             throw new Error('Establishment Has Practician could not be created');
@@ -67,13 +72,7 @@ export class EstablishmentHasPracticianService {
             },
         );
 
-        const establishmentHasPractician = (
-            await EstablishmentHasPractician.findByPk(createdEstablishmentHasPractician.id, {
-                include: [{ model: Establishment }, { model: Practician }],
-            })
-        )?.get({ plain: true });
-
-        return { data: [establishmentHasPractician] };
+        return this.find(createdEstablishmentHasPractician.id);
     }
 
     async delete(establishmentHasPracticianToDeleteId: string) {

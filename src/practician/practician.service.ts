@@ -1,4 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Op } from 'sequelize';
 
 import { Appointment, AppointmentAttributes } from '../appointment/models/appointment.model';
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
@@ -13,11 +15,15 @@ import { UserRole } from '../user-role/models/user-role.model';
 import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
 import { CreatePracticianDto } from './dtos/create-practician.dto';
 import { UpdatePracticianDto } from './dtos/update-practician.dto';
+import { PracticianDeletedEvent } from './events/practician.event';
 import { Practician, PracticianAttributes } from './models/practician.model';
 
 @Injectable()
 export class PracticianService {
-    constructor(private readonly logger: ApplicationLoggerService) {}
+    constructor(
+        private readonly logger: ApplicationLoggerService,
+        private eventEmitter: EventEmitter2,
+    ) {}
 
     async findAndCountAll(
         options: QueryParams,
@@ -38,7 +44,7 @@ export class PracticianService {
         return { data: data.map((row) => row.get({ plain: true })), total };
     }
 
-    async find(practicianId: string): Promise<PracticianAttributes> {
+    async find(practicianId: string) {
         const practician = await Practician.findOne({
             where: {
                 id: practicianId,
@@ -54,7 +60,7 @@ export class PracticianService {
             throw new NotFoundException('Practician not found');
         }
 
-        return practician.get({ plain: true });
+        return { data: practician.get({ plain: true }) };
     }
 
     async findPracticianTimeSlots(
@@ -117,19 +123,20 @@ export class PracticianService {
         return { data: data.map((row) => row.get({ plain: true })), total };
     }
 
-    async create(
-        createPracticianPayload: CreatePracticianDto & { createdBy: string },
-    ): Promise<PracticianAttributes> {
-        // check if the user already exists with the same email
+    async create(createPracticianPayload: CreatePracticianDto & { createdBy: string }) {
+        // check if the User already exists with the same email or phone
         const [user, isCreated] = await User.findOrCreate({
             where: {
-                email: createPracticianPayload.email,
+                [Op.or]: [
+                    { phone: createPracticianPayload.phone ?? '[phone-undefined]' },
+                    { email: createPracticianPayload.email ?? '[email-undefined]' },
+                ],
             },
-            defaults: { ...createPracticianPayload, createdAt: new Date().toISOString() },
+            defaults: { ...createPracticianPayload },
         });
 
         if (!isCreated) {
-            throw new ConflictException('User already exists with the same email');
+            throw new ConflictException('User already exists with the same email or phone');
         }
 
         const role = await Role.findOne({
@@ -145,10 +152,12 @@ export class PracticianService {
         await UserRole.create({
             userId: user.id,
             roleId: role.id,
+            createdBy: createPracticianPayload.createdBy,
         });
 
         const practician = await Practician.create({
             userId: user.id,
+            createdBy: createPracticianPayload.createdBy,
         });
 
         const practicianValue = await this.find(practician.id);
@@ -157,15 +166,17 @@ export class PracticianService {
             throw new Error('Practician could not be created');
         }
 
+        // emit patient create event
+
         return practicianValue;
     }
 
-    async update(
-        updatePracticianPayload: UpdatePracticianDto & { updatedBy: string },
-    ): Promise<PracticianAttributes> {
+    async update(updatePracticianPayload: UpdatePracticianDto & { updatedBy: string }) {
+        const { id, ...userUpdateData } = updatePracticianPayload;
+
         const practicianToBeUpdated = await Practician.findOne({
             where: {
-                id: updatePracticianPayload.id,
+                id,
             },
             include: [
                 {
@@ -181,11 +192,11 @@ export class PracticianService {
         const [affectedRows, _] = await User.update(
             {
                 ...practicianToBeUpdated.user.get({ plain: true }),
-                ...updatePracticianPayload,
+                ...userUpdateData,
             },
             {
                 where: {
-                    id: updatePracticianPayload.id,
+                    id: practicianToBeUpdated.user.id,
                 },
                 returning: true,
             },
@@ -195,7 +206,9 @@ export class PracticianService {
             throw new NotFoundException('User associated with practician not found');
         }
 
-        return await this.find(updatePracticianPayload.id);
+        // emit practician update event
+
+        return this.find(updatePracticianPayload.id);
     }
 
     async delete(deletePayload: { practicianId: string; deletedBy: string }): Promise<void> {
@@ -209,6 +222,14 @@ export class PracticianService {
             throw new NotFoundException('Practician not found');
         }
 
+        // emit practician delete event
+        this.eventEmitter.emit(
+            'practician.deleted',
+            new PracticianDeletedEvent({
+                practicianId: deletePayload.practicianId,
+            }),
+        );
+
         await Practician.update(
             { deletedBy: deletePayload.deletedBy },
             {
@@ -217,6 +238,8 @@ export class PracticianService {
                 },
             },
         );
+
+        // emit practician delete event
 
         this.logger.info(`PracticianService - deleted (${deletedCount}) practician`, {
             id: deletePayload.practicianId,

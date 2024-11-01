@@ -59,20 +59,4 @@ export class UserController {
             throw error;
         }
     }
-
-    @Delete('/:id')
-    async delete(@Param('id') userId: string) {
-        try {
-            await this.userService.delete(userId);
-        } catch (error) {
-            this.logger.error(
-                `UserController - failed to delete user, ${(error as Error).message}`,
-                {
-                    error: errorToPlainObject(error as Error),
-                },
-            );
-
-            throw error;
-        }
-    }
 }

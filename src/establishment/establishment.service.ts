@@ -38,7 +38,7 @@ export class EstablishmentService {
             throw new NotFoundException('Establishment not found');
         }
 
-        return { data: [establishment] };
+        return { data: establishment };
     }
 
     async findEstablishmentTimeSlots(
@@ -111,7 +111,7 @@ export class EstablishmentService {
             createdEstablishment: createdEstablishmentValue,
         });
 
-        return { data: [createdEstablishmentValue] };
+        return { data: createdEstablishmentValue };
     }
 
     async update(updateEstablishmentDto: UpdateEstablishmentDto) {
@@ -137,7 +137,7 @@ export class EstablishmentService {
             updatedEstablishment: updatedEstablishmentValue,
         });
 
-        return { data: [updatedEstablishmentValue] };
+        return { data: updatedEstablishmentValue };
     }
 
     async delete(establishmentId: string) {

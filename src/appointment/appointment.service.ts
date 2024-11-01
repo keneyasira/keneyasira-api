@@ -76,7 +76,7 @@ export class AppointmentService {
             throw new NotFoundException('Appointment not found');
         }
 
-        return { data: [appointment] };
+        return { data: appointment };
     }
 
     async create(createAppointmentDto: CreateAppointmentDto) {

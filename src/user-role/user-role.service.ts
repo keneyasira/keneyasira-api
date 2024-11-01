@@ -53,7 +53,7 @@ export class UserRoleService {
             throw new NotFoundException();
         }
 
-        return { data: [userRole.get({ plain: true })] };
+        return { data: userRole.get({ plain: true }) };
     }
 
     async getUserRoles(userId: string) {

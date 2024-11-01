@@ -29,7 +29,7 @@ export class RoleService {
             order: transformSortParamsToSequelizeFormat(options.sort),
         });
 
-        return { data, total };
+        return { data: data.map((row) => row.get({ plain: true })), total };
     }
 
     async find(RoleId: string) {
@@ -43,34 +43,39 @@ export class RoleService {
             throw new NotFoundException('Role not found');
         }
 
-        return { data: [role] };
+        return { data: role.get({ plain: true }) };
     }
 
-    async create(createRoleDto: CreateRoleDto) {
-        const createdRole = await Role.create(
-            {
-                ...createRoleDto,
-                // createdBy: connectedUser?.id,
-            },
-            { raw: true },
-        );
+    async create(createRolePayload: CreateRoleDto & { createdBy: string }) {
+        const createdRole = await Role.create({
+            ...createRolePayload,
+        });
 
         this.logger.info(`Created role`, { createdRole });
 
-        return { data: [createdRole] };
+        return { data: createdRole.get({ plain: true }) };
     }
 
-    async delete(RoleToDeleteId: string): Promise<void> {
+    async delete(roleToDeletePayload: { roleId: string; deletedBy: string }): Promise<void> {
         const deletedCount = await Role.destroy({
-            where: { id: RoleToDeleteId },
+            where: { id: roleToDeletePayload.roleId },
         });
 
         if (!deletedCount) {
             throw new NotFoundException('Role not found');
         }
 
+        // TODO // emit patient delete event
+        // this.eventEmitter.emit(
+        //     'role.deleted',
+        //     new RoleDeletedEvent({
+        //         roleId: roleToDeletePayload.roleId,
+        //         actionUserId: roleToDeletePayload.deletedBy,
+        //     }),
+        // );
+
         this.logger.info(`deleted (${deletedCount}) Role(s)`, {
-            RoleToDeleteId,
+            RoleToDeleteId: roleToDeletePayload,
         });
     }
 }

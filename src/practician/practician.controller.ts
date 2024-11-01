@@ -11,20 +11,19 @@ import {
     Post,
     Put,
     Query,
-    Req,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+import { AuthenticatedUser } from '../authentication/decorators/authenticated-user.param-decorator';
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { SortParams } from '../typings/query.typings';
+import type { UserAttributes } from '../user/models/user.model';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
 import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
 import { CreatePracticianDto } from './dtos/create-practician.dto';
 import { UpdatePracticianDto } from './dtos/update-practician.dto';
 import { PracticianService } from './practician.service';
-import type { UserAttributes } from '../user/models/user.model';
-import { AuthenticatedUser } from '../authentication/decorators/authenticated-user.param-decorator';
 
 @ApiBearerAuth()
 @ApiTags('practician')
