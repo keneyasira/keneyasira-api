@@ -1,5 +1,5 @@
 import { Optional } from 'sequelize';
-import { AllowNull, BelongsTo,Column, ForeignKey, Table } from 'sequelize-typescript';
+import { AllowNull, BelongsTo, Column, ForeignKey, Table } from 'sequelize-typescript';
 
 import { BaseAttributes, BaseModel } from '../../common/base.model';
 import { Practician, type PracticianAttributes } from '../../practician/models/practician.model';

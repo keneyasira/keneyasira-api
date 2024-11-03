@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 
+import { AdminModule } from './admin/admin.module';
 import { AppointmentModule } from './appointment/appointment.module';
 import { AppointmentStatusModule } from './appointment-status/appointment-status.module';
 import { AuthenticationModule } from './authentication/authentication.module';
+import { CollaboratorModule } from './collaborator/collaborator.module';
 import { CoreModule } from './core/core.module';
 import { RootController } from './core/root.controller';
 import { EstablishmentModule } from './establishment/establishment.module';
@@ -20,9 +22,11 @@ import { UserRoleModule } from './user-role/user-role.module';
 
 @Module({
     imports: [
+        AdminModule,
         AppointmentModule,
         AppointmentStatusModule,
         AuthenticationModule,
+        CollaboratorModule,
         CoreModule,
         EstablishmentModule,
         EstablishmentHasSpecialtyModule,

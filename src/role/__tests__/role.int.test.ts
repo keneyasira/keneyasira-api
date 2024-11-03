@@ -92,8 +92,19 @@ describe('RoleController', () => {
                                 deletedAt: null,
                                 deletedBy: null,
                             },
+                            {
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                description: 'collaborator role',
+                                id: '314ad3cb-bec3-41da-8ef2-0486b0c7a6b3',
+                                name: 'collaborator',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                createdAt: expect.any(String),
+                                updatedAt: expect.any(String),
+                                deletedAt: null,
+                                deletedBy: null,
+                            },
                         ],
-                        total: 3,
+                        total: 4,
                         statusCode: 200,
                     });
                 });

@@ -33,6 +33,15 @@ export async function up(queryInterface: QueryInterface) {
             created_at: '2024-05-20 23:13:00',
             updated_at: '2024-05-20 23:13:00',
         },
+        {
+            id: 'e66d2f6d-056d-4513-a75e-7e0f400e0698',
+            email: 'collaborator@keneyasira.com',
+            first_name: 'Collaborator',
+            last_name: 'Collaborator',
+            phone: '+22379131417',
+            created_at: '2024-05-20 23:13:00',
+            updated_at: '2024-05-20 23:13:00',
+        },
     ]);
 
     // Seed data for role table
@@ -59,6 +68,15 @@ export async function up(queryInterface: QueryInterface) {
             id: '86a41c88-726b-4a69-8774-60a9960cfa09',
             name: 'patient',
             description: 'patient role',
+            created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            created_at: '2024-05-20 23:13:00',
+            updated_at: '2024-05-20 23:13:00',
+        },
+        {
+            id: '314ad3cb-bec3-41da-8ef2-0486b0c7a6b3',
+            name: 'collaborator',
+            description: 'collaborator role',
             created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             created_at: '2024-05-20 23:13:00',
@@ -93,6 +111,41 @@ export async function up(queryInterface: QueryInterface) {
             id: 'f49a12e6-4f3c-4b24-869d-b54f80db9f61',
             role_id: '86a41c88-726b-4a69-8774-60a9960cfa09',
             user_id: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+            created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            created_at: '2024-05-20 23:13:00',
+            updated_at: '2024-05-20 23:13:00',
+        },
+
+        {
+            //collaborator
+            id: 'f5b833c9-3791-4997-9aa7-5d73201e3a01',
+            role_id: '314ad3cb-bec3-41da-8ef2-0486b0c7a6b3',
+            user_id: 'e66d2f6d-056d-4513-a75e-7e0f400e0698',
+            created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            created_at: '2024-05-20 23:13:00',
+            updated_at: '2024-05-20 23:13:00',
+        },
+    ]);
+
+    // Seed data for admin table
+    await queryInterface.bulkInsert('admin', [
+        {
+            id: '421b1dcb-a5d8-4b6c-b491-507db3ab52c0',
+            user_id: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            created_at: '2024-05-20 23:13:00',
+            updated_at: '2024-05-20 23:13:00',
+        },
+    ]);
+
+    // Seed data for collaborator table
+    await queryInterface.bulkInsert('collaborator', [
+        {
+            id: '52525920-e848-42cb-9faa-4bcfef3419d9',
+            user_id: 'e66d2f6d-056d-4513-a75e-7e0f400e0698',
             created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             created_at: '2024-05-20 23:13:00',
@@ -376,6 +429,8 @@ export async function down(queryInterface: QueryInterface) {
     await queryInterface.bulkDelete('role', {}, {});
     await queryInterface.bulkDelete('user', {}, {});
     await queryInterface.bulkDelete('user_role', {}, {});
+    await queryInterface.bulkDelete('admin', {}, {});
+    await queryInterface.bulkDelete('collaborator', {}, {});
     await queryInterface.bulkDelete('patient', {}, {});
     await queryInterface.bulkDelete('specialty', {}, {});
     await queryInterface.bulkDelete('practician', {}, {});

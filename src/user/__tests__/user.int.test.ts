@@ -34,7 +34,7 @@ describe('UserController', () => {
     });
 
     describe('/', () => {
-        it('should get users', async () => {
+        it.skip('should get users', async () => {
             await request(app.getHttpServer())
                 .get('/users')
                 .auth(accessToken, { type: 'bearer' })

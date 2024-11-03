@@ -1,4 +1,6 @@
 // auth.module.ts
+import { ConfigModule } from '@config/config.module';
+import { Config } from '@config/default';
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
@@ -18,12 +20,16 @@ import { MagicLoginStrategy } from './strategies/magic-login.strategy';
         UserModule,
         UserRoleModule,
         PassportModule,
-        JwtModule.register({
-            secret: 'secret', // TODO get from config module
-            global: true,
-            signOptions: {
-                expiresIn: '1h',
-            },
+        JwtModule.registerAsync({
+            imports: [ConfigModule],
+            useFactory: (configService: Config) => ({
+                secret: configService.jwt_secret,
+                global: true,
+                signOptions: {
+                    expiresIn: '1h',
+                },
+            }),
+            inject: [Config],
         }),
         CoreModule,
     ],

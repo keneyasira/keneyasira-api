@@ -31,7 +31,7 @@ export class BaseLoggerConfig {
     enabled = true;
     level = 'info';
     omitFieldForLogs = ['password'];
-    omitRoutes = ['/', '/health'];
+    omitRoutes = ['/', '/health', '/api-docs'];
 }
 
 export class BaseRateLimitConfig {
@@ -45,6 +45,7 @@ export class Config {
     nodeEnv = 'development';
     env = 'development';
     port = 4000;
+    jwt_secret = 'secret';
 
     @ValidateNested()
     database = new BaseDatabaseConfig();

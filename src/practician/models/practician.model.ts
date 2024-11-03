@@ -1,7 +1,16 @@
 import { Optional } from 'sequelize';
-import { AllowNull, BelongsTo,Column, ForeignKey, Table } from 'sequelize-typescript';
+import {
+    AllowNull,
+    BelongsTo,
+    BelongsToMany,
+    Column,
+    ForeignKey,
+    Table,
+} from 'sequelize-typescript';
 
 import { BaseAttributes, BaseModel } from '../../common/base.model';
+import { PracticianHasSpecialty } from '../../practician-has-specialty/models/practician-has-specialty.model';
+import { Specialty } from '../../specialty/models/specialty.model';
 import { User, type UserAttributes } from '../../user/models/user.model';
 
 export interface PracticianAttributes extends BaseAttributes {
@@ -23,4 +32,7 @@ export class Practician extends BaseModel<PracticianAttributes, PracticianCreati
 
     @BelongsTo(() => User, 'userId')
     user: User;
+
+    @BelongsToMany(() => Specialty, () => PracticianHasSpecialty)
+    specialties: Specialty[];
 }

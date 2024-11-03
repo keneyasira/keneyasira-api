@@ -1,7 +1,9 @@
 import { Optional } from 'sequelize';
-import { AllowNull, Column, HasMany, Table } from 'sequelize-typescript';
+import { AllowNull, BelongsToMany, Column, HasMany, Table } from 'sequelize-typescript';
 
 import { BaseAttributes, BaseModel } from '../../common/base.model';
+import { EstablishmentHasSpecialty } from '../../establishment-has-specialty/models/establishment-has-specialty.model';
+import { Specialty } from '../../specialty/models/specialty.model';
 import { TimeSlot, type TimeSlotAttributes } from '../../time-slot/models/time-slot.model';
 
 export interface EstablishmentAttributes extends BaseAttributes {
@@ -44,4 +46,7 @@ export class Establishment extends BaseModel<
 
     @HasMany(() => TimeSlot)
     timeSlots: TimeSlot[];
+
+    @BelongsToMany(() => Specialty, () => EstablishmentHasSpecialty)
+    specialties: Specialty[];
 }

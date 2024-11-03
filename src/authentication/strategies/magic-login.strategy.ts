@@ -19,7 +19,8 @@ export class MagicLoginStrategy extends PassportStrategy(Strategy) {
             jwtOptions: {
                 expiresIn: '5m',
             },
-            callbackUrl: 'http://localhost:4000/authentication/login/callback',
+            // callbackUrl: 'http://localhost:4000/authentication/login/callback',
+            callbackUrl: 'http://localhost:4200/auth/callback',
             // eslint-disable-next-line @typescript-eslint/require-await
             sendMagicLink: async (destination: string, href: string) => {
                 // TODO: send email or sms

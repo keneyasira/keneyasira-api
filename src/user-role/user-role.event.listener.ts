@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
+import type { AdminDeletedEvent } from '../admin/events/admin.event';
+import { Admin } from '../admin/models/admin.model';
+import type { CollaboratorDeletedEvent } from '../collaborator/events/collaborator.event';
+import { Collaborator } from '../collaborator/models/collaborator.model';
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { PatientDeletedEvent } from '../patient/events/patient.event';
 import { Patient } from '../patient/models/patient.model';
@@ -47,7 +51,7 @@ export class UserRoleEventListener {
         await UserRole.destroy({
             where: {
                 userId: deletedPatient.user.id,
-                role: patientRole.id,
+                roleId: patientRole.id,
             },
         });
     }
@@ -87,18 +91,86 @@ export class UserRoleEventListener {
         await UserRole.destroy({
             where: {
                 userId: deletedPractician.user.id,
-                role: practicianRole.id,
+                roleId: practicianRole.id,
             },
         });
     }
 
-    // @OnEvent('collaborator.deleted')
-    // handleCollaboratorDeletedEvent(event: CollaboratorDeletedEvent) {
-    //     // handle and process "OrderCreatedEvent" event
-    // }
+    @OnEvent('collaborator.deleted', { async: true })
+    async handleCollaboratorDeletedEvent(event: CollaboratorDeletedEvent) {
+        const deletedCollaborator = await Collaborator.findOne({
+            where: {
+                id: event.payload.collaboratorId,
+            },
+            paranoid: false,
+            include: [{ model: User, attributes: ['id'] }],
+        });
 
-    // @OnEvent('admin.deleted')
-    // handleAdminDeletedEvent(event: AdminDeletedEvent) {
-    //     // handle and process "OrderCreatedEvent" event
-    // }
+        if (!deletedCollaborator) {
+            this.logger.error(`Error deleting collaborator from event`, event);
+
+            return;
+        }
+
+        const collaboratorRole = await Role.findOne({
+            where: {
+                name: ROLE_NAMES.COLLABORATOR,
+            },
+        });
+
+        if (!collaboratorRole) {
+            this.logger.error(
+                `Error deleting collaborator from event, collaborator role not found`,
+                event,
+            );
+
+            return;
+        }
+
+        await UserRole.destroy({
+            where: {
+                userId: deletedCollaborator.user.id,
+                roleId: collaboratorRole.id,
+            },
+        });
+    }
+
+    @OnEvent('admin.deleted', { async: true })
+    async handleAdminDeletedEvent(event: AdminDeletedEvent) {
+        const deletedAdmin = await Admin.findOne({
+            where: {
+                id: event.payload.adminId,
+            },
+            paranoid: false,
+            include: [{ model: User, attributes: ['id'] }],
+        });
+
+        if (!deletedAdmin) {
+            this.logger.error(`Error deleting administrator from event`, event);
+
+            return;
+        }
+
+        const administratorRole = await Role.findOne({
+            where: {
+                name: ROLE_NAMES.ADMIN,
+            },
+        });
+
+        if (!administratorRole) {
+            this.logger.error(
+                `Error deleting administrator from event, administrator role not found`,
+                event,
+            );
+
+            return;
+        }
+
+        await UserRole.destroy({
+            where: {
+                userId: deletedAdmin.user.id,
+                roleId: administratorRole.id,
+            },
+        });
+    }
 }

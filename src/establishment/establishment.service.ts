@@ -1,13 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Op } from 'sequelize';
 
 import { Appointment, AppointmentAttributes } from '../appointment/models/appointment.model';
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { Patient } from '../patient/models/patient.model';
 import { Practician } from '../practician/models/practician.model';
+import { Specialty } from '../specialty/models/specialty.model';
 import { TimeSlot, TimeSlotAttributes } from '../time-slot/models/time-slot.model';
 import { QueryParams } from '../typings/query.typings';
 import { User } from '../user/models/user.model';
-import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
+import {
+    buildEstablishmentSearchQuery,
+    transformSortParamsToSequelizeFormat,
+} from '../utils/sequelize.helpers';
 import { CreateEstablishmentDto } from './dtos/create-establishment.dto';
 import { UpdateEstablishmentDto } from './dtos/update-establishment.dto';
 import { Establishment, EstablishmentAttributes } from './models/establishment.model';
@@ -21,10 +26,27 @@ export class EstablishmentService {
     ): Promise<{ data: EstablishmentAttributes[]; total: number }> {
         const offset = options?.limit && options.page ? options.limit * (options.page - 1) : 0;
 
+        const include = [];
+
+        if (options.establishmentSearch?.specialty || options.establishmentSearch?.nameSearch) {
+            include.push({
+                model: Specialty,
+                where: {
+                    name: {
+                        [Op.iLike]: `%${options.establishmentSearch.specialty ?? options.establishmentSearch?.nameSearch}%`,
+                    },
+                },
+                required: true,
+            });
+        }
+
         const { rows: data, count: total } = await Establishment.findAndCountAll({
             limit: options?.limit,
             offset,
             order: transformSortParamsToSequelizeFormat(options.sort),
+            where: buildEstablishmentSearchQuery(options.establishmentSearch),
+            include,
+            distinct: true,
         });
 
         return { data: data.map((row) => row.get({ plain: true })), total };

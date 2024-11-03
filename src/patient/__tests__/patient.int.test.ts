@@ -46,6 +46,10 @@ describe('PatientController', () => {
                                 createdBy: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
                                 id: '632273cc-de99-4582-a440-752ba1f78766',
                                 updatedBy: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                                deletedAt: null,
+                                deletedBy: null,
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                updatedAt: expect.any(String),
                                 user: {
                                     createdBy: null,
                                     email: 'patient@keneyasira.com',
@@ -54,6 +58,10 @@ describe('PatientController', () => {
                                     lastName: 'Patient',
                                     phone: '+22379131416',
                                     updatedBy: null,
+                                    deletedAt: null,
+                                    deletedBy: null,
+                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    updatedAt: expect.any(String),
                                 },
                                 userId: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
                             },
@@ -71,24 +79,30 @@ describe('PatientController', () => {
                 .expect(200)
                 .expect(({ body }) => {
                     expect(body).toEqual({
-                        data: [
-                            {
-                                birthDate: '1999-01-01',
-                                createdBy: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
-                                id: '632273cc-de99-4582-a440-752ba1f78766',
-                                updatedBy: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
-                                user: {
-                                    createdBy: null,
-                                    email: 'patient@keneyasira.com',
-                                    firstName: 'Patient',
-                                    id: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
-                                    lastName: 'Patient',
-                                    phone: '+22379131416',
-                                    updatedBy: null,
-                                },
-                                userId: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                        data: {
+                            birthDate: '1999-01-01',
+                            createdBy: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                            id: '632273cc-de99-4582-a440-752ba1f78766',
+                            updatedBy: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                            deletedAt: null,
+                            deletedBy: null,
+                            createdAt: '2024-05-20T23:13:00.000Z',
+                            updatedAt: expect.any(String),
+                            user: {
+                                createdBy: null,
+                                email: 'patient@keneyasira.com',
+                                firstName: 'Patient',
+                                id: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                                lastName: 'Patient',
+                                phone: '+22379131416',
+                                updatedBy: null,
+                                deletedAt: null,
+                                deletedBy: null,
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                updatedAt: expect.any(String),
                             },
-                        ],
+                            userId: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                        },
                         statusCode: 200,
                     });
                 });
@@ -109,18 +123,29 @@ describe('PatientController', () => {
                 .expect(201)
                 .expect(({ body }) => {
                     expect(body).toMatchObject({
-                        id: expect.any(String),
-                        birthDate: newDate,
-                        user: {
-                            createdBy: null,
-                            email: 'createdpatient@keneyasira.com',
-                            firstName: 'Patient',
+                        data: {
                             id: expect.any(String),
-                            lastName: 'Patient',
-                            phone: '+22379131419',
-                            updatedBy: null,
+                            birthDate: expect.any(String),
+                            deletedAt: null,
+                            deletedBy: null,
+                            createdAt: expect.any(String),
+                            updatedAt: expect.any(String),
+                            user: {
+                                createdBy: null,
+                                email: 'createdpatient@keneyasira.com',
+                                firstName: 'Patient',
+                                id: expect.any(String),
+                                lastName: 'Patient',
+                                phone: '+22379131419',
+                                updatedBy: null,
+                                deletedAt: null,
+                                deletedBy: null,
+                                createdAt: expect.any(String),
+                                updatedAt: expect.any(String),
+                            },
+                            userId: expect.any(String),
                         },
-                        userId: expect.any(String),
+                        statusCode: 201,
                     });
                 });
         });
@@ -136,24 +161,30 @@ describe('PatientController', () => {
                 .expect(200)
                 .expect(({ body }) => {
                     expect(body).toEqual({
-                        data: [
-                            {
-                                birthDate: '2000-05-05',
-                                createdBy: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
-                                id: '632273cc-de99-4582-a440-752ba1f78766',
-                                updatedBy: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
-                                user: {
-                                    createdBy: null,
-                                    email: 'patient@keneyasira.com',
-                                    firstName: 'Patient',
-                                    id: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
-                                    lastName: 'Patient',
-                                    phone: '+22379131416',
-                                    updatedBy: null,
-                                },
-                                userId: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                        data: {
+                            birthDate: '2000-05-05',
+                            createdBy: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                            id: '632273cc-de99-4582-a440-752ba1f78766',
+                            updatedBy: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                            deletedAt: null,
+                            deletedBy: null,
+                            createdAt: '2024-05-20T23:13:00.000Z',
+                            updatedAt: expect.any(String),
+                            user: {
+                                createdBy: null,
+                                email: 'patient@keneyasira.com',
+                                firstName: 'Patient',
+                                id: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                                lastName: 'Patient',
+                                phone: '+22379131416',
+                                updatedBy: null,
+                                deletedAt: null,
+                                deletedBy: null,
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                updatedAt: expect.any(String),
                             },
-                        ],
+                            userId: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
+                        },
                         statusCode: 200,
                     });
                 });

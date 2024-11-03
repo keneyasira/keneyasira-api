@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { Op } from 'sequelize';
+import { type Includeable, Op } from 'sequelize';
 
 import { Appointment, AppointmentAttributes } from '../appointment/models/appointment.model';
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
@@ -8,11 +8,15 @@ import { Establishment } from '../establishment/models/establishment.model';
 import { Patient } from '../patient/models/patient.model';
 import { Role } from '../role/models/role.model';
 import { ROLE_NAMES } from '../role/role.service';
+import { Specialty } from '../specialty/models/specialty.model';
 import { TimeSlot, TimeSlotAttributes } from '../time-slot/models/time-slot.model';
 import { QueryParams } from '../typings/query.typings';
 import { User } from '../user/models/user.model';
 import { UserRole } from '../user-role/models/user-role.model';
-import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
+import {
+    buildUserSearchQuery,
+    transformSortParamsToSequelizeFormat,
+} from '../utils/sequelize.helpers';
 import { CreatePracticianDto } from './dtos/create-practician.dto';
 import { UpdatePracticianDto } from './dtos/update-practician.dto';
 import { PracticianDeletedEvent } from './events/practician.event';
@@ -30,15 +34,29 @@ export class PracticianService {
     ): Promise<{ data: PracticianAttributes[]; total: number }> {
         const offset = options?.limit && options.page ? options.limit * (options.page - 1) : 0;
 
+        const include: Includeable[] = [
+            {
+                model: User,
+                where: buildUserSearchQuery(options.search),
+            },
+        ];
+
+        if (options.search?.specialty) {
+            include.push({
+                model: Specialty,
+                where: {
+                    name: { [Op.iLike]: `%${options.search.specialty}%` },
+                },
+                required: true
+            });
+        }
+
         const { rows: data, count: total } = await Practician.findAndCountAll({
             limit: options?.limit,
-            include: [
-                {
-                    model: User,
-                },
-            ],
             offset,
             order: transformSortParamsToSequelizeFormat(options.sort),
+            include,
+            distinct: true,
         });
 
         return { data: data.map((row) => row.get({ plain: true })), total };

@@ -138,20 +138,56 @@ describe('EstablishmentController (e2e)', () => {
             });
     });
 
-    it.skip('/establishments/:id (PATCH)', async () => {
+    it('/establishments/:id (PUT)', async () => {
+        const createEstablishmentDto: CreateEstablishmentDto = {
+            name: 'Test Establishment',
+            address: '123 Test St',
+            city: 'Test City',
+            country: 'Test Country',
+            phone: '0022379131510',
+            email: 'test@test.com',
+        };
+
+        const id = await request(app.getHttpServer())
+            .post('/establishments')
+            .auth(accessToken, { type: 'bearer' })
+            .send(createEstablishmentDto)
+            .expect(201)
+            .then(({ body }) => body.data.id);
         const updateEstablishmentDto = {
-            id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+            id,
             name: 'Updated Establishment',
         };
 
         await request(app.getHttpServer())
-            .patch(`/establishments/f211f711-0e57-4c30-bbf2-7c9f576de879`)
+            .put(`/establishments/${id}`)
             .auth(accessToken, { type: 'bearer' })
             .send(updateEstablishmentDto)
             .expect(200)
             .expect(({ body }) => {
-                expect(body).toEqual({});
+                expect(body).toEqual({
+                    data: {
+                        address: '123 Test St',
+                        city: 'Test City',
+                        country: 'Test Country',
+                        createdAt: expect.any(String),
+                        createdBy: null,
+                        deletedAt: null,
+                        deletedBy: null,
+                        id,
+                        name: 'Updated Establishment',
+                        phone: '0022379131510',
+                        updatedAt: expect.any(String),
+                        updatedBy: null,
+                    },
+                    statusCode: 200,
+                });
             });
+
+        await request(app.getHttpServer())
+            .delete(`/establishments/${id}`)
+            .auth(accessToken, { type: 'bearer' })
+            .expect(200);
     });
 
     it('/establishments/:id (DELETE)', async () => {
@@ -213,6 +249,113 @@ describe('EstablishmentController (e2e)', () => {
                         path: '/establishments/undefined',
                     }),
                 });
+            });
+    });
+
+    it('should search establishments by specialty', async () => {
+        await request(app.getHttpServer())
+            .get('/establishments?specialty=Dermatology')
+            .auth(accessToken, { type: 'bearer' })
+            .expect(200)
+            .expect(({ body }) => {
+                expect(body.data).toEqual([
+                    {
+                        address: 'Rue Kati, Bamako, Mali',
+                        city: 'Bamako',
+                        country: 'Mali',
+                        createdAt: '2024-05-20T23:13:00.000Z',
+                        createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                        deletedAt: null,
+                        deletedBy: null,
+                        id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                        name: 'Point G',
+                        phone: '+22379131419',
+                        specialties: [
+                            {
+                                EstablishmentHasSpecialty: {
+                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                    deletedAt: null,
+                                    deletedBy: null,
+                                    establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                                    id: '77a093ae-2d0c-4cac-b8cb-c4bbb035439a',
+                                    specialtyId: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
+                                    updatedAt: '2024-05-20T23:13:00.000Z',
+                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                },
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                deletedAt: null,
+                                deletedBy: null,
+                                id: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
+                                name: 'Dermatology',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                            },
+                        ],
+                        updatedAt: expect.any(String),
+                        updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                    },
+                ]);
+            });
+    });
+
+    it('should return empty array when searching for non-existent specialty', async () => {
+        await request(app.getHttpServer())
+            .get('/establishments?specialty=NonExistentSpecialty')
+            .auth(accessToken, { type: 'bearer' })
+            .expect(200)
+            .expect(({ body }) => {
+                expect(body.data).toEqual([]);
+                expect(body.total).toBe(0);
+            });
+    });
+
+    it('should combine specialty search with other criteria', async () => {
+        await request(app.getHttpServer())
+            .get('/establishments?specialty=Dermatology&city=Bamako')
+            .auth(accessToken, { type: 'bearer' })
+            .expect(200)
+            .expect(({ body }) => {
+                expect(body.data).toEqual([
+                    {
+                        address: 'Rue Kati, Bamako, Mali',
+                        city: 'Bamako',
+                        country: 'Mali',
+                        createdAt: '2024-05-20T23:13:00.000Z',
+                        createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                        deletedAt: null,
+                        deletedBy: null,
+                        id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                        name: 'Point G',
+                        phone: '+22379131419',
+                        specialties: [
+                            {
+                                EstablishmentHasSpecialty: {
+                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                    deletedAt: null,
+                                    deletedBy: null,
+                                    establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                                    id: '77a093ae-2d0c-4cac-b8cb-c4bbb035439a',
+                                    specialtyId: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
+                                    updatedAt: '2024-05-20T23:13:00.000Z',
+                                    updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                },
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                deletedAt: null,
+                                deletedBy: null,
+                                id: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
+                                name: 'Dermatology',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                            },
+                        ],
+                        updatedAt: expect.any(String),
+                        updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                    },
+                ]);
             });
     });
 });

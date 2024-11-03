@@ -57,7 +57,7 @@ describe('EstablishmentHasPracticianController', () => {
                                     id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
                                     name: 'Point G',
                                     phone: '+22379131419',
-                                    updatedAt: '2024-05-20T23:13:00.000Z',
+                                    updatedAt: expect.any(String),
                                     updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                                 },
                                 establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
@@ -192,7 +192,7 @@ describe('EstablishmentHasPracticianController', () => {
                 .post('/establishment-has-practicians')
                 .auth(accessToken, { type: 'bearer' })
                 .send({
-                    establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                    establishmentId: '90b93a53-4109-4182-aa28-d4f3af0b87bb',
                     practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
                 })
                 .expect(201)

@@ -71,6 +71,7 @@ describe('PracticianController', () => {
                     });
                 });
         });
+
         it('should get a practician', async () => {
             await request(app.getHttpServer())
                 .get('/practicians/18f33b4c-6f7c-4af7-8d0f-3c50aab951ac')
@@ -102,6 +103,158 @@ describe('PracticianController', () => {
                             },
                         },
                         statusCode: 200,
+                    });
+                });
+        });
+
+        it('should search practicians by firstName', async () => {
+            await request(app.getHttpServer())
+                .get('/practicians?firstName=Doctor')
+                .auth(accessToken, { type: 'bearer' })
+                .expect(200)
+                .expect(({ body }) => {
+                    expect(body).toEqual({
+                        data: [
+                            {
+                                id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                deletedAt: null,
+                                deletedBy: null,
+                                user: {
+                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    createdBy: null,
+                                    id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                    email: 'practician@keneyasira.com',
+                                    firstName: 'Doctor',
+                                    lastName: 'Doctor',
+                                    phone: '+22379131415',
+                                    updatedBy: null,
+                                    deletedAt: null,
+                                    deletedBy: null,
+                                    updatedAt: '2024-05-20T23:13:00.000Z',
+                                },
+                            },
+                        ],
+                        statusCode: 200,
+                        total: 1,
+                    });
+                });
+        });
+
+        it('should search practicians by lastName', async () => {
+            await request(app.getHttpServer())
+                .get('/practicians?lastName=Doctor')
+                .auth(accessToken, { type: 'bearer' })
+                .expect(200)
+                .expect(({ body }) => {
+                    expect(body).toEqual({
+                        data: [
+                            {
+                                id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                deletedAt: null,
+                                deletedBy: null,
+                                user: {
+                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    createdBy: null,
+                                    id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                    email: 'practician@keneyasira.com',
+                                    firstName: 'Doctor',
+                                    lastName: 'Doctor',
+                                    phone: '+22379131415',
+                                    updatedBy: null,
+                                    deletedAt: null,
+                                    deletedBy: null,
+                                    updatedAt: '2024-05-20T23:13:00.000Z',
+                                },
+                            },
+                        ],
+                        statusCode: 200,
+                        total: 1,
+                    });
+                });
+        });
+
+        it('should search practicians by email', async () => {
+            await request(app.getHttpServer())
+                .get('/practicians?email=practician@keneyasira.com')
+                .auth(accessToken, { type: 'bearer' })
+                .expect(200)
+                .expect(({ body }) => {
+                    expect(body).toEqual({
+                        data: [
+                            {
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                deletedAt: null,
+                                deletedBy: null,
+                                id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                user: {
+                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    createdBy: null,
+                                    deletedAt: null,
+                                    deletedBy: null,
+                                    email: 'practician@keneyasira.com',
+                                    firstName: 'Doctor',
+                                    id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                    lastName: 'Doctor',
+                                    phone: '+22379131415',
+                                    updatedAt: '2024-05-20T23:13:00.000Z',
+                                    updatedBy: null,
+                                },
+                                userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                            },
+                        ],
+                        statusCode: 200,
+                        total: 1,
+                    });
+                });
+        });
+
+        it('should search practicians by phone', async () => {
+            await request(app.getHttpServer())
+                .get('/practicians?phone=+22379131415')
+                .auth(accessToken, { type: 'bearer' })
+                .expect(200)
+                .expect(({ body }) => {
+                    expect(body).toEqual({
+                        data: [
+                            {
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                deletedAt: null,
+                                deletedBy: null,
+                                id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                user: {
+                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    createdBy: null,
+                                    deletedAt: null,
+                                    deletedBy: null,
+                                    email: 'practician@keneyasira.com',
+                                    firstName: 'Doctor',
+                                    id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                    lastName: 'Doctor',
+                                    phone: '+22379131415',
+                                    updatedAt: '2024-05-20T23:13:00.000Z',
+                                    updatedBy: null,
+                                },
+                                userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                            },
+                        ],
+                        statusCode: 200,
+                        total: 1,
                     });
                 });
         });
@@ -172,8 +325,6 @@ describe('PracticianController', () => {
                 firstName: 'updateName',
                 phone: '0022389151410',
             };
-
-            const userId = 'd4581754-69b2-4414-9e9c-4a17fb2022c2';
 
             await request(app.getHttpServer())
                 .put(`/practicians/${id}`)
@@ -319,6 +470,78 @@ describe('PracticianController', () => {
                             },
                         }),
                     });
+                });
+        });
+
+        it('should search practicians by specialty', async () => {
+            await request(app.getHttpServer())
+                .get('/practicians?specialty=Dermatology')
+                .auth(accessToken, { type: 'bearer' })
+                .expect(200)
+                .expect(({ body }) => {
+                    expect(body).toEqual({
+                        data: [
+                            {
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                deletedAt: null,
+                                deletedBy: null,
+                                id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                specialties: [
+                                    {
+                                        PracticianHasSpecialty: {
+                                            createdAt: '2024-05-20T23:13:00.000Z',
+                                            createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                            deletedAt: null,
+                                            deletedBy: null,
+                                            id: '8112162c-e0a2-4f6f-a2c6-14aa72f6bab0',
+                                            practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                            specialtyId: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
+                                            updatedAt: '2024-05-20T23:13:00.000Z',
+                                            updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                        },
+                                        createdAt: '2024-05-20T23:13:00.000Z',
+                                        createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                        deletedAt: null,
+                                        deletedBy: null,
+                                        id: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
+                                        name: 'Dermatology',
+                                        updatedAt: '2024-05-20T23:13:00.000Z',
+                                        updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                    },
+                                ],
+                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                user: {
+                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    createdBy: null,
+                                    deletedAt: null,
+                                    deletedBy: null,
+                                    email: 'practician@keneyasira.com',
+                                    firstName: 'Doctor',
+                                    id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                    lastName: 'Doctor',
+                                    phone: '+22379131415',
+                                    updatedAt: '2024-05-20T23:13:00.000Z',
+                                    updatedBy: null,
+                                },
+                                userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                            },
+                        ],
+                        statusCode: 200,
+                        total: 1,
+                    });
+                });
+        });
+
+        it('should return empty array when searching for non-existent specialty', async () => {
+            await request(app.getHttpServer())
+                .get('/practicians?specialty=NonExistentSpecialty')
+                .auth(accessToken, { type: 'bearer' })
+                .expect(200)
+                .expect(({ body }) => {
+                    expect(body.data).toEqual([]);
+                    expect(body.total).toBe(0);
                 });
         });
     });

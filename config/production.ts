@@ -43,9 +43,10 @@ class ProdConfig extends Config {
 
     database = new ProdDatabaseConfig();
 
-    @IsUrl()
+    @IsString()
     @IsNotEmpty()
-    sentryDSN = process.env.SENTRY_DSN!;
+    jwt_secret = process.env.JWT_SECRET!;
+
 }
 
 export default new ProdConfig();

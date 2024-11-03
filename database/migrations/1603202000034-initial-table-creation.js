@@ -56,6 +56,39 @@ module.exports = {
         CONSTRAINT deleted_by_fk FOREIGN KEY (deleted_by) REFERENCES "user"(id) ON DELETE CASCADE
     );
 
+
+    CREATE TABLE IF NOT EXISTS admin (
+        id uuid NOT NULL DEFAULT uuid_generate_v4(),
+        user_id uuid NOT NULL,
+        created_by uuid NULL,
+        updated_by uuid NULL,
+        created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+        updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+        deleted_at timestamptz NULL,
+        deleted_by uuid NULL,
+        CONSTRAINT "admin_pk" PRIMARY KEY (id),
+        CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
+        CONSTRAINT created_by_fk FOREIGN KEY (created_by) REFERENCES "user"(id) ON DELETE CASCADE,
+        CONSTRAINT updated_by_fk FOREIGN KEY (updated_by) REFERENCES "user"(id) ON DELETE CASCADE,
+        CONSTRAINT deleted_by_fk FOREIGN KEY (deleted_by) REFERENCES "user"(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS collaborator (
+        id uuid NOT NULL DEFAULT uuid_generate_v4(),
+        user_id uuid NOT NULL,
+        created_by uuid NULL,
+        updated_by uuid NULL,
+        created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+        updated_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+        deleted_at timestamptz NULL,
+        deleted_by uuid NULL,
+        CONSTRAINT "collaborator_pk" PRIMARY KEY (id),
+        CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE,
+        CONSTRAINT created_by_fk FOREIGN KEY (created_by) REFERENCES "user"(id) ON DELETE CASCADE,
+        CONSTRAINT updated_by_fk FOREIGN KEY (updated_by) REFERENCES "user"(id) ON DELETE CASCADE,
+        CONSTRAINT deleted_by_fk FOREIGN KEY (deleted_by) REFERENCES "user"(id) ON DELETE CASCADE
+    );
+
     CREATE TABLE IF NOT EXISTS patient (
         id uuid NOT NULL DEFAULT uuid_generate_v4(),
         birth_date date NOT NULL,
@@ -251,6 +284,8 @@ module.exports = {
             'drop table user cascade;',
             'drop table role cascade;',
             'drop table user_role cascade;',
+            'drop table admin cascade;',
+            'drop table collaborator cascade;',
             'drop table patient cascade;',
             'drop table specialty cascade;',
             'drop table practician cascade;',

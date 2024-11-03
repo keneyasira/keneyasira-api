@@ -77,9 +77,9 @@ describe('SpecialtyController', () => {
                 .expect(({ body }) => {
                     expect(body).toEqual({
                         data: {
-                            createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                             id: 'bb045ec3-e2e8-5707-8e4d-f8cfaf7195c1',
                             name: 'Cardiology',
+                            createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                             updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                             createdAt: '2024-05-20T23:13:00.000Z',
                             updatedAt: '2024-05-20T23:13:00.000Z',
@@ -111,17 +111,46 @@ describe('SpecialtyController', () => {
         });
 
         it('should update a specialty', async () => {
-            await request(app.getHttpServer())
-                .put('/specialties/e47e3b25-5399-4272-ab9b-c87c11d20177')
+            const id = await request(app.getHttpServer())
+                .post('/specialties')
                 .auth(accessToken, { type: 'bearer' })
                 .send({
-                    id: 'e47e3b25-5399-4272-ab9b-c87c11d20177',
+                    name: 'test',
+                })
+                .expect(201)
+                .expect(({ body }) => {
+                    expect(body).toMatchObject({});
+                })
+                .then(({ body }) => body.data.id);
+
+            await request(app.getHttpServer())
+                .put(`/specialties/${id}`)
+                .auth(accessToken, { type: 'bearer' })
+                .send({
+                    id,
                     name: 'updated.title',
                 })
                 .expect(200)
                 .expect(({ body }) => {
-                    expect(body).toMatchObject({});
+                    expect(body).toMatchObject({
+                        data: {
+                            createdAt: expect.any(String),
+                            createdBy: null,
+                            deletedAt: null,
+                            deletedBy: null,
+                            id: expect.any(String),
+                            name: 'updated.title',
+                            updatedAt: expect.any(String),
+                            updatedBy: null,
+                        },
+                        statusCode: 200,
+                    });
                 });
+
+            await request(app.getHttpServer())
+                .delete(`/specialties/${id}`)
+                .auth(accessToken, { type: 'bearer' })
+                .expect(200);
         });
 
         it('should delete a specialty', async () => {

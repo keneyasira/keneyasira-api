@@ -12,11 +12,11 @@ import {
     Put,
     Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 import { AuthenticatedUser } from '../authentication/decorators/authenticated-user.param-decorator';
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
-import { SortParams } from '../typings/query.typings';
+import { type SearchParams,SortParams } from '../typings/query.typings';
 import { UserAttributes } from '../user/models/user.model';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
@@ -35,13 +35,37 @@ export class PracticianController {
     ) {}
 
     @Get('/')
+    @ApiQuery({
+        name: 'sort',
+        required: false,
+        type: String,
+        example: `[{field: 'createdAt', order: 'DESC'}]`,
+    })
+    @ApiQuery({ name: 'firstName', required: false, type: String })
+    @ApiQuery({ name: 'lastName', required: false, type: String })
+    @ApiQuery({ name: 'email', required: false, type: String })
+    @ApiQuery({ name: 'phone', required: false, type: String })
+    @ApiQuery({ name: 'specialty', required: false, type: String })
     async findAll(
         @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
         @Query('limit', new DefaultValuePipe(0), ParseIntPipe, ParseLimitParamPipe) limit: number,
         @Query('sort', new ParseSortPipe()) sort: SortParams[] = DEFAULT_SORT_PARAMS,
+        @Query('firstName') firstName?: string,
+        @Query('lastName') lastName?: string,
+        @Query('email') email?: string,
+        @Query('phone') phone?: string,
+        @Query('specialty') specialty?: string,
     ) {
         try {
-            return this.practicianService.findAndCountAll({ page, limit, sort });
+            const search: SearchParams = {
+                firstName,
+                lastName,
+                email,
+                phone,
+                specialty,
+            };
+
+            return this.practicianService.findAndCountAll({ page, limit, sort, search });
         } catch (error) {
             this.logger.error(
                 `PracticianController - failed to get practicians, ${(error as Error).message}`,

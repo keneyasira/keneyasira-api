@@ -11,10 +11,10 @@ import {
     Put,
     Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
-import { SortParams } from '../typings/query.typings';
+import { type EstablishmentSearchParams, SortParams } from '../typings/query.typings';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
 import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
@@ -32,13 +32,51 @@ export class EstablishmentController {
     ) {}
 
     @Get('/')
+    @ApiQuery({
+        name: 'sort',
+        required: false,
+        type: String,
+        example: `[{field: 'createdAt', order: 'DESC'}]`,
+    })
+    @ApiQuery({ name: 'name', required: false, type: String })
+    @ApiQuery({ name: 'address', required: false, type: String })
+    @ApiQuery({ name: 'phone', required: false, type: String })
+    @ApiQuery({ name: 'city', required: false, type: String })
+    @ApiQuery({ name: 'country', required: false, type: String })
+    @ApiQuery({ name: 'specialty', required: false, type: String })
+    @ApiQuery({ name: 'name_search', required: false, type: String })
+    @ApiQuery({ name: 'location_search', required: false, type: String })
     async findAll(
         @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
         @Query('limit', new DefaultValuePipe(0), ParseIntPipe, ParseLimitParamPipe) limit: number,
         @Query('sort', new ParseSortPipe()) sort: SortParams[] = DEFAULT_SORT_PARAMS,
+        @Query('name') name?: string,
+        @Query('address') address?: string,
+        @Query('phone') phone?: string,
+        @Query('city') city?: string,
+        @Query('country') country?: string,
+        @Query('specialty') specialty?: string,
+        @Query('name_search') nameSearch?: string,
+        @Query('location_search') locationSearch?: string,
     ) {
         try {
-            return this.establishmentService.findAndCountAll({ page, limit, sort });
+            const establishmentSearch: EstablishmentSearchParams = {
+                name,
+                address,
+                phone,
+                city,
+                country,
+                specialty,
+                nameSearch,
+                locationSearch,
+            };
+
+            return this.establishmentService.findAndCountAll({
+                page,
+                limit,
+                sort,
+                establishmentSearch,
+            });
         } catch (error) {
             this.logger.error(
                 `EstablishmentController - failed to get establishments, ${

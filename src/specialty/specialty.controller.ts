@@ -11,7 +11,7 @@ import {
     Put,
     Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { SortParams } from '../typings/query.typings';
@@ -24,7 +24,7 @@ import { SpecialtyService } from './specialty.service';
 
 @ApiBearerAuth()
 @ApiTags('specialty')
-@Controller('specialty')
+@Controller('specialties')
 export class SpecialtyController {
     constructor(
         private readonly logger: ApplicationLoggerService,
@@ -32,6 +32,12 @@ export class SpecialtyController {
     ) {}
 
     @Get('/')
+    @ApiQuery({
+        name: 'sort',
+        required: false,
+        type: String,
+        example: `[{field: 'createdAt', order: 'DESC'}]`,
+    })
     async findAll(
         @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
         @Query('limit', new DefaultValuePipe(0), ParseIntPipe, ParseLimitParamPipe) limit: number,

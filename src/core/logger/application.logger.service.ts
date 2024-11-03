@@ -49,6 +49,7 @@ export class ApplicationLoggerService implements LoggerService {
             const lvlColor = this.nestLikeColorScheme.get(level) || clc.white;
             let formattedMsg =
                 clc.green(`[${appName}] ${process.pid} `) +
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                 (timestamp ? `${new Date(timestamp).toLocaleString()} ` : '') +
                 `${lvlColor(capitalize(level))} ` +
                 lvlColor(context ? `[${context}] ` : '') +

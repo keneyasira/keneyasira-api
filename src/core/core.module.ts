@@ -5,8 +5,10 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { TerminusModule } from '@nestjs/terminus';
 
+import { Admin } from '../admin/models/admin.model';
 import { Appointment } from '../appointment/models/appointment.model';
 import { AppointmentStatus } from '../appointment-status/models/appointment-status.model';
+import { Collaborator } from '../collaborator/models/collaborator.model';
 import { Establishment } from '../establishment/models/establishment.model';
 import { EstablishmentHasPractician } from '../establishment-has-practician/models/establishment-has-practician.model';
 import { EstablishmentHasSpecialty } from '../establishment-has-specialty/models/establishment-has-specialty.model';
@@ -29,8 +31,10 @@ import { ResponseInterceptor } from './response.interceptor';
         SequelizeModule.forRoot({
             ...ormconfig,
             models: [
+                Admin,
                 Appointment,
                 AppointmentStatus,
+                Collaborator,
                 Establishment,
                 EstablishmentHasPractician,
                 EstablishmentHasSpecialty,

@@ -10,6 +10,7 @@ export const ROLE_NAMES = {
     ADMIN: 'admin',
     PRACTICIAN: 'practician',
     PATIENT: 'patient',
+    COLLABORATOR: 'collaborator',
 } as const;
 
 export type ROLE_TYPE = (typeof ROLE_NAMES)[keyof typeof ROLE_NAMES];

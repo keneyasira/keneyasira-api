@@ -11,7 +11,7 @@ import {
     Put,
     Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 // import { Roles } from '../role/decorators/roles.decorator';
@@ -34,6 +34,12 @@ export class TimeSlotController {
     ) {}
 
     @Get('/')
+    @ApiQuery({
+        name: 'sort',
+        required: false,
+        type: String,
+        example: `[{field: 'createdAt', order: 'DESC'}]`,
+    })
     async findAll(
         @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
         @Query('limit', new DefaultValuePipe(0), ParseIntPipe, ParseLimitParamPipe) limit: number,
