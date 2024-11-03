@@ -11,6 +11,7 @@ export interface SearchParams {
     phone?: string;
     email?: string;
     specialty?: string;
+    nameSearch?: string
 }
 
 export interface EstablishmentSearchParams {

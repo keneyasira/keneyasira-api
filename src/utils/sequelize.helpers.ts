@@ -20,28 +20,39 @@ export function buildUserSearchQuery(search?: SearchParams): WhereOptions<User> 
 
     const conditions = [];
 
-    if (search.firstName) {
+    if (search?.firstName && !search?.nameSearch) {
         conditions.push({
             firstName: { [Op.iLike]: `%${search.firstName}%` },
         });
     }
 
-    if (search.lastName) {
+    if (search?.lastName && !search?.nameSearch) {
         conditions.push({
             lastName: { [Op.iLike]: `%${search.lastName}%` },
         });
     }
 
-    if (search.email) {
+    if (search?.email) {
         conditions.push({
             email: { [Op.iLike]: `%${search.email}%` },
         });
     }
 
-    if (search.phone) {
+    if (search?.phone) {
         conditions.push({
             phone: { [Op.iLike]: `%${search.phone.replace('+', '').trim()}%` },
         });
+    }
+
+    if (search?.nameSearch) {
+        conditions.push(
+            {
+                firstName: { [Op.iLike]: `%${search.nameSearch}%` },
+            },
+            {
+                lastName: { [Op.iLike]: `%${search.nameSearch}%` },
+            },
+        );
     }
 
     return conditions.length > 0 ? { [Op.or]: conditions } : {};
@@ -54,13 +65,13 @@ export function buildEstablishmentSearchQuery(
 
     const conditions = [];
 
-    if (search.name) {
+    if (search.name && !search.nameSearch) {
         conditions.push({
             name: { [Op.iLike]: `%${search.name}%` },
         });
     }
 
-    if (search.address) {
+    if (search.address && !search.locationSearch) {
         conditions.push({
             address: { [Op.iLike]: `%${search.address}%` },
         });
@@ -72,13 +83,13 @@ export function buildEstablishmentSearchQuery(
         });
     }
 
-    if (search.city) {
+    if (search.city && !search.locationSearch) {
         conditions.push({
             city: { [Op.iLike]: `%${search.city}%` },
         });
     }
 
-    if (search.country) {
+    if (search.country && !search.locationSearch) {
         conditions.push({
             country: { [Op.iLike]: `%${search.country}%` },
         });
@@ -91,17 +102,17 @@ export function buildEstablishmentSearchQuery(
     }
 
     if (search.locationSearch) {
-        conditions.push({
-            country: { [Op.iLike]: `%${search.locationSearch}%` },
-        });
-
-        conditions.push({
-            city: { [Op.iLike]: `%${search.locationSearch}%` },
-        });
-
-        conditions.push({
-            address: { [Op.iLike]: `%${search.locationSearch}%` },
-        });
+        conditions.push(
+            {
+                country: { [Op.iLike]: `%${search.locationSearch}%` },
+            },
+            {
+                city: { [Op.iLike]: `%${search.locationSearch}%` },
+            },
+            {
+                address: { [Op.iLike]: `%${search.locationSearch}%` },
+            },
+        );
     }
 
     return conditions.length > 0 ? { [Op.or]: conditions } : {};

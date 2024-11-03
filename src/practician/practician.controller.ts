@@ -16,7 +16,7 @@ import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 import { AuthenticatedUser } from '../authentication/decorators/authenticated-user.param-decorator';
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
-import { type SearchParams,SortParams } from '../typings/query.typings';
+import { type SearchParams, SortParams } from '../typings/query.typings';
 import { UserAttributes } from '../user/models/user.model';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
@@ -46,6 +46,8 @@ export class PracticianController {
     @ApiQuery({ name: 'email', required: false, type: String })
     @ApiQuery({ name: 'phone', required: false, type: String })
     @ApiQuery({ name: 'specialty', required: false, type: String })
+    @ApiQuery({ name: 'name_search', required: false, type: String })
+    @ApiQuery({ name: 'location_search', required: false, type: String })
     async findAll(
         @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
         @Query('limit', new DefaultValuePipe(0), ParseIntPipe, ParseLimitParamPipe) limit: number,
@@ -55,14 +57,16 @@ export class PracticianController {
         @Query('email') email?: string,
         @Query('phone') phone?: string,
         @Query('specialty') specialty?: string,
+        @Query('name_search') nameSearch?: string,
     ) {
         try {
-            const search: SearchParams = {
+            const search: SearchParams  = {
                 firstName,
                 lastName,
                 email,
                 phone,
                 specialty,
+                nameSearch,
             };
 
             return this.practicianService.findAndCountAll({ page, limit, sort, search });
