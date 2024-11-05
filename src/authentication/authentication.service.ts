@@ -31,6 +31,6 @@ export class AuthenticationService {
             ...user,
         };
 
-        return { access_token: this.jwtService.sign(payload) };
+        return { data: { access_token: this.jwtService.sign(payload) } };
     }
 }
