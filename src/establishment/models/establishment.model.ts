@@ -8,6 +8,7 @@ import { TimeSlot, type TimeSlotAttributes } from '../../time-slot/models/time-s
 
 export interface EstablishmentAttributes extends BaseAttributes {
     name: string;
+    description?: string;
     address: string;
     phone: string;
     city: string;
@@ -15,7 +16,10 @@ export interface EstablishmentAttributes extends BaseAttributes {
     timeSlots?: TimeSlotAttributes[];
 }
 
-type EstablishmentCreationAttributes = Optional<EstablishmentAttributes, 'id' | 'timeSlots'>;
+type EstablishmentCreationAttributes = Optional<
+    EstablishmentAttributes,
+    'id' | 'timeSlots' | 'description'
+>;
 
 @Table({
     tableName: 'establishment',
@@ -27,6 +31,10 @@ export class Establishment extends BaseModel<
     @AllowNull(false)
     @Column
     name: string;
+
+    @AllowNull(true)
+    @Column
+    description?: string;
 
     @AllowNull(false)
     @Column

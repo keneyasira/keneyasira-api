@@ -165,6 +165,7 @@ module.exports = {
         phone varchar(20) NOT NULL,
         email varchar NULL,
         address varchar NOT NULL,
+        description text NULL,
         city varchar NOT NULL,
         country varchar NOT NULL,
         created_by uuid NULL,

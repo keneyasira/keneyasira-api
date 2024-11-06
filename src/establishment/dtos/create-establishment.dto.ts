@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
 import parsePhoneNumberFromString from 'libphonenumber-js';
 
 export class CreateEstablishmentDto {
@@ -20,6 +20,15 @@ export class CreateEstablishmentDto {
     @IsNotEmpty()
     @IsString()
     address: string;
+
+    @ApiProperty({
+        example: 'Principal hopital du Mali, spécialisé en ondoto-stomatologie',
+        description: `description de l'établissement`,
+    })
+    @IsNotEmpty()
+    @IsString()
+    @IsOptional()
+    description?: string;
 
     @ApiProperty({
         example: 'Bamako',

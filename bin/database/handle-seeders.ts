@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Logger } from '@nestjs/common';
 import { Sequelize } from 'sequelize-typescript';
 import { SequelizeStorage, Umzug } from 'umzug';
@@ -25,15 +27,17 @@ async function main() {
             glob: '**/database/seeders/*.js',
             resolve: ({ name, path, context }) => {
                 console.log('Seeders file path: ', path);
-                // eslint-disable-next-line @typescript-eslint/no-var-requires
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-require-imports
                 const seeder = require(path as string);
 
                 return {
                     // adjust the parameters Umzug will
                     // pass to seeder methods when called
                     name,
-                    up: async () => seeder.up(context, Sequelize),
-                    down: async () => seeder.down(context, Sequelize),
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                    up: () => seeder.up(context, Sequelize),
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                    down: () => seeder.down(context, Sequelize),
                 };
             },
         },
@@ -77,6 +81,7 @@ main()
         Logger.error(e.message);
         exitCode = 1;
     })
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     .finally(async () => {
         if (connection) {
             await connection.close();

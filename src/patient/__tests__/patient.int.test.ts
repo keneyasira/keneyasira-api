@@ -191,8 +191,22 @@ describe('PatientController', () => {
         });
 
         it('should delete a patient', async () => {
+            // create patient
+            const id = await request(app.getHttpServer())
+                .post('/patients')
+                .auth(accessToken, { type: 'bearer' })
+                .send({
+                    birthDate: new Date().toISOString(),
+                    email: 'created2patient@keneyasira.com',
+                    firstName: 'Patient',
+                    lastName: 'Patient',
+                    phone: '+22379181419',
+                })
+                .expect(201)
+                .then(({ body }) => body.data.id);
+
             return request(app.getHttpServer())
-                .delete('/patients/632273cc-de99-4582-a440-752ba1f78766')
+                .delete(`/patients/${id}`)
                 .auth(accessToken, { type: 'bearer' })
                 .expect(200);
         });
