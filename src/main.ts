@@ -66,6 +66,6 @@ async function bootstrap() {
 void bootstrap();
 
 process.on('uncaughtException', function (err) {
-    console.error('An exception was thrown but not catch:', err.message);
-    process.exit(1);
+    console.error('An exception was thrown but not catched:', err.message);
+    //process.exit(1);
 });
