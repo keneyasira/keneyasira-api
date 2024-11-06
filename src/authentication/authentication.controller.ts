@@ -35,9 +35,9 @@ export class AuthenticationController {
         @Body()
         body: PasswordLessLoginDto,
     ) {
-        const result = await this.authenticationService.validateUser(body);
+        const validatedUser = await this.authenticationService.validateUser(body);
 
-        if (!result) {
+        if (!validatedUser) {
             throw new UnauthorizedException();
         }
         // assign the transformed value to the raw value

@@ -3,6 +3,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { useContainer } from 'class-validator';
+import { Request, Response } from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 
@@ -40,6 +41,20 @@ async function bootstrap() {
             validate: { trustProxy: false },
         }),
     );
+
+    //middleware to intercept response.json()
+    app.use((req: Request, res: Response, next: () => void) => {
+        const originalJson = res.json;
+
+        // Override the json function
+        res.json = function (body: Record<string, unknown>) {
+            const data = { ...body };
+
+            return originalJson.call(this, { data });
+        };
+
+        next();
+    });
 
     useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
