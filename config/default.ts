@@ -39,13 +39,20 @@ export class BaseRateLimitConfig {
     windowMs = 1000;
 }
 
+export class BaseClientConfig {
+    adminUrl = process.env.ADMIN_CLIENT_URL || 'http://localhost:4200';
+    patientUrl = process.env.PATIENT_CLIENT_URL || 'http://localhost:4201';
+    practicianUrl = process.env.PRACTICIAN_CLIENT_URL || 'http://localhost:4202';
+    collaboratorUrl = process.env.COLLABORATOR_CLIENT_URL || 'http://localhost:4203';
+}
+
 export class Config {
     name = 'keneyasira-api';
     version = 'dev';
     nodeEnv = 'development';
     env = 'development';
     port = 4000;
-    jwt_secret = 'secret';
+    jwt_secret = process.env.JWT_SECRET || 'secret';
 
     @ValidateNested()
     database = new BaseDatabaseConfig();
@@ -55,6 +62,9 @@ export class Config {
 
     @ValidateNested()
     ratelimit = new BaseRateLimitConfig();
+
+    @ValidateNested()
+    clients = new BaseClientConfig();
 
     querySearch = {
         limit: {

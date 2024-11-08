@@ -43,7 +43,9 @@ export class AuthenticationController {
         // assign the transformed value to the raw value
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         req.body.destination = body.email ?? body.phone ?? '';
-
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        req.body.clientType = body.clientType;
+        
         return this.strategy.send(req, res);
     }
 

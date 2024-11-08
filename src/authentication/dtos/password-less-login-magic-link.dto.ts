@@ -1,7 +1,10 @@
 import { BadRequestException } from '@nestjs/common';
+import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsEmail, IsNotEmpty, IsOptional, IsPhoneNumber } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsPhoneNumber } from 'class-validator';
 import parsePhoneNumberFromString from 'libphonenumber-js';
+
+import { type ClientType, ClientTypes } from '../strategies/magic-login.strategy';
 
 export class PasswordLessLoginDto {
     @IsPhoneNumber('ML')
@@ -23,4 +26,13 @@ export class PasswordLessLoginDto {
     @IsNotEmpty()
     @IsOptional()
     email: string;
+
+    @ApiProperty({
+        enum: ClientTypes,
+        description: 'Type of client application making the request',
+        example: ClientTypes.PATIENT,
+    })
+    @IsEnum(ClientTypes)
+    @IsNotEmpty()
+    clientType: ClientType;
 }

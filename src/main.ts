@@ -48,9 +48,13 @@ async function bootstrap() {
 
         // Override the json function
         res.json = function (body: Record<string, unknown>) {
-            const data = { ...body };
+            if (!body.data) {
+                const data = { ...body };
 
-            return originalJson.call(this, { data });
+                return originalJson.call(this, { data });
+            }
+
+            return originalJson.call(this, body);
         };
 
         next();

@@ -6,6 +6,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { UserAttributes } from '../../user/models/user.model';
 import { AuthenticationService } from '../authentication.service';
+import type { ClientType } from './magic-login.strategy';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -20,10 +21,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         });
     }
 
-    async validate(payload: UserAttributes) {
+    async validate(payload: UserAttributes & { clienType: ClientType }) {
         const result = await this.authenticationService.validateUser({
             phone: payload.phone,
             email: payload.email,
+            clientType: payload.clienType,
         });
 
         if (!result) {

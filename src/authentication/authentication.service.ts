@@ -16,8 +16,20 @@ export class AuthenticationService {
         private jwtService: JwtService,
     ) {}
 
-    validateUser(dto: PasswordLessLoginDto) {
-        return this.userService.findByEmailOrNumber(dto);
+    async validateUser(dto: PasswordLessLoginDto) {
+        const result = await this.userService.findByEmailOrNumber(dto);
+
+        if (!result) {
+            throw new UnauthorizedException('Invalid Credentials');
+        }
+
+        const roles = await this.userRoleService.getUserRoles(result.data.id);
+
+        if (roles?.filter((role) => role && role === dto.clientType).length === 0) {
+            throw new UnauthorizedException('Invalid Credentials');
+        }
+
+        return result;
     }
 
     async generateTokens(user: UserAttributes | undefined) {
