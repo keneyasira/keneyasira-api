@@ -75,11 +75,10 @@ export class PatientController {
 
     @Post('/')
     async create(
-        @AuthenticatedUser() user: UserAttributes,
         @Body() createPatientDto: CreatePatientDto,
     ) {
         try {
-            return this.patientService.create({ ...createPatientDto, createdBy: user.id });
+            return this.patientService.create(createPatientDto);
         } catch (error) {
             this.logger.error(
                 `PatientController - failed to create patient, ${(error as Error).message}`,

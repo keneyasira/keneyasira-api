@@ -59,7 +59,7 @@ export class PatientService {
         return { data: patient.get({ plain: true }) };
     }
 
-    async create(createPatientDto: CreatePatientDto & { createdBy: string }) {
+    async create(createPatientDto: CreatePatientDto & { createdBy?: string }) {
         // check if the User already exists with the same email or phone
         const [user, isCreated] = await User.findOrCreate({
             where: {

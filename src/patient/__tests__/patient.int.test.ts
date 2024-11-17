@@ -112,7 +112,6 @@ describe('PatientController', () => {
             const newDate = new Date().toISOString();
             return request(app.getHttpServer())
                 .post('/patients')
-                .auth(accessToken, { type: 'bearer' })
                 .send({
                     birthDate: newDate,
                     email: 'createdpatient@keneyasira.com',
