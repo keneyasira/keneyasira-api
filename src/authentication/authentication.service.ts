@@ -11,7 +11,6 @@ import { UserAttributes } from '../user/models/user.model';
 import { UserService } from '../user/user.service';
 import { UserRoleService } from '../user-role/user-role.service';
 import { PasswordLessLoginDto } from './dtos/password-less-login-magic-link.dto';
-import type { Model } from 'sequelize-typescript';
 
 @Injectable()
 export class AuthenticationService {
@@ -44,7 +43,7 @@ export class AuthenticationService {
         }
 
         const roles = await this.userRoleService.getUserRoles(user.id);
-        const infos = [];
+        const infos: Record<string, unknown> = {};
 
         // Add specific IDs based on roles
         const roleModels = {
@@ -57,12 +56,12 @@ export class AuthenticationService {
         for (const role in roleModels) {
             if (roles.includes(role)) {
                 const info = await roleModels[role as keyof typeof roleModels].findOne({
-                    attributes: ['id'  ],
+                    attributes: ['id'],
                     where: { userId: user.id },
                 });
 
                 if (info) {
-                    infos.push({ [role]: { ...info.get({ plain: true }) } });
+                    infos[role] = info.get({ plain: true });
                 }
             }
         }
