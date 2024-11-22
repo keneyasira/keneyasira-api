@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 import { AppointmentStatus } from '../appointment-status/models/appointment-status.model';
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
@@ -12,6 +13,11 @@ import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers
 import { CreateAppointmentDto } from './dtos/create-appointment.dto';
 import { UpdateAppointmentDto } from './dtos/update-appointment.dto';
 import { Appointment, AppointmentAttributes } from './models/appointment.model';
+import {
+    AppointmentCancelledEvent,
+    AppointmentCreatedEvent,
+    AppointmentEvents,
+} from './events/appointment.event';
 
 export const STATUS_NAMES = {
     SCHEDULED: 'scheduled',
@@ -47,7 +53,10 @@ const IncludeValues = [
 
 @Injectable()
 export class AppointmentService {
-    constructor(private readonly logger: ApplicationLoggerService) {}
+    constructor(
+        private readonly logger: ApplicationLoggerService,
+        private eventEmitter: EventEmitter2,
+    ) {}
 
     async findAndCountAll(
         options: QueryParams,
@@ -105,6 +114,14 @@ export class AppointmentService {
             createdAppointment,
         });
 
+        // emit appointment created event
+        this.eventEmitter.emit(
+            AppointmentEvents.APPOINTMENT_CREATED,
+            new AppointmentCreatedEvent({
+                appointmentId: createdAppointment.id,
+            }),
+        );
+
         return this.find(createdAppointment.id);
     }
 
@@ -126,6 +143,48 @@ export class AppointmentService {
         }
 
         return timeSlot;
+    }
+
+    async cancel(appointmentId: string) {
+        const appointmentStatus = await AppointmentStatus.findOne({
+            where: { name: STATUS_NAMES.CANCELLED },
+        });
+
+        if (!appointmentStatus?.id) {
+            throw new BadRequestException('Cannot find appointment status');
+        }
+
+        const [affectedRows, [updatedAppointment]] = await Appointment.update(
+            {
+                appointmentStatusId: appointmentStatus.id,
+            },
+            {
+                where: {
+                    id: appointmentId,
+                },
+                returning: true,
+            },
+        );
+
+        if (!affectedRows) {
+            throw new NotFoundException('Appointment not found');
+        }
+
+        const updatedAppointmentValue = updatedAppointment.get({ plain: true });
+
+        this.logger.info(`Updated (${affectedRows}) appointment`, {
+            updatedAppointment: updatedAppointmentValue,
+        });
+
+        // emit appointment cancelled event
+        this.eventEmitter.emit(
+            AppointmentEvents.APPOINTMENT_CANCELLED,
+            new AppointmentCancelledEvent({
+                appointmentId,
+            }),
+        );
+
+        return this.find(updatedAppointmentValue.id);
     }
 
     async update(updateAppointmentDto: UpdateAppointmentDto) {

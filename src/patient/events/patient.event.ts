@@ -2,6 +2,12 @@ interface EventPayload {
     patientId: string;
 }
 
+export const PatientEvents = {
+    PATIENT_CREATED: 'patient.created',
+    PATIENT_UPDATED: 'patient.updated',
+    PATIENT_DELETED: 'patient.deleted',
+} as const;
+
 export class PatientCreatedEvent {
     name: 'patient.created';
 

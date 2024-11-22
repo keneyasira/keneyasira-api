@@ -425,9 +425,10 @@ describe('AppointmentController', () => {
         });
 
         it('should create appointment with scheduled status', async () => {
+            const timeSlotId = '6a2cb23b-2882-4a02-81c9-ac2d9c72775f';
             const createAppointmentDto: CreateAppointmentDto = {
                 patientId: '632273cc-de99-4582-a440-752ba1f78766',
-                timeSlotId: '6a2cb23b-2882-4a02-81c9-ac2d9c72775f',
+                timeSlotId,
             };
 
             await request(app.getHttpServer())
@@ -509,11 +510,11 @@ describe('AppointmentController', () => {
                                 userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
                             },
                             practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                            timeSlotId: '6a2cb23b-2882-4a02-81c9-ac2d9c72775f',
+                            timeSlotId,
                             timeslot: {
                                 available: true,
                                 establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
-                                id: '6a2cb23b-2882-4a02-81c9-ac2d9c72775f',
+                                id: timeSlotId,
                                 practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
                                 date: expect.any(String),
                                 startTime: '01:30:00',
@@ -531,6 +532,70 @@ describe('AppointmentController', () => {
                         statusCode: 201,
                     });
                 });
+
+            // check that the associated timeslot is updated to unavailable
+            await request(app.getHttpServer())
+                .get(`/time-slots/${timeSlotId}`)
+                .auth(accessToken, { type: 'bearer' })
+                .expect(200)
+                .expect(({ body }) => {
+                    expect(body).toEqual({
+                        data: {
+                            available: false,
+                            createdAt: '2024-05-20T23:13:00.000Z',
+                            createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                            date: '2024-11-22',
+                            deletedAt: null,
+                            deletedBy: null,
+                            endTime: '02:30:00',
+                            establishment: {
+                                address: 'Rue Kati, Bamako, Mali',
+                                city: 'Bamako',
+                                country: 'Mali',
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                deletedAt: null,
+                                deletedBy: null,
+                                description: '',
+                                id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                                name: 'Point G',
+                                phone: '+22379131419',
+                                updatedAt: expect.any(String),
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                            },
+                            establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                            id: '6a2cb23b-2882-4a02-81c9-ac2d9c72775f',
+                            practician: {
+                                createdAt: '2024-05-20T23:13:00.000Z',
+                                createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                deletedAt: null,
+                                deletedBy: null,
+                                id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                                updatedAt: expect.any(String),
+                                updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                user: {
+                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    createdBy: null,
+                                    deletedAt: null,
+                                    deletedBy: null,
+                                    email: 'practician@keneyasira.com',
+                                    firstName: 'Doctor',
+                                    id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                                    lastName: 'Doctor',
+                                    phone: '+22379131415',
+                                    updatedAt: expect.any(String),
+                                    updatedBy: null,
+                                },
+                                userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+                            },
+                            practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                            startTime: '01:30:00',
+                            updatedAt: expect.any(String),
+                            updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                        },
+                        statusCode: 200,
+                    });
+                });
         });
 
         it.skip('should confirm an appointment', async () => {
@@ -545,35 +610,21 @@ describe('AppointmentController', () => {
 
         it.skip('should cancel an appointment', async () => {
             // create new appointment
-            await request(app.getHttpServer()).post('/appointments').send({
-                establishment_id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
-                practician_id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                patient_id: '632273cc-de99-4582-a440-752ba1f78766',
-                time_slot_id: '6a2cb23b-2882-4a02-81c9-ac2d9c72775f',
-            });
-
-            await request(app.getHttpServer())
-                .post('/appointments/:id/cancel')
+            const createdAppointmentId = await request(app.getHttpServer())
+                .post('/appointments')
                 .auth(accessToken, { type: 'bearer' })
+                .send({
+                    establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                    practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                    patientId: '632273cc-de99-4582-a440-752ba1f78766',
+                    timeSlotId: '6a2cb23b-2882-4a02-81c9-ac2d9c72775f',
+                })
                 .expect(201)
-                .expect(({ body }) => {
-                    expect(body).toEqual({});
-                });
-        });
-
-        it.skip('should complete an appointment', async () => {
-            // create new appointment to complete
-            await request(app.getHttpServer()).post('/appointments').send({
-                establishment_id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
-                practician_id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                patient_id: '632273cc-de99-4582-a440-752ba1f78766',
-                time_slot_id: '6a2cb23b-2882-4a02-81c9-ac2d9c72775f',
-            });
+                .then(({ body }) => body.data.id);
 
             await request(app.getHttpServer())
-                .post('/appointments/:id/complete')
+                .post(`/appointments/${createdAppointmentId}/cancel`)
                 .auth(accessToken, { type: 'bearer' })
-                .send({})
                 .expect(201)
                 .expect(({ body }) => {
                     expect(body).toEqual({});
@@ -585,6 +636,29 @@ describe('AppointmentController', () => {
                 .delete('/appointments/12de8a17-686b-41b4-a1af-53e512ca957c')
                 .auth(accessToken, { type: 'bearer' })
                 .expect(200);
+        });
+
+        it('should not create appointment because timeslot is unavailable', async () => {
+            // create new appointment
+            const createdAppointmentId = await request(app.getHttpServer())
+                .post('/appointments')
+                .auth(accessToken, { type: 'bearer' })
+                .send({
+                    establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                    practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                    patientId: '632273cc-de99-4582-a440-752ba1f78766',
+                    timeSlotId: '6a2cb23b-2882-4a02-81c9-ac2d9c72775f',
+                })
+                .expect(400)
+                .expect(({ body }) => {
+                    expect(body).toEqual({
+                        error: expect.objectContaining({
+                            code: 400,
+                            message: 'TimeSlot is not available',
+                            path: '/appointments',
+                        }),
+                    });
+                });
         });
 
         it('should return "Not Found" when passing an ID which is absent from the DB', async () => {

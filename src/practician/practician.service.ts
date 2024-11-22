@@ -19,7 +19,7 @@ import {
 } from '../utils/sequelize.helpers';
 import { CreatePracticianDto } from './dtos/create-practician.dto';
 import { UpdatePracticianDto } from './dtos/update-practician.dto';
-import { PracticianDeletedEvent } from './events/practician.event';
+import { PracticianDeletedEvent, PracticianEvents } from './events/practician.event';
 import { Practician, PracticianAttributes } from './models/practician.model';
 
 @Injectable()
@@ -184,7 +184,7 @@ export class PracticianService {
             throw new Error('Practician could not be created');
         }
 
-        // emit patient create event
+        // TODO emit practician create event
 
         return practicianValue;
     }
@@ -224,7 +224,7 @@ export class PracticianService {
             throw new NotFoundException('User associated with practician not found');
         }
 
-        // emit practician update event
+        // TODO emit practician update event
 
         return this.find(updatePracticianPayload.id);
     }
@@ -242,7 +242,7 @@ export class PracticianService {
 
         // emit practician delete event
         this.eventEmitter.emit(
-            'practician.deleted',
+            PracticianEvents.PRACTICIAN_DELETED,
             new PracticianDeletedEvent({
                 practicianId: deletePayload.practicianId,
             }),
@@ -256,8 +256,6 @@ export class PracticianService {
                 },
             },
         );
-
-        // emit practician delete event
 
         this.logger.info(`PracticianService - deleted (${deletedCount}) practician`, {
             id: deletePayload.practicianId,

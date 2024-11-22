@@ -2,6 +2,12 @@ interface EventPayload {
     practicianId: string;
 }
 
+export const PracticianEvents = {
+    PRACTICIAN_CREATED: 'practician.created',
+    PRACTICIAN_UPDATED: 'practician.updated',
+    PRACTICIAN_DELETED: 'practician.deleted',
+} as const;
+
 export class PracticianCreatedEvent {
     name: 'practician.created';
 

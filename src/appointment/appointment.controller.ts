@@ -1,11 +1,23 @@
-import { BadRequestException, Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
+import {
+    BadRequestException,
+    Body,
+    Controller,
+    DefaultValuePipe,
+    Delete,
+    Get,
+    Param,
+    ParseIntPipe,
+    Post,
+    Put,
+    Query,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { SortParams } from '../typings/query.typings';
 import { errorToPlainObject } from '../utils/error.helper';
 import { ParseLimitParamPipe } from '../utils/pipes/parseLimitParamPipe';
-import { DEFAULT_SORT_PARAMS,ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
+import { DEFAULT_SORT_PARAMS, ParseSortPipe } from '../utils/pipes/parseSortParamPipe';
 import { AppointmentService } from './appointment.service';
 import { CreateAppointmentDto } from './dtos/create-appointment.dto';
 import { UpdateAppointmentDto } from './dtos/update-appointment.dto';
@@ -18,7 +30,6 @@ export class AppointmentController {
         private readonly logger: ApplicationLoggerService,
         private readonly appointmentService: AppointmentService,
     ) {}
-
 
     @Get('/')
     @ApiQuery({
@@ -36,9 +47,7 @@ export class AppointmentController {
             return this.appointmentService.findAndCountAll({ page, limit, sort });
         } catch (error) {
             this.logger.error(
-                `AppointmentController - failed to get appointments, ${
-                    (error as Error).message
-                }`,
+                `AppointmentController - failed to get appointments, ${(error as Error).message}`,
                 {
                     error: errorToPlainObject(error as Error),
                 },
@@ -53,9 +62,7 @@ export class AppointmentController {
             return this.appointmentService.find(appointmentId);
         } catch (error) {
             this.logger.error(
-                `AppointmentController - failed to get appointment, ${
-                    (error as Error).message
-                }`,
+                `AppointmentController - failed to get appointment, ${(error as Error).message}`,
                 {
                     error: errorToPlainObject(error as Error),
                 },
@@ -64,16 +71,13 @@ export class AppointmentController {
         }
     }
 
-
     @Post('/')
     async create(@Body() createAppointmentDto: CreateAppointmentDto) {
         try {
             return this.appointmentService.create(createAppointmentDto);
         } catch (error) {
             this.logger.error(
-                `AppointmentController - failed to create appointment, ${
-                    (error as Error).message
-                }`,
+                `AppointmentController - failed to create appointment, ${(error as Error).message}`,
                 {
                     error: errorToPlainObject(error as Error),
                 },
@@ -95,9 +99,22 @@ export class AppointmentController {
             return this.appointmentService.update(updateAppointmentDto);
         } catch (error) {
             this.logger.error(
-                `AppointmentController - failed to update appointment, ${
-                    (error as Error).message
-                }`,
+                `AppointmentController - failed to update appointment, ${(error as Error).message}`,
+                {
+                    error: errorToPlainObject(error as Error),
+                },
+            );
+            throw error;
+        }
+    }
+
+    @Put('/:id/cancel')
+    async cancel(@Param('id') appointmentId: string) {
+        try {
+            return this.appointmentService.cancel(appointmentId);
+        } catch (error) {
+            this.logger.error(
+                `AppointmentController - failed to cancel appointment, ${(error as Error).message}`,
                 {
                     error: errorToPlainObject(error as Error),
                 },
@@ -112,9 +129,7 @@ export class AppointmentController {
             await this.appointmentService.delete(appointmentId);
         } catch (error) {
             this.logger.error(
-                `AppointmentController - failed to delete appointment, ${
-                    (error as Error).message
-                }`,
+                `AppointmentController - failed to delete appointment, ${(error as Error).message}`,
                 {
                     error: errorToPlainObject(error as Error),
                 },

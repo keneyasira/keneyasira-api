@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 
-import type { AdminDeletedEvent } from '../admin/events/admin.event';
+import { AdminDeletedEvent, AdminEvents } from '../admin/events/admin.event';
 import { Admin } from '../admin/models/admin.model';
-import type { CollaboratorDeletedEvent } from '../collaborator/events/collaborator.event';
+import {
+    CollaboratorDeletedEvent,
+    CollaboratorEvents,
+} from '../collaborator/events/collaborator.event';
 import { Collaborator } from '../collaborator/models/collaborator.model';
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
-import { PatientDeletedEvent } from '../patient/events/patient.event';
+import { PatientDeletedEvent, PatientEvents } from '../patient/events/patient.event';
 import { Patient } from '../patient/models/patient.model';
-import { PracticianDeletedEvent } from '../practician/events/practician.event';
+import { PracticianDeletedEvent, PracticianEvents } from '../practician/events/practician.event';
 import { Practician } from '../practician/models/practician.model';
 import { Role } from '../role/models/role.model';
 import { ROLE_NAMES } from '../role/role.service';
@@ -19,7 +22,7 @@ import { UserRole } from './models/user-role.model';
 export class UserRoleEventListener {
     constructor(private readonly logger: ApplicationLoggerService) {}
 
-    @OnEvent('patient.deleted', { async: true })
+    @OnEvent(PatientEvents.PATIENT_DELETED, { async: true })
     async handlePatientDeletedEvent(event: PatientDeletedEvent) {
         // handle and process "PatientDeletedEvent" event
         const deletedPatient = await Patient.findOne({
@@ -56,7 +59,7 @@ export class UserRoleEventListener {
         });
     }
 
-    @OnEvent('practician.deleted', { async: true })
+    @OnEvent(PracticianEvents.PRACTICIAN_DELETED, { async: true })
     async handlePracticianDeletedEvent(event: PracticianDeletedEvent) {
         // handle and process "PracticianDeletedEvent" event
         const deletedPractician = await Practician.findOne({
@@ -96,7 +99,7 @@ export class UserRoleEventListener {
         });
     }
 
-    @OnEvent('collaborator.deleted', { async: true })
+    @OnEvent(CollaboratorEvents.COLLABORATOR_DELETED, { async: true })
     async handleCollaboratorDeletedEvent(event: CollaboratorDeletedEvent) {
         const deletedCollaborator = await Collaborator.findOne({
             where: {
@@ -135,7 +138,7 @@ export class UserRoleEventListener {
         });
     }
 
-    @OnEvent('admin.deleted', { async: true })
+    @OnEvent(AdminEvents.ADMIN_DELETED, { async: true })
     async handleAdminDeletedEvent(event: AdminDeletedEvent) {
         const deletedAdmin = await Admin.findOne({
             where: {

@@ -2,6 +2,12 @@ interface EventPayload {
     adminId: string;
 }
 
+export const AdminEvents = {
+    ADMIN_CREATED: 'admin.created',
+    ADMIN_UPDATED: 'admin.updated',
+    ADMIN_DELETED: 'admin.deleted',
+} as const;
+
 export class AdminCreatedEvent {
     name: 'admin.created';
 

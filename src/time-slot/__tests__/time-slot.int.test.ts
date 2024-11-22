@@ -205,7 +205,7 @@ describe('TimeSlotController', () => {
                                 updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                             },
                             {
-                                available: true,
+                                available: false,
                                 createdAt: '2024-05-20T23:13:00.000Z',
                                 createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                                 deletedAt: null,
@@ -254,7 +254,7 @@ describe('TimeSlotController', () => {
                                     userId: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
                                 },
                                 practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                updatedAt: expect.any(String),
                                 updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                             },
                         ],

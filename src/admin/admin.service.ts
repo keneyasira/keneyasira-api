@@ -14,7 +14,7 @@ import {
 } from '../utils/sequelize.helpers';
 import { CreateAdminDto } from './dtos/create-admin.dto';
 import { UpdateAdminDto } from './dtos/update-admin.dto';
-import { AdminDeletedEvent } from './events/admin.event';
+import { AdminDeletedEvent, AdminEvents } from './events/admin.event';
 import { Admin, AdminAttributes } from './models/admin.model';
 
 @Injectable()
@@ -218,7 +218,7 @@ export class AdminService {
         });
 
         this.eventEmitter.emit(
-            'admin.deleted',
+            AdminEvents.ADMIN_DELETED,
             new AdminDeletedEvent({ adminId: adminToDeletePayload.adminId }),
         );
 

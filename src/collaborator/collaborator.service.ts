@@ -14,7 +14,7 @@ import {
 } from '../utils/sequelize.helpers';
 import { CreateCollaboratorDto } from './dtos/create-collaborator.dto';
 import { UpdateCollaboratorDto } from './dtos/update-collaborator.dto';
-import { CollaboratorDeletedEvent } from './events/collaborator.event';
+import { CollaboratorDeletedEvent, CollaboratorEvents } from './events/collaborator.event';
 import { Collaborator, CollaboratorAttributes } from './models/collaborator.model';
 
 @Injectable()
@@ -221,7 +221,7 @@ export class CollaboratorService {
         });
 
         this.eventEmitter.emit(
-            'collaborator.deleted',
+            CollaboratorEvents.COLLABORATOR_DELETED,
             new CollaboratorDeletedEvent({
                 collaboratorId: collaboratorToDeletePayload.collaboratorId,
             }),

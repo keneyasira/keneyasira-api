@@ -11,7 +11,7 @@ import { UserRole } from '../user-role/models/user-role.model';
 import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers';
 import { CreatePatientDto } from './dtos/create-patient.dto';
 import { UpdatePatientDto } from './dtos/update-patient.dto';
-import { PatientDeletedEvent } from './events/patient.event';
+import { PatientDeletedEvent, PatientEvents } from './events/patient.event';
 import { Patient, PatientAttributes } from './models/patient.model';
 
 @Injectable()
@@ -179,7 +179,7 @@ export class PatientService {
 
         // emit patient delete event
         this.eventEmitter.emit(
-            'patient.deleted',
+            PatientEvents.PATIENT_DELETED,
             new PatientDeletedEvent({
                 patientId: deletePayload.patientId,
             }),
