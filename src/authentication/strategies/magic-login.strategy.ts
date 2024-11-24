@@ -1,5 +1,5 @@
 import { Config } from '@config/default';
-import { Injectable, Scope, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import Strategy from 'passport-magic-login';
@@ -16,7 +16,7 @@ export const ClientTypes = {
 } as const;
 
 export type ClientType = (typeof ClientTypes)[keyof typeof ClientTypes];
-@Injectable({ scope: Scope.REQUEST })
+@Injectable()
 export class MagicLoginStrategy extends PassportStrategy(Strategy) {
     clientType: ClientType;
     constructor(

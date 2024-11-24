@@ -28,11 +28,11 @@ export class AuthenticationService {
             throw new UnauthorizedException('Invalid Credentials');
         }
 
-        // const roles = await this.userRoleService.getUserRoles(result.data.id);
+        const roles = await this.userRoleService.getUserRoles(result.data.id);
 
-        // if (roles?.filter((role) => role && role === dto.clientType).length === 0) {
-        //     throw new UnauthorizedException('Invalid Credential roles');
-        // }
+        if (!(roles ?? []).includes(dto.clientType)) {
+            throw new UnauthorizedException('Invalid Credential roles');
+        }
 
         return result;
     }
