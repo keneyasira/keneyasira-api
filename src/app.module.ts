@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ScheduleModule } from '@nestjs/schedule';
 
 import { AdminModule } from './admin/admin.module';
 import { AppointmentModule } from './appointment/appointment.module';
@@ -55,6 +56,7 @@ import { UserRoleModule } from './user-role/user-role.module';
             // disable throwing uncaughtException if an error event is emitted and it has no listeners
             ignoreErrors: false,
         }),
+        ScheduleModule.forRoot(),
     ],
     controllers: [RootController],
 })
