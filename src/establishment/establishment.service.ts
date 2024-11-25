@@ -4,7 +4,7 @@ import { Op } from 'sequelize';
 import { Appointment, AppointmentAttributes } from '../appointment/models/appointment.model';
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { Patient } from '../patient/models/patient.model';
-import { Practician } from '../practician/models/practician.model';
+import { Practician, type PracticianAttributes } from '../practician/models/practician.model';
 import { Specialty } from '../specialty/models/specialty.model';
 import { TimeSlot, TimeSlotAttributes } from '../time-slot/models/time-slot.model';
 import { QueryParams } from '../typings/query.typings';
@@ -113,6 +113,30 @@ export class EstablishmentService {
                 },
                 {
                     model: TimeSlot,
+                },
+            ],
+            limit: options?.limit,
+            offset,
+            order: transformSortParamsToSequelizeFormat(options.sort),
+        });
+
+        return { data: data.map((row) => row.get({ plain: true })), total };
+    }
+
+    async findEstablishmentPracticians(
+        establishmentId: string,
+        options: QueryParams,
+    ): Promise<{ data: PracticianAttributes[]; total: number }> {
+        const offset = options?.limit && options.page ? options.limit * (options.page - 1) : 0;
+
+        const { rows: data, count: total } = await Practician.findAndCountAll({
+            include: [
+                {
+                    model: Establishment,
+                    where: {
+                        establishmentId,
+                    },
+                    required: true,
                 },
             ],
             limit: options?.limit,
