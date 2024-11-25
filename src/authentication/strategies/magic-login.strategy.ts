@@ -42,7 +42,6 @@ export class MagicLoginStrategy extends PassportStrategy(Strategy) {
                     [ClientTypes.COLLABORATOR]: this.config.clients.collaboratorUrl,
                 };
 
-
                 const baseUrl = clientUrls[clientType];
                 const callbackUrl = `${baseUrl}/auth/callback`;
 
@@ -86,6 +85,9 @@ export class MagicLoginStrategy extends PassportStrategy(Strategy) {
             throw new UnauthorizedException('Invalid Credentials');
         }
 
-        return result.data;
+        return {
+            ...result.data,
+            clientType: payload.clientType,
+        };
     }
 }

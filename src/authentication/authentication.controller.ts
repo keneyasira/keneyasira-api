@@ -45,14 +45,14 @@ export class AuthenticationController {
         req.body.destination = body.email ?? body.phone ?? '';
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         req.body.clientType = body.clientType;
-        
+
         return this.strategy.send(req, res);
     }
 
     @Public()
     @UseGuards(AuthGuard('magiclogin'))
     @Get('login/callback')
-    callback(@AuthenticatedUser() user: UserAttributes) {
+    callback(@AuthenticatedUser() user: UserAttributes & { clientType: ClientTypes }) {
         return this.authenticationService.generateTokens(user);
     }
 }
