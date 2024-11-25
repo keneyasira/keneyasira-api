@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { type Includeable, Op } from 'sequelize';
+import { type Includeable, Op, type WhereOptions } from 'sequelize';
 
 import { Appointment, AppointmentAttributes } from '../appointment/models/appointment.model';
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
@@ -47,7 +47,7 @@ export class PracticianService {
                 where: {
                     name: { [Op.iLike]: `%${options.search.specialty}%` },
                 },
-                required: true
+                required: true,
             });
         }
 
@@ -84,30 +84,44 @@ export class PracticianService {
     async findPracticianTimeSlots(
         practicianId: string,
         options: QueryParams,
+        establishmentId?: string,
     ): Promise<{ data: TimeSlotAttributes[]; total: number }> {
         const offset = options?.limit && options.page ? options.limit * (options.page - 1) : 0;
+        const whereOptions: WhereOptions<TimeSlotAttributes> = {
+            practicianId,
+        };
 
+        if (establishmentId) {
+            whereOptions['establishmentId'] = establishmentId;
+        }
         const { rows: data, count: total } = await TimeSlot.findAndCountAll({
             where: {
-                practicianId: practicianId,
+                ...whereOptions,
             },
             limit: options?.limit,
             offset,
             order: transformSortParamsToSequelizeFormat(options.sort),
         });
 
-        return { data, total };
+        return { data: data.map((row) => row.get({ plain: true })), total };
     }
 
     async findPracticianAppointments(
         practicianId: string,
         options: QueryParams,
+        establishmentId?: string,
     ): Promise<{ data: AppointmentAttributes[]; total: number }> {
         const offset = options?.limit && options.page ? options.limit * (options.page - 1) : 0;
+        const whereOptions: WhereOptions<TimeSlotAttributes> = {
+            practicianId,
+        };
 
+        if (establishmentId) {
+            whereOptions['establishmentId'] = establishmentId;
+        }
         const { rows: data, count: total } = await Appointment.findAndCountAll({
             where: {
-                practicianId: practicianId,
+                ...whereOptions,
             },
             include: [
                 {

@@ -60,7 +60,7 @@ export class PracticianController {
         @Query('name_search') nameSearch?: string,
     ) {
         try {
-            const search: SearchParams  = {
+            const search: SearchParams = {
                 firstName,
                 lastName,
                 email,
@@ -141,6 +141,66 @@ export class PracticianController {
                 limit,
                 sort,
             });
+        } catch (error) {
+            this.logger.error(
+                `PracticianController - failed to get time-slots, ${(error as Error).message}`,
+                {
+                    error: errorToPlainObject(error as Error),
+                },
+            );
+            throw error;
+        }
+    }
+
+    @Get('/:id/establishments/:establishmentId/appointments')
+    async findAppointmentsForAnEstablishment(
+        @Param('id') practicianId: string,
+        @Param('establishmentId') establishmentId: string,
+        @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
+        @Query('limit', new DefaultValuePipe(0), ParseIntPipe, ParseLimitParamPipe) limit: number,
+        @Query('sort', new ParseSortPipe()) sort: SortParams[] = DEFAULT_SORT_PARAMS,
+    ) {
+        try {
+            return this.practicianService.findPracticianAppointments(
+                practicianId,
+                {
+                    page,
+                    limit,
+                    sort,
+                },
+                establishmentId,
+            );
+        } catch (error) {
+            this.logger.error(
+                `PracticianController - failed to get practician appointments, ${
+                    (error as Error).message
+                }`,
+                {
+                    error: errorToPlainObject(error as Error),
+                },
+            );
+            throw error;
+        }
+    }
+
+    @Get('/:id/establishments/:establishmentId/time-slots')
+    async findTimeSlotsForAnEstablishment(
+        @Param('id') practicianId: string,
+        @Param('establishmentId') establishmentId: string,
+        @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
+        @Query('limit', new DefaultValuePipe(0), ParseIntPipe, ParseLimitParamPipe) limit: number,
+        @Query('sort', new ParseSortPipe()) sort: SortParams[] = DEFAULT_SORT_PARAMS,
+    ) {
+        try {
+            return this.practicianService.findPracticianTimeSlots(
+                practicianId,
+                {
+                    page,
+                    limit,
+                    sort,
+                },
+                establishmentId,
+            );
         } catch (error) {
             this.logger.error(
                 `PracticianController - failed to get time-slots, ${(error as Error).message}`,
