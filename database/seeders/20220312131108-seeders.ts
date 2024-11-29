@@ -222,6 +222,8 @@ export async function up(queryInterface: QueryInterface) {
             description: '',
             city: 'Bamako',
             country: 'Mali',
+            establishment_affiliation_id: 'dcb1639d-18c8-4a96-a8fd-23947b88bd0f',
+            establishment_type_id: '4d37ada2-8652-4268-b202-0db16fef70ba',
             created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             created_at: '2024-05-20 23:13:00',
@@ -236,10 +238,80 @@ export async function up(queryInterface: QueryInterface) {
             country: 'Mali',
             phone: '+22379131418',
             email: 'gabriel@keneyasira.com',
+            establishment_affiliation_id: 'dcb1639d-18c8-4a96-a8fd-23947b88bd0f',
+            establishment_type_id: '4d37ada2-8652-4268-b202-0db16fef70ba',
             created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             created_at: '2024-05-20 23:13:00',
             updated_at: '2024-05-20 23:13:00',
+        },
+    ]);
+
+    // Seed data for establishment_affiliation table
+    await queryInterface.bulkInsert('establishment_affiliation', [
+        {
+            id: 'dcb1639d-18c8-4a96-a8fd-23947b88bd0f',
+            name: 'public',
+            created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            created_at: '2024-05-20T23:13:00.000Z',
+            updated_at: '2024-05-20T23:13:00.000Z',
+            deleted_at: null,
+            deleted_by: null,
+        },
+        {
+            id: '4b2852bf-412e-484a-8446-ce8e3fea4b22',
+            name: 'private',
+            created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            created_at: '2024-05-20T23:13:00.000Z',
+            updated_at: '2024-05-20T23:13:00.000Z',
+            deleted_at: null,
+            deleted_by: null,
+        },
+        {
+            id: 'a0fdd5e9-dbc5-4b90-8c83-adafa1eaa969',
+            name: 'mixed',
+            created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            created_at: '2024-05-20T23:13:00.000Z',
+            updated_at: '2024-05-20T23:13:00.000Z',
+            deleted_at: null,
+            deleted_by: null,
+        },
+    ]);
+
+    // Seed data for establishment_type table
+    await queryInterface.bulkInsert('establishment_type', [
+        {
+            id: '4d37ada2-8652-4268-b202-0db16fef70ba',
+            name: 'hospital',
+            created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            created_at: '2024-05-20T23:13:00.000Z',
+            updated_at: '2024-05-20T23:13:00.000Z',
+            deleted_at: null,
+            deleted_by: null,
+        },
+        {
+            id: 'f02e3ec7-f1ee-4025-910f-c5d4f376da31',
+            name: 'clinic',
+            created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            created_at: '2024-05-20T23:13:00.000Z',
+            updated_at: '2024-05-20T23:13:00.000Z',
+            deleted_at: null,
+            deleted_by: null,
+        },
+        {
+            id: 'efee12b0-cef3-4235-a6fd-76241af46611',
+            name: 'community_health_center',
+            created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            created_at: '2024-05-20T23:13:00.000Z',
+            updated_at: '2024-05-20T23:13:00.000Z',
+            deleted_at: null,
+            deleted_by: null,
         },
     ]);
 

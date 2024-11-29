@@ -158,6 +158,35 @@ module.exports = {
 
     );
 
+    CREATE TABLE IF NOT EXISTS establishment_affiliation (
+        id uuid NOT NULL DEFAULT uuid_generate_v4(),
+        name varchar NOT NULL,
+        created_by uuid NULL,
+        updated_by uuid NULL,
+        created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+        updated_at timestamptz  NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+        deleted_at timestamptz NULL,
+        deleted_by uuid NULL,
+        CONSTRAINT "establishment_affiliation_pk" PRIMARY KEY (id),
+        CONSTRAINT created_by_fk FOREIGN KEY (created_by) REFERENCES "user"(id) ON DELETE CASCADE,
+        CONSTRAINT updated_by_fk FOREIGN KEY (updated_by) REFERENCES "user"(id) ON DELETE CASCADE,
+        CONSTRAINT deleted_by_fk FOREIGN KEY (deleted_by) REFERENCES "user"(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS establishment_type (
+        id uuid NOT NULL DEFAULT uuid_generate_v4(),
+        name varchar NOT NULL,
+        created_by uuid NULL,
+        updated_by uuid NULL,
+        created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+        updated_at timestamptz  NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+        deleted_at timestamptz NULL,
+        deleted_by uuid NULL,
+        CONSTRAINT "establishment_type_pk" PRIMARY KEY (id),
+        CONSTRAINT created_by_fk FOREIGN KEY (created_by) REFERENCES "user"(id) ON DELETE CASCADE,
+        CONSTRAINT updated_by_fk FOREIGN KEY (updated_by) REFERENCES "user"(id) ON DELETE CASCADE,
+        CONSTRAINT deleted_by_fk FOREIGN KEY (deleted_by) REFERENCES "user"(id) ON DELETE CASCADE
+    );
 
     CREATE TABLE IF NOT EXISTS establishment (
         id uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -168,6 +197,8 @@ module.exports = {
         description text NULL,
         city varchar NOT NULL,
         country varchar NOT NULL,
+        establishment_affiliation_id uuid NOT NULL,
+        establishment_type_id uuid NOT NULL,
         created_by uuid NULL,
         updated_by uuid NULL,
         created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
@@ -290,6 +321,8 @@ module.exports = {
             'drop table patient cascade;',
             'drop table specialty cascade;',
             'drop table practician cascade;',
+            'drop table establishment_affiliation cascade;',
+            'drop table establishment_type cascade;',
             'drop table establishment cascade;',
             'drop table establishment_has_practician cascade;',
             'drop table establishment_has_specialty cascade;',

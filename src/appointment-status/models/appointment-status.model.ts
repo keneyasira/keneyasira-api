@@ -7,11 +7,11 @@ export interface AppointmentStatusAttributes extends BaseAttributes {
     name: string;
 }
 
-type SpecialtyCreationAttributes = Optional<AppointmentStatusAttributes, 'id'>;
+type AppointmentStatusCreationAttributes = Optional<AppointmentStatusAttributes, 'id'>;
 @Table({
     tableName: 'appointment_status',
 })
-export class AppointmentStatus extends BaseModel<AppointmentStatusAttributes, SpecialtyCreationAttributes> {
+export class AppointmentStatus extends BaseModel<AppointmentStatusAttributes, AppointmentStatusCreationAttributes> {
     @AllowNull(false)
     @Column
     name: string;

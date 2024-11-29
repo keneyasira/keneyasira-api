@@ -10,8 +10,10 @@ import { Appointment } from '../appointment/models/appointment.model';
 import { AppointmentStatus } from '../appointment-status/models/appointment-status.model';
 import { Collaborator } from '../collaborator/models/collaborator.model';
 import { Establishment } from '../establishment/models/establishment.model';
+import { EstablishmentAffiliation } from '../establishment-affiliation/models/establishment-affiliation.model';
 import { EstablishmentHasPractician } from '../establishment-has-practician/models/establishment-has-practician.model';
 import { EstablishmentHasSpecialty } from '../establishment-has-specialty/models/establishment-has-specialty.model';
+import { EstablishmentType } from '../establishment-type/models/establishment-type.model';
 import { Patient } from '../patient/models/patient.model';
 import { Practician } from '../practician/models/practician.model';
 import { PracticianHasSpecialty } from '../practician-has-specialty/models/practician-has-specialty.model';
@@ -36,6 +38,8 @@ import { ResponseInterceptor } from './response.interceptor';
                 AppointmentStatus,
                 Collaborator,
                 Establishment,
+                EstablishmentAffiliation,
+                EstablishmentType,
                 EstablishmentHasPractician,
                 EstablishmentHasSpecialty,
                 Patient,
@@ -49,7 +53,6 @@ import { ResponseInterceptor } from './response.interceptor';
             ],
         }),
         TerminusModule,
-        
     ],
     exports: [ConfigModule, ApplicationLoggerService],
     providers: [

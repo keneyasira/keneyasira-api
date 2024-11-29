@@ -1,10 +1,12 @@
 import { Optional } from 'sequelize';
-import { AllowNull, BelongsToMany, Column, HasMany, Table } from 'sequelize-typescript';
+import { AllowNull, BelongsTo, BelongsToMany, Column, ForeignKey, HasMany, Table } from 'sequelize-typescript';
 
 import { BaseAttributes, BaseModel } from '../../common/base.model';
 import { EstablishmentHasSpecialty } from '../../establishment-has-specialty/models/establishment-has-specialty.model';
 import { Specialty } from '../../specialty/models/specialty.model';
 import { TimeSlot, type TimeSlotAttributes } from '../../time-slot/models/time-slot.model';
+import { EstablishmentAffiliation } from '../../establishment-affiliation/models/establishment-affiliation.model';
+import { EstablishmentType } from '../../establishment-type/models/establishment-type.model';
 
 export interface EstablishmentAttributes extends BaseAttributes {
     name: string;
@@ -14,6 +16,8 @@ export interface EstablishmentAttributes extends BaseAttributes {
     city: string;
     country: string;
     timeSlots?: TimeSlotAttributes[];
+    // type: 'hospital' | 'clinic' | 'community_health_center'
+    // affiliation: 'public' | 'private' | 'mixte'
 }
 
 type EstablishmentCreationAttributes = Optional<
@@ -52,9 +56,25 @@ export class Establishment extends BaseModel<
     @Column
     country: string;
 
+    @AllowNull(false)
+    @Column
+    @ForeignKey(() => EstablishmentAffiliation)
+    establishmentAffiliationId: string;
+
+    @AllowNull(false)
+    @Column
+    @ForeignKey(() => EstablishmentType)
+    establishmentTypeId: string;
+
     @HasMany(() => TimeSlot)
     timeSlots: TimeSlot[];
 
     @BelongsToMany(() => Specialty, () => EstablishmentHasSpecialty)
     specialties: Specialty[];
+
+    @BelongsTo(() => EstablishmentAffiliation)
+    affiliation: EstablishmentAffiliation;
+
+    @BelongsTo(() => EstablishmentType)
+    type: EstablishmentType;
 }

@@ -10,8 +10,10 @@ import { CollaboratorModule } from './collaborator/collaborator.module';
 import { CoreModule } from './core/core.module';
 import { RootController } from './core/root.controller';
 import { EstablishmentModule } from './establishment/establishment.module';
+import { EstablishmentAffiliationModule } from './establishment-affiliation/establishment-affiliation.module';
 import { EstablishmentHasPracticianModule } from './establishment-has-practician/establishment-has-practician.module';
 import { EstablishmentHasSpecialtyModule } from './establishment-has-specialty/establishment-has-specialty.module';
+import { EstablishmentTypeModule } from './establishment-type/establishment-type.module';
 import { PatientModule } from './patient/patient.module';
 import { PracticianModule } from './practician/practician.module';
 import { PracticianHasSpecialtyModule } from './practician-has-specialty/practician-has-specialty.module';
@@ -29,9 +31,11 @@ import { UserRoleModule } from './user-role/user-role.module';
         AuthenticationModule,
         CollaboratorModule,
         CoreModule,
+        EstablishmentAffiliationModule,
         EstablishmentModule,
         EstablishmentHasSpecialtyModule,
         EstablishmentHasPracticianModule,
+        EstablishmentTypeModule,
         PatientModule,
         PracticianModule,
         PracticianHasSpecialtyModule,

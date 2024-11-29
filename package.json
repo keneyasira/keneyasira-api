@@ -14,7 +14,7 @@
         "build": "nest build",
         "format": "prettier --write 'src/**/*.ts'",
         "start": "nest start -b swc --type-check",
-        "start:dev": "nest start --builder swc --watch --type-check",
+        "start:dev": "nest start",
         "start:debug": "nest start --builder swc --debug --watch --type-check",
         "start:prod": "node dist/src/main",
         "lint": "eslint --fix . ",

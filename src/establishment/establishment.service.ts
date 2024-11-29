@@ -3,6 +3,8 @@ import { Op } from 'sequelize';
 
 import { Appointment, AppointmentAttributes } from '../appointment/models/appointment.model';
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
+import { EstablishmentAffiliation } from '../establishment-affiliation/models/establishment-affiliation.model';
+import { EstablishmentType } from '../establishment-type/models/establishment-type.model';
 import { Patient } from '../patient/models/patient.model';
 import { Practician, type PracticianAttributes } from '../practician/models/practician.model';
 import { Specialty } from '../specialty/models/specialty.model';
@@ -45,7 +47,11 @@ export class EstablishmentService {
             offset,
             order: transformSortParamsToSequelizeFormat(options.sort),
             where: buildEstablishmentSearchQuery(options.establishmentSearch),
-            include,
+            include: [
+                { model: EstablishmentAffiliation, attributes: ['id', 'name'] },
+                { model: EstablishmentType, attributes: ['id', 'name'] },
+                ...include,
+            ],
             distinct: true,
         });
 
