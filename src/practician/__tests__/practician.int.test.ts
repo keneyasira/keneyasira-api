@@ -24,6 +24,7 @@ describe('PracticianController', () => {
             phone: '+22379131414',
             roles: ['admin'], // Example role
             secret: 'secret',
+            clientType: 'admin',
         });
 
         await app.init();
@@ -542,6 +543,94 @@ describe('PracticianController', () => {
                 .expect(({ body }) => {
                     expect(body.data).toEqual([]);
                     expect(body.total).toBe(0);
+                });
+        });
+
+        it('GET /:id/establishments/:establishmentId/time-slots should return array of timeslots for establishment', async () => {
+            const establishmentId = 'f211f711-0e57-4c30-bbf2-7c9f576de879';
+            const practicianId = '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac';
+            await request(app.getHttpServer())
+                .get(`/practicians/${practicianId}/establishments/${establishmentId}/time-slots`)
+                .auth(accessToken, { type: 'bearer' })
+                .expect(200)
+                .expect(({ body }) => {
+                    expect(body.data).toEqual([
+                        {
+                            available: expect.any(Boolean),
+                            createdAt: '2024-05-20T23:13:04.000Z',
+                            createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                            date: '2024-12-01',
+                            deletedAt: null,
+                            deletedBy: null,
+                            endTime: '02:30:00',
+                            establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                            id: '6a2cb23b-2882-4a02-81c9-ac2d9c72775f',
+                            practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                            startTime: '01:30:00',
+                            updatedAt: expect.any(String),
+                            updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                        },
+                        {
+                            available: false,
+                            createdAt: '2024-05-20T23:13:03.000Z',
+                            createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                            date: '2024-12-01',
+                            deletedAt: null,
+                            deletedBy: null,
+                            endTime: '02:30:00',
+                            establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                            id: '56c63078-c32f-4d04-aa96-5e7815de1f98',
+                            practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                            startTime: '01:30:00',
+                            updatedAt: expect.any(String),
+                            updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                        },
+                        {
+                            available: false,
+                            createdAt: '2024-05-20T23:13:02.000Z',
+                            createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                            date: '2024-12-01',
+                            deletedAt: null,
+                            deletedBy: null,
+                            endTime: '01:30:00',
+                            establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                            id: '4b42301e-0108-46f2-a721-e01dc8c359d2',
+                            practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                            startTime: '01:00:00',
+                            updatedAt: expect.any(String),
+                            updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                        },
+                        {
+                            available: false,
+                            createdAt: '2024-05-20T23:13:01.000Z',
+                            createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                            date: '2024-12-01',
+                            deletedAt: null,
+                            deletedBy: null,
+                            endTime: '01:00:00',
+                            establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+                            id: '091f0895-91c6-4fd0-b638-5db2dd933539',
+                            practicianId: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+                            startTime: '00:00:00',
+                            updatedAt: expect.any(String),
+                            updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                        },
+                    ]);
+                    expect(body.total).toBe(4);
+                });
+        });
+
+        it('GET /:id/establishments/:establishmentId/appointments should return array of appointments for establishment', async () => {
+            const establishmentId = 'f211f711-0e57-4c30-bbf2-7c9f576de879';
+            const practicianId = '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac';
+
+            await request(app.getHttpServer())
+                .get(`/practicians/${practicianId}/establishments/${establishmentId}/appointments`)
+                .auth(accessToken, { type: 'bearer' })
+                .expect(200)
+                .expect(({ body }) => {
+                    // expect(body.data).toEqual([]);
+                    expect(body.total).toBe(4);
                 });
         });
     });

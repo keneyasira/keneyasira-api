@@ -1,12 +1,28 @@
 import { Optional } from 'sequelize';
-import { AllowNull, BelongsTo, BelongsToMany, Column, ForeignKey, HasMany, Table } from 'sequelize-typescript';
+import {
+    AllowNull,
+    BelongsTo,
+    BelongsToMany,
+    Column,
+    ForeignKey,
+    HasMany,
+    Table,
+} from 'sequelize-typescript';
 
 import { BaseAttributes, BaseModel } from '../../common/base.model';
+import {
+    EstablishmentAffiliation,
+    type EstablishmentAffiliationAttributes,
+} from '../../establishment-affiliation/models/establishment-affiliation.model';
+import { EstablishmentHasPractician } from '../../establishment-has-practician/models/establishment-has-practician.model';
 import { EstablishmentHasSpecialty } from '../../establishment-has-specialty/models/establishment-has-specialty.model';
+import {
+    EstablishmentType,
+    type EstablishmentTypeAttributes,
+} from '../../establishment-type/models/establishment-type.model';
+import { Practician } from '../../practician/models/practician.model';
 import { Specialty } from '../../specialty/models/specialty.model';
 import { TimeSlot, type TimeSlotAttributes } from '../../time-slot/models/time-slot.model';
-import { EstablishmentAffiliation } from '../../establishment-affiliation/models/establishment-affiliation.model';
-import { EstablishmentType } from '../../establishment-type/models/establishment-type.model';
 
 export interface EstablishmentAttributes extends BaseAttributes {
     name: string;
@@ -16,8 +32,10 @@ export interface EstablishmentAttributes extends BaseAttributes {
     city: string;
     country: string;
     timeSlots?: TimeSlotAttributes[];
-    // type: 'hospital' | 'clinic' | 'community_health_center'
-    // affiliation: 'public' | 'private' | 'mixte'
+    establishmentTypeId: string;
+    establishmentAffiliationId: string;
+    type?: EstablishmentTypeAttributes;
+    affiliation?: EstablishmentAffiliationAttributes;
 }
 
 type EstablishmentCreationAttributes = Optional<
@@ -71,6 +89,9 @@ export class Establishment extends BaseModel<
 
     @BelongsToMany(() => Specialty, () => EstablishmentHasSpecialty)
     specialties: Specialty[];
+
+    @BelongsToMany(() => Practician, () => EstablishmentHasPractician)
+    practicians: Practician[];
 
     @BelongsTo(() => EstablishmentAffiliation)
     affiliation: EstablishmentAffiliation;

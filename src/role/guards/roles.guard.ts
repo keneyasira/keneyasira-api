@@ -7,9 +7,7 @@ import { JwtAuthGuard } from '../../authentication/guards/jwt.guard';
 // Define the Roles Guard
 @Injectable()
 export class RolesGuard extends JwtAuthGuard implements CanActivate {
-    constructor(
-        reflector: Reflector
-    ) {
+    constructor(reflector: Reflector) {
         super(reflector);
     }
 

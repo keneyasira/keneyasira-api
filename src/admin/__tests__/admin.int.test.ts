@@ -23,6 +23,7 @@ describe('AdminController', () => {
             phone: '+22379131414',
             roles: ['admin'],
             secret: 'secret',
+            clientType: 'admin',
         });
 
         await app.init();

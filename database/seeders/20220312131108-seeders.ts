@@ -25,6 +25,15 @@ export async function up(queryInterface: QueryInterface) {
             updated_at: '2024-05-20 23:13:00',
         },
         {
+            id: '92f24616-c19d-46a7-84e6-2f8715f7407d',
+            email: 'practician2@keneyasira.com',
+            first_name: 'Second',
+            last_name: 'Doctor',
+            phone: '+22379131818',
+            created_at: '2024-05-20 23:13:00',
+            updated_at: '2024-05-20 23:13:00',
+        },
+        {
             id: 'c8581754-69b2-4414-9e9c-4a17fb2022c2',
             email: 'patient@keneyasira.com',
             first_name: 'Patient',
@@ -101,6 +110,16 @@ export async function up(queryInterface: QueryInterface) {
             id: 'ccdbe78c-3403-4c67-b4f8-c7ac0fe1e05b',
             role_id: 'dcc71837-5964-409f-b0c7-3ec4d9f3a114',
             user_id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+            created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            created_at: '2024-05-20 23:13:00',
+            updated_at: '2024-05-20 23:13:00',
+        },
+        // practician
+        {
+            id: '4d287105-0151-49f8-a75b-c80bcba380e9',
+            role_id: 'dcc71837-5964-409f-b0c7-3ec4d9f3a114',
+            user_id: '92f24616-c19d-46a7-84e6-2f8715f7407d',
             created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             created_at: '2024-05-20 23:13:00',
@@ -191,6 +210,14 @@ export async function up(queryInterface: QueryInterface) {
         {
             id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
             user_id: 'd4581754-69b2-4414-9e9c-4a17fb2022c2',
+            created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            created_at: '2024-05-20 23:13:00',
+            updated_at: '2024-05-20 23:13:00',
+        },
+        {
+            id: '8372ee85-c443-4100-97ad-01adda4a553e',
+            user_id: '92f24616-c19d-46a7-84e6-2f8715f7407d',
             created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             created_at: '2024-05-20 23:13:00',
@@ -326,6 +353,33 @@ export async function up(queryInterface: QueryInterface) {
             created_at: '2024-05-20 23:13:00',
             updated_at: '2024-05-20 23:13:00',
         },
+        {
+            id: '70be6727-0870-4b80-8bc1-aaf1e504fe6a',
+            establishment_id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
+            practician_id: '8372ee85-c443-4100-97ad-01adda4a553e',
+            created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            created_at: '2024-05-20 23:13:00',
+            updated_at: '2024-05-20 23:13:00',
+        },
+        {
+            id: '825a91f2-ceb5-41db-9e14-d4dd19ab073e',
+            establishment_id: '90b93a53-4109-4182-aa28-d4f3af0b87bb',
+            practician_id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
+            created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            created_at: '2024-05-20 23:13:00',
+            updated_at: '2024-05-20 23:13:00',
+        },
+        {
+            id: '079836f9-4e14-47bc-8cc3-29375483a6bd',
+            establishment_id: '90b93a53-4109-4182-aa28-d4f3af0b87bb',
+            practician_id: '8372ee85-c443-4100-97ad-01adda4a553e',
+            created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+            created_at: '2024-05-20 23:13:00',
+            updated_at: '2024-05-20 23:13:00',
+        },
     ]);
 
     // Seed data for establishment_has_specialty table
@@ -395,8 +449,8 @@ export async function up(queryInterface: QueryInterface) {
             end_time: `01:00:00.0`,
             created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-            created_at: '2024-05-20 23:13:00',
-            updated_at: '2024-05-20 23:13:00',
+            created_at: '2024-05-20 23:13:01',
+            updated_at: '2024-05-20 23:13:01',
         },
         {
             id: '4b42301e-0108-46f2-a721-e01dc8c359d2',
@@ -408,8 +462,8 @@ export async function up(queryInterface: QueryInterface) {
             end_time: `01:30:00.0`,
             created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-            created_at: '2024-05-20 23:13:00',
-            updated_at: '2024-05-20 23:13:00',
+            created_at: '2024-05-20 23:13:02',
+            updated_at: '2024-05-20 23:13:02',
         },
         {
             id: '56c63078-c32f-4d04-aa96-5e7815de1f98',
@@ -421,8 +475,8 @@ export async function up(queryInterface: QueryInterface) {
             end_time: `02:30:00.0`,
             created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-            created_at: '2024-05-20 23:13:00',
-            updated_at: '2024-05-20 23:13:00',
+            created_at: '2024-05-20 23:13:03',
+            updated_at: '2024-05-20 23:13:03',
         },
         {
             id: '6a2cb23b-2882-4a02-81c9-ac2d9c72775f',
@@ -434,8 +488,8 @@ export async function up(queryInterface: QueryInterface) {
             end_time: `02:30:00.0`,
             created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
             updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-            created_at: '2024-05-20 23:13:00',
-            updated_at: '2024-05-20 23:13:00',
+            created_at: '2024-05-20 23:13:04',
+            updated_at: '2024-05-20 23:13:04',
         },
         // Add more time slots as needed
     ]);
@@ -478,19 +532,6 @@ export async function up(queryInterface: QueryInterface) {
             created_at: '2024-05-20 23:13:00',
             updated_at: '2024-05-20 23:13:00',
         },
-        // {
-        //     id: 'f5ce1888-25c6-4933-a969-73c53ebcbf0e',
-        //     establishment_id: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
-        //     practician_id: '18f33b4c-6f7c-4af7-8d0f-3c50aab951ac',
-        //     patient_id: '632273cc-de99-4582-a440-752ba1f78766',
-        //     appointment_status_id: '452da462-61fc-4809-aa50-a712a0f5231c', //no_show
-        //     time_slot_id: '56c63078-c32f-4d04-aa96-5e7815de1f98',
-        //     created_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-        //     updated_by: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-        //     created_at: '2024-05-20 23:13:00',
-        //     updated_at: '2024-05-20 23:13:00',
-        // },
-        // Add more appointments as needed
     ]);
 
     // Remember to return, indicating that the migrations were successful

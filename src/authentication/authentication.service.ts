@@ -30,12 +30,11 @@ export class AuthenticationService {
 
         const roles = await this.userRoleService.getUserRoles(result.data.id);
 
-
         if (!(roles ?? []).includes(dto.clientType)) {
             throw new UnauthorizedException('Invalid Credential roles');
         }
 
-        return result;
+        return { ...result, roles };
     }
 
     async generateTokens(user: (UserAttributes & { clientType: ClientTypes }) | undefined) {

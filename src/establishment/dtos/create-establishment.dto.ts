@@ -58,6 +58,7 @@ export class CreateEstablishmentDto {
 
         return result.number as string;
     })
+
     @ApiProperty({
         example: '+22379131415',
         description: 'Phone number of the establishment',
@@ -72,4 +73,20 @@ export class CreateEstablishmentDto {
     @IsNotEmpty()
     @IsString()
     email: string;
+
+
+    @ApiProperty({
+        example: 'public|private|mixed',
+        description: 'affiliation of establishment',
+    })
+    @IsNotEmpty()
+    affiliation: string;
+
+    @ApiProperty({
+        example: 'hospital|clinic',
+        description: 'type of the establishment',
+    })
+    @IsNotEmpty()
+    @IsString()
+    type: string;
 }

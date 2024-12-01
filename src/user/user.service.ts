@@ -8,6 +8,7 @@ import { transformSortParamsToSequelizeFormat } from '../utils/sequelize.helpers
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { User, type UserAttributes } from './models/user.model';
+import { Role } from '../role/models/role.model';
 
 @Injectable()
 export class UserService {

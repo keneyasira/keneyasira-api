@@ -9,6 +9,8 @@ import {
 } from 'sequelize-typescript';
 
 import { BaseAttributes, BaseModel } from '../../common/base.model';
+import { Establishment } from '../../establishment/models/establishment.model';
+import { EstablishmentHasPractician } from '../../establishment-has-practician/models/establishment-has-practician.model';
 import { PracticianHasSpecialty } from '../../practician-has-specialty/models/practician-has-specialty.model';
 import { Specialty } from '../../specialty/models/specialty.model';
 import { User, type UserAttributes } from '../../user/models/user.model';
@@ -35,4 +37,7 @@ export class Practician extends BaseModel<PracticianAttributes, PracticianCreati
 
     @BelongsToMany(() => Specialty, () => PracticianHasSpecialty)
     specialties: Specialty[];
+
+    @BelongsToMany(() => Establishment, () => EstablishmentHasPractician)
+    establishments: Establishment[];
 }

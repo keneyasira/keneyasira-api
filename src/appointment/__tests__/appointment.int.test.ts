@@ -23,6 +23,7 @@ describe('AppointmentController', () => {
             phone: '+22379131414',
             roles: ['admin'], // Example role
             secret: 'secret',
+            clientType: 'admin',
         });
 
         await app.init();
@@ -48,6 +49,9 @@ describe('AppointmentController', () => {
                                 deletedAt: null,
                                 deletedBy: null,
                                 establishment: {
+                                    establishmentAffiliationId:
+                                        'dcb1639d-18c8-4a96-a8fd-23947b88bd0f',
+                                    establishmentTypeId: '4d37ada2-8652-4268-b202-0db16fef70ba',
                                     address: 'Rue Kati, Bamako, Mali',
                                     city: 'Bamako',
                                     country: 'Mali',
@@ -125,7 +129,7 @@ describe('AppointmentController', () => {
                                     updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                                     updatedAt: expect.any(String),
                                     createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    createdAt: '2024-05-20T23:13:01.000Z',
                                     deletedAt: null,
                                     deletedBy: null,
                                 },
@@ -139,6 +143,9 @@ describe('AppointmentController', () => {
                                 deletedAt: null,
                                 deletedBy: null,
                                 establishment: {
+                                    establishmentAffiliationId:
+                                        'dcb1639d-18c8-4a96-a8fd-23947b88bd0f',
+                                    establishmentTypeId: '4d37ada2-8652-4268-b202-0db16fef70ba',
                                     address: 'Rue Kati, Bamako, Mali',
                                     city: 'Bamako',
                                     country: 'Mali',
@@ -214,8 +221,8 @@ describe('AppointmentController', () => {
                                     startTime: expect.any(String),
                                     endTime: expect.any(String),
                                     updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    updatedAt: '2024-05-20T23:13:00.000Z',
-                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    updatedAt: '2024-05-20T23:13:02.000Z',
+                                    createdAt: '2024-05-20T23:13:02.000Z',
                                     createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                                     deletedAt: null,
                                     deletedBy: null,
@@ -230,6 +237,9 @@ describe('AppointmentController', () => {
                                 deletedAt: null,
                                 deletedBy: null,
                                 establishment: {
+                                    establishmentAffiliationId:
+                                        'dcb1639d-18c8-4a96-a8fd-23947b88bd0f',
+                                    establishmentTypeId: '4d37ada2-8652-4268-b202-0db16fef70ba',
                                     address: 'Rue Kati, Bamako, Mali',
                                     city: 'Bamako',
                                     country: 'Mali',
@@ -304,9 +314,9 @@ describe('AppointmentController', () => {
                                     date: expect.any(String),
                                     startTime: expect.any(String),
                                     endTime: expect.any(String),
-                                    updatedAt: '2024-05-20T23:13:00.000Z',
+                                    updatedAt: '2024-05-20T23:13:03.000Z',
                                     updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                    createdAt: '2024-05-20T23:13:00.000Z',
+                                    createdAt: '2024-05-20T23:13:03.000Z',
                                     createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                                     deletedAt: null,
                                     deletedBy: null,
@@ -335,6 +345,8 @@ describe('AppointmentController', () => {
                             deletedAt: null,
                             deletedBy: null,
                             establishment: {
+                                establishmentAffiliationId: 'dcb1639d-18c8-4a96-a8fd-23947b88bd0f',
+                                establishmentTypeId: '4d37ada2-8652-4268-b202-0db16fef70ba',
                                 address: 'Rue Kati, Bamako, Mali',
                                 city: 'Bamako',
                                 country: 'Mali',
@@ -410,7 +422,7 @@ describe('AppointmentController', () => {
                                 startTime: '00:00:00',
                                 endTime: '01:00:00',
                                 createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                createdAt: '2024-05-20T23:13:00.000Z',
+                                createdAt: '2024-05-20T23:13:01.000Z',
                                 updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                                 updatedAt: expect.any(String),
                                 deletedAt: null,
@@ -431,7 +443,7 @@ describe('AppointmentController', () => {
                 timeSlotId,
             };
 
-            await request(app.getHttpServer())
+            const createdId = await request(app.getHttpServer())
                 .post('/appointments')
                 .auth(accessToken, { type: 'bearer' })
                 .send(createAppointmentDto)
@@ -445,6 +457,8 @@ describe('AppointmentController', () => {
                             deletedAt: null,
                             deletedBy: null,
                             establishment: {
+                                establishmentAffiliationId: 'dcb1639d-18c8-4a96-a8fd-23947b88bd0f',
+                                establishmentTypeId: '4d37ada2-8652-4268-b202-0db16fef70ba',
                                 address: 'Rue Kati, Bamako, Mali',
                                 city: 'Bamako',
                                 country: 'Mali',
@@ -519,9 +533,9 @@ describe('AppointmentController', () => {
                                 date: expect.any(String),
                                 startTime: '01:30:00',
                                 endTime: '02:30:00',
-                                updatedAt: '2024-05-20T23:13:00.000Z',
+                                updatedAt: '2024-05-20T23:13:04.000Z',
                                 updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                                createdAt: '2024-05-20T23:13:00.000Z',
+                                createdAt: '2024-05-20T23:13:04.000Z',
                                 createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
                                 deletedAt: null,
                                 deletedBy: null,
@@ -531,7 +545,8 @@ describe('AppointmentController', () => {
                         },
                         statusCode: 201,
                     });
-                });
+                })
+                .then(({ body }) => body.data.id);
 
             // check that the associated timeslot is updated to unavailable
             await request(app.getHttpServer())
@@ -542,9 +557,9 @@ describe('AppointmentController', () => {
                     expect(body).toEqual({
                         data: {
                             available: false,
-                            createdAt: '2024-05-20T23:13:00.000Z',
+                            createdAt: '2024-05-20T23:13:04.000Z',
                             createdBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
-                            date: '2024-11-22',
+                            date: expect.any(String),
                             deletedAt: null,
                             deletedBy: null,
                             endTime: '02:30:00',
@@ -562,6 +577,8 @@ describe('AppointmentController', () => {
                                 phone: '+22379131419',
                                 updatedAt: expect.any(String),
                                 updatedBy: 'd7a05755-62d3-4a8e-9ea4-035d9fafd924',
+                                establishmentAffiliationId: 'dcb1639d-18c8-4a96-a8fd-23947b88bd0f',
+                                establishmentTypeId: '4d37ada2-8652-4268-b202-0db16fef70ba',
                             },
                             establishmentId: 'f211f711-0e57-4c30-bbf2-7c9f576de879',
                             id: '6a2cb23b-2882-4a02-81c9-ac2d9c72775f',
@@ -596,6 +613,11 @@ describe('AppointmentController', () => {
                         statusCode: 200,
                     });
                 });
+
+            await request(app.getHttpServer())
+                .delete(`/appointments/${createdId}`)
+                .auth(accessToken, { type: 'bearer' })
+                .expect(200);
         });
 
         it.skip('should confirm an appointment', async () => {
