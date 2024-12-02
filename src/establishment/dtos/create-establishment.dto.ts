@@ -76,17 +76,17 @@ export class CreateEstablishmentDto {
 
 
     @ApiProperty({
-        example: 'public|private|mixed',
-        description: 'affiliation of establishment',
+        example: '334619eb-3c0b-4078-ae75-81c1a0f3b7c8',
+        description: 'id of establishment affiliation',
     })
     @IsNotEmpty()
-    affiliation: string;
+    establishmentAffiliationId: string;
 
     @ApiProperty({
-        example: 'hospital|clinic',
-        description: 'type of the establishment',
+        example: '334619eb-3c0b-4078-ae75-81c1a0f3b7c8',
+        description: 'id of establishment type',
     })
     @IsNotEmpty()
     @IsString()
-    type: string;
+    establishmentTypeId: string;
 }

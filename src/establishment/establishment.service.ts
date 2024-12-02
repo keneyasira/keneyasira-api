@@ -170,33 +170,8 @@ export class EstablishmentService {
     }
 
     async create(createEstablishmentDto: CreateEstablishmentDto) {
-        const { type, affiliation, ...createPayload } = createEstablishmentDto;
-        //get establishment type
-        const establishmentType = await EstablishmentType.findOne({
-            where: { name: type },
-            attributes: ['id'],
-        });
-
-        if (!establishmentType) {
-            throw new NotFoundException('Establishment Type not found');
-        }
-
-        //get establishment affiliation
-        const establishmentAffiliation = await EstablishmentAffiliation.findOne({
-            where: { name: affiliation },
-            attributes: ['id'],
-        });
-
-        if (!establishmentAffiliation) {
-            throw new NotFoundException('Establishment Affiliation not found');
-        }
-
         // Implement the logic to create an establishment
-        const createdEstablishment = await Establishment.create({
-            ...createPayload,
-            establishmentTypeId: establishmentType.id,
-            establishmentAffiliationId: establishmentAffiliation.id,
-        });
+        const createdEstablishment = await Establishment.create(createEstablishmentDto);
 
         const createdEstablishmentValue = createdEstablishment.get({ plain: true });
 
@@ -208,43 +183,8 @@ export class EstablishmentService {
     }
 
     async update(updateEstablishmentDto: UpdateEstablishmentDto) {
-        const { type, affiliation, ...updatePayload } = updateEstablishmentDto;
-        let establishmentTypeId, establishmentAffiliationId;
-
-        if (type) {
-            //get establishment type
-            const establishmentType = await EstablishmentType.findOne({
-                where: { name: type },
-                attributes: ['id'],
-            });
-
-            if (!establishmentType) {
-                throw new NotFoundException('Establishment Type not found');
-            }
-
-            establishmentTypeId = establishmentType.id;
-        }
-
-        if (affiliation) {
-            //get establishment affiliation
-            const establishmentAffiliation = await EstablishmentAffiliation.findOne({
-                where: { name: affiliation },
-                attributes: ['id'],
-            });
-
-            if (!establishmentAffiliation) {
-                throw new NotFoundException('Establishment Affiliation not found');
-            }
-
-            establishmentAffiliationId = establishmentAffiliation.id;
-        }
-
         const [affectedRows, [updatedEstablishment]] = await Establishment.update(
-            {
-                ...updatePayload,
-                ...(establishmentTypeId ? { establishmentTypeId } : {}),
-                ...(establishmentAffiliationId ? { establishmentAffiliationId } : {}),
-            },
+            updateEstablishmentDto,
             {
                 where: {
                     id: updateEstablishmentDto.id,
