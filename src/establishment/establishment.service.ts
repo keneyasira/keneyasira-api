@@ -152,6 +152,10 @@ export class EstablishmentService {
         const { rows: data, count: total } = await Practician.findAndCountAll({
             include: [
                 {
+                    model: User,
+                    attributes: ['id', 'firstName', 'lastName', 'phone'],
+                },
+                {
                     model: Establishment,
                     where: {
                         id: establishmentId,
