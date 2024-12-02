@@ -150,8 +150,8 @@ describe('EstablishmentController (e2e)', () => {
             country: 'Test Country',
             phone: '0022379131510',
             email: 'test@test.com',
-            affiliation: 'public',
-            type: 'hospital',
+            establishmentAffiliationId: 'dcb1639d-18c8-4a96-a8fd-23947b88bd0f',
+            establishmentTypeId: '4d37ada2-8652-4268-b202-0db16fef70ba',
         };
 
         await request(app.getHttpServer())
@@ -191,8 +191,8 @@ describe('EstablishmentController (e2e)', () => {
             country: 'Test Country',
             phone: '0022379131510',
             email: 'test@test.com',
-            affiliation: 'public',
-            type: 'hospital',
+            establishmentAffiliationId: 'dcb1639d-18c8-4a96-a8fd-23947b88bd0f',
+            establishmentTypeId: '4d37ada2-8652-4268-b202-0db16fef70ba',
         };
 
         const id = await request(app.getHttpServer())
@@ -248,8 +248,8 @@ describe('EstablishmentController (e2e)', () => {
             country: 'Test Country',
             phone: '0022379131510',
             email: 'test@test.com',
-            affiliation: 'public',
-            type: 'hospital',
+            establishmentAffiliationId: 'dcb1639d-18c8-4a96-a8fd-23947b88bd0f',
+            establishmentTypeId: '4d37ada2-8652-4268-b202-0db16fef70ba',
         };
 
         const id = await request(app.getHttpServer())
