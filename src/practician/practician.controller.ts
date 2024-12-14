@@ -128,6 +128,32 @@ export class PracticianController {
         }
     }
 
+    @Get('/:id/establishments')
+    async findEstablishments(
+        @Param('id') practicianId: string,
+        @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
+        @Query('limit', new DefaultValuePipe(0), ParseIntPipe, ParseLimitParamPipe) limit: number,
+        @Query('sort', new ParseSortPipe()) sort: SortParams[] = DEFAULT_SORT_PARAMS,
+    ) {
+        try {
+            return this.practicianService.findPracticianEstablishments(practicianId, {
+                page,
+                limit,
+                sort,
+            });
+        } catch (error) {
+            this.logger.error(
+                `PracticianController - failed to get practician establishments, ${
+                    (error as Error).message
+                }`,
+                {
+                    error: errorToPlainObject(error as Error),
+                },
+            );
+            throw error;
+        }
+    }
+
     @Get('/:id/time-slots')
     async findTimeSlots(
         @Param('id') practicianId: string,

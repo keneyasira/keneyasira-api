@@ -4,7 +4,10 @@ import { type Includeable, Op, type WhereOptions } from 'sequelize';
 
 import { Appointment, AppointmentAttributes } from '../appointment/models/appointment.model';
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
-import { Establishment } from '../establishment/models/establishment.model';
+import {
+    Establishment,
+    type EstablishmentAttributes,
+} from '../establishment/models/establishment.model';
 import { Patient } from '../patient/models/patient.model';
 import { Role } from '../role/models/role.model';
 import { ROLE_NAMES } from '../role/role.service';
@@ -21,6 +24,8 @@ import { CreatePracticianDto } from './dtos/create-practician.dto';
 import { UpdatePracticianDto } from './dtos/update-practician.dto';
 import { PracticianDeletedEvent, PracticianEvents } from './events/practician.event';
 import { Practician, PracticianAttributes } from './models/practician.model';
+import { EstablishmentAffiliation } from '../establishment-affiliation/models/establishment-affiliation.model';
+import { EstablishmentType } from '../establishment-type/models/establishment-type.model';
 
 @Injectable()
 export class PracticianService {
@@ -145,6 +150,39 @@ export class PracticianService {
                 },
                 {
                     model: TimeSlot,
+                },
+            ],
+            limit: options?.limit,
+            offset,
+            order: transformSortParamsToSequelizeFormat(options.sort),
+        });
+
+        return { data: data.map((row) => row.get({ plain: true })), total };
+    }
+
+    async findPracticianEstablishments(
+        practicianId: string,
+        options: QueryParams,
+    ): Promise<{ data: EstablishmentAttributes[]; total: number }> {
+        const offset = options?.limit && options.page ? options.limit * (options.page - 1) : 0;
+
+        const { rows: data, count: total } = await Establishment.findAndCountAll({
+            include: [
+                {
+                    model: Specialty,
+                    through: { attributes: [] },
+                    attributes: ['id', 'name'],
+                },
+                { model: EstablishmentAffiliation, attributes: ['id', 'name'] },
+                { model: EstablishmentType, attributes: ['id', 'name'] },
+                {
+                    model: Practician,
+                    where: {
+                        id: practicianId,
+                    },
+                    attributes: [],
+                    required: true,
+                    through: { attributes: [] },
                 },
             ],
             limit: options?.limit,
