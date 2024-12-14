@@ -18,6 +18,7 @@ install: ## Install necessary packages to run the application
 	@npm ci
 
 run: ## Start nest server in watch mode
+	@npm run build
 	@npm run start:dev
 
 debug: ## Start nest server in watch and debug mode
