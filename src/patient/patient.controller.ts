@@ -14,6 +14,7 @@ import {
 import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 import { AuthenticatedUser } from '../authentication/decorators/authenticated-user.param-decorator';
+import { Public } from '../authentication/decorators/public.decorator';
 import { ApplicationLoggerService } from '../core/logger/application.logger.service';
 import { SortParams } from '../typings/query.typings';
 import { UserAttributes } from '../user/models/user.model';
@@ -73,6 +74,7 @@ export class PatientController {
         }
     }
 
+    @Public()
     @Post('/')
     async create(
         @Body() createPatientDto: CreatePatientDto,

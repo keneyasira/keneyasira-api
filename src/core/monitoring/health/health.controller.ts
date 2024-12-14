@@ -6,7 +6,7 @@ import {
     SequelizeHealthIndicator,
 } from '@nestjs/terminus';
 
-import { Public } from '../../../authentication/decorators/is-public.decorator';
+import { Public } from '../../../authentication/decorators/public.decorator';
 
 @Controller('health')
 export class HealthController {

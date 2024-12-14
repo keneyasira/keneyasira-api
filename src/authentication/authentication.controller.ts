@@ -15,7 +15,7 @@ import { Request, Response } from 'express';
 import { UserAttributes } from '../user/models/user.model';
 import { AuthenticationService } from './authentication.service';
 import { AuthenticatedUser } from './decorators/authenticated-user.param-decorator';
-import { Public } from './decorators/is-public.decorator';
+import { Public } from './decorators/public.decorator';
 import { PasswordLessLoginDto } from './dtos/password-less-login-magic-link.dto';
 import { MagicLoginStrategy } from './strategies/magic-login.strategy';
 
